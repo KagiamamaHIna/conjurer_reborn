@@ -1,0 +1,76 @@
+<Biome>
+  <Topology
+    name="_EMPTY_"
+    background_use_neighbor="0"
+
+    lua_script="mods/conjurer_reborn/files/biomes/common.lua"
+    mGradientAddNoise="0"
+    mGradientHighNoise="64"
+    mGradientLowNoise="0"
+    mGradientNoiseScale="0.00128571"
+    noise_type="SIN_CAPPED_SIMPLEX"
+
+    mGradientEndY="580"
+    mGradientStartY="-400"
+
+    mInsidePerlinClamped="0"
+    mInsidePerlinScaleMax="1"
+    mInsidePerlinScaleMin="1"
+    mInsidePerlinScaleX="0.9999"
+    mInsidePerlinScaleY="0.9999"
+    mInsidePerlinScaled="1"
+    mInsidePerlinSquared="0"
+    mMultiplierPerlin="0"
+    mMultiplierExtraPerlin="0"
+    mMultiplierGradient="0.871429"
+    audio_ambience="cave"
+    audio_ambience_surface="hills"
+  ></Topology>
+
+  <Materials name="forest">
+    <MaterialComponent
+      _enabled="1"
+      is_rare="0"
+      limit_max_y="350"
+      limit_min_y="0"
+      limit_y="1"
+      material_index="10"
+      material_max="0.90"
+      material_min="0.40"
+      material_name="soil"
+    ></MaterialComponent>
+
+    <MaterialComponent
+      _enabled="1"
+      is_rare="0"
+      limit_max_y="600"
+      limit_min_y="350"
+      limit_y="1"
+
+      material_index="5"
+      material_max="1.00"
+      material_min="-0.80"
+      material_name="rock_static"
+    ></MaterialComponent>
+
+    <VegetationComponent
+      _enabled="1"
+      is_visual="1"
+      rand_seed="8376.86"
+      tree_extra_y="0"
+      tree_image_file=""
+      tree_image_visual=""
+      tree_material="grass"
+      tree_probability="0.828571"
+      tree_radius_high="0.414286"
+      tree_radius_low="0.228571"
+      tree_width="76.1143"
+      visual_color="0xffb89f6c"
+      visual_offset_x="3"
+      visual_offset_y="7.5"
+      is_grass="1"
+      grass_requires_neighbors="0"
+      material_on_top_of="soil"
+    ></VegetationComponent>
+  </Materials>
+</Biome>

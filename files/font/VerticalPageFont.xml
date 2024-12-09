@@ -1,0 +1,18 @@
+<FontData>
+  <Texture>
+    mods/conjurer_reborn/files/font/VerticalPageFont.png
+  </Texture>
+  <LineHeight>
+    7
+  </LineHeight>
+  <CharSpace>
+    0
+  </CharSpace>
+  <WordSpace>
+    6
+  </WordSpace>
+  <QuadChar id="60" offset_x="0" offset_y="0" rect_h="5" rect_w="5" rect_x="0" rect_y="0" width="5" >
+  </QuadChar>
+  <QuadChar id="62" offset_x="0" offset_y="0" rect_h="5" rect_w="5" rect_x="6" rect_y="0" width="5" >
+  </QuadChar>
+</FontData>

@@ -1,0 +1,16 @@
+<Mod
+  name="Conjurer-Reborn"
+  description="Freeform sandbox builder."
+  is_game_mode="1"
+  ui_newgame_name="Conjurer-Reborn"
+  ui_newgame_description="Conjurer-Reborn is Modern Conjurer!
+Stranded on a barren world, with seemingly nothing
+around you - it's time to conjure something up!
+_
+
+Freeform sandbox builder."
+  ui_newgame_gfx_banner_bg="mods/conjurer_reborn/files/gfx/menu_banner_background.png"
+  ui_newgame_gfx_banner_fg="mods/conjurer_reborn/files/gfx/menu_banner_overlay.png"
+  request_no_api_restrictions="0"
+  game_mode_supports_save_slots="1"
+></Mod>

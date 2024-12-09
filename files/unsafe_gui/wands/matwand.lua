@@ -1,8 +1,8 @@
 dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetAllData.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/utilities.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/DataInterface/IgnoreMaterials.lua")
-dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/mat_brushe_entity.lua")
-dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/mat_draw.lua")
+dofile_once("mods/conjurer_reborn/files/wandhelper/mat_brushe_entity.lua")
+dofile_once("mods/conjurer_reborn/files/wandhelper/mat_draw.lua")
 
 local Brushes = GetBrushesTable()
 

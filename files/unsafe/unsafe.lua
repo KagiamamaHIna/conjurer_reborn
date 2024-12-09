@@ -1,6 +1,6 @@
 dofile_once("mods/conjurer_reborn/files/lib/define.lua")
 dofile_once("mods/conjurer_reborn/unsafeFn.lua")
-dofile_once("mods/conjurer_unsafe/files/module/NoitaPatcher/load.lua")
+
 SavePath = "%userprofile%/AppData/LocalLow/Nolla_Games_Noita/"
 
 if DebugMode then
@@ -10,7 +10,5 @@ else
 end
 
 Cpp = require("ConjurerExtensions") --加载模块
-
-NP = require("noitapatcher") 
 
 SavePath = Cpp.GetAbsPath(SavePath)

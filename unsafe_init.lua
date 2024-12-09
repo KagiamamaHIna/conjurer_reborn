@@ -34,7 +34,6 @@ function OnWorldPostUpdate()
     local player = GetPlayer()
     if player and InputIsKeyDown(Key_q) then
 		local comp = EntityGetFirstComponentIncludingDisabled(player,"Inventory2Component")
-		Cpp.SetClipboard(NP.GetComponentAddress(comp))
 	end
 	GuiUpdate()
 end

@@ -25,7 +25,7 @@ async_loop(function()
     local wand = EntityGetName(get_active_wand())
 
     if wand == "matwand" then
-      render_matwand()
+      --render_matwand()
     elseif wand == "entwand" then
       render_entwand()
     elseif wand == "editwand" then

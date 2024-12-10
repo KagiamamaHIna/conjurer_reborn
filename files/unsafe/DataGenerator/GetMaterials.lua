@@ -190,6 +190,30 @@ for i = 1, #MatOrderedIdList do--通过有序表来获得数据，确保归类�
         v.attr.cell_type = "liquid"
     end
 	
+    if IsNil(v.attr.density) then--默认密度是1
+        v.attr.density = "1"
+    end
+
+    if IsNil(v.attr.burnable) then--默认不可燃
+        v.attr.burnable = "0"
+    end
+
+    if IsNil(v.attr.durability) then--默认硬度是0
+        v.attr.durability = "0"
+    end
+
+    if IsNil(v.attr.hp) then--默认血量是100
+        v.attr.hp = "100"
+    end
+
+    if IsNil(v.attr.fire_hp) then--默认燃烧血量是0
+        v.attr.fire_hp = "0"
+    end
+
+    if IsNil(v.attr.on_fire) then--默认不会始终燃烧
+        v.attr.on_fire = "0"
+    end
+
 	if IsNil(v.attr.electrical_conductivity) then
 		if v.attr.liquid_sand == "0" and v.attr.cell_type == "liquid" then--液体材料情况下默认导电
             v.attr.electrical_conductivity = "1"

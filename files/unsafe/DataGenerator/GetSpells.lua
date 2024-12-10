@@ -61,4 +61,9 @@ for modid,v in pairs(AppendsModToFile) do
 	actions = nil
 end
 
-return {SpellTable, OrderedListId, EnumToListId}
+local KeyToSpell = {}
+for i,v in ipairs(OrderedListId)do
+	KeyToSpell[v] = i
+end
+
+return {SpellTable, OrderedListId, EnumToListId, KeyToSpell}

@@ -3,7 +3,7 @@
     TODO: Seek to somehow make this dynamic and get rid of this whole thing.
   -->
   <SpriteComponent
-    image_file="mods/conjurer_reborn/files/wands/matwand/brushes/10_reticle.png"
+    image_file="mods/raksa/files/wands/matwand/brushes/10_reticle.png"
     offset_x="5"
     offset_y="5"
 

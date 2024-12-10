@@ -1,6 +1,13 @@
 dofile_once("mods/conjurer_reborn/files/unsafe/unsafe.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/misc/ModIdUtilities.lua")
+dofile_once("mods/conjurer_reborn/files/unsafe/DataInterface/IgnoreEnemies.lua")
+
+local IngoreEntTable = {}
+for _, v in pairs(IgnoreEnemies) do
+    IngoreEntTable[v] = true
+end
+IgnoreEnemies = nil
 
 ---@class DataWak
 local datawak = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetDataWak.lua")
@@ -20,6 +27,10 @@ local function OriAndModDataAppend(path, isSibling)
 	end
 	local _result = {Noita = {}}
     for _, v in pairs(datawak:GetFileList()) do
+        local projPos = string.find(v, "data/entities/projectiles/")
+		if projPos == 1 then--排除投射物文件
+			goto continue
+		end
         local _, pos = string.find(v, path)
         if not isSibling and pos then --如果不是同级模式，那么就在这里写入吧！
             _result.Noita[#_result.Noita+1] = v
@@ -43,8 +54,14 @@ local function OriAndModDataAppend(path, isSibling)
 			goto continue
 		end
 		local Paths = GetDirectory(ModDataPath)
-		for _, v in pairs(Paths.File) do
-			_result[modid][#_result[modid]+1] = string.sub(v, #ModPath+1)
+        for _, v in pairs(Paths.File) do
+			local modfile = string.sub(v, #ModPath + 1)
+			local projPos = string.find(modfile, "data/entities/projectiles/")
+			if projPos == 1 then--排除投射物文件
+				goto continue
+			end
+            _result[modid][#_result[modid] + 1] = modfile
+			::continue::
 		end
 		::continue::
 	end
@@ -73,7 +90,7 @@ if OrderedListText ~= nil and OrderedListText ~= "" then
 			--移除可能的多余换行符，因为ModTextFileGetContent会在每行插入多余换行(\13)
             key = string.gsub(key, '\n', "")
 			key = string.gsub(key, '\13',"")
-			if key ~= "" then
+			if key ~= "" and not IngoreEntTable[key] then
 				OrderedListId[#OrderedListId + 1] = key
 				OrderedIdToKey[key] = #OrderedListId
 			end
@@ -92,7 +109,10 @@ for _,t in pairs(AnimalIconList) do
 		end
 	
 		local name = Cpp.PathGetFileName(v)
-		name = string.sub(name,1,#name-4)--减去不需要的后缀名
+        name = string.sub(name, 1, #name - 4) --减去不需要的后缀名
+		if IngoreEntTable[name] then--被标记要被忽视的跳过
+			goto continue
+		end
 		HasEnemiesIcon[name] = true
 		if OrderedIdToKey[name] == nil then--如果是未写入有序表但是有贴图的，往最后面排
 			OrderedListId[#OrderedListId + 1] = name
@@ -114,12 +134,15 @@ for modid, t in pairs(AnimalList) do --遍历文件，写入数据
 
         local name = Cpp.PathGetFileName(v)
         name = string.sub(name, 1, #name - 4) --减去不需要的后缀名
-        if HasEnemiesIcon[name] == nil then --如果不是有icon的
+        if HasEnemiesIcon[name] == nil or IngoreEntTable[name] then --如果不是有icon的，或者是被标记要被忽视的
             goto continue
         end
         --有，那么就要开始处理了
 		if EnemiesTable[name] then--多重文件
             EnemiesTable[name].files[#EnemiesTable[name].files + 1] = v
+			if modid == "Noita" then--假定出现了Noita，那么就强制设置，因为noita的实体可能被覆盖
+				EnemiesTable[name].from_id = "Noita"
+			end
         else--单文件
 			EnemiesTable[name] = { name = name, from_id = modid, tags = nil, png = Cpp.ConcatStr("data/ui_gfx/animal_icons/", name, ".png"), files = {v} }
 		end
@@ -128,7 +151,7 @@ for modid, t in pairs(AnimalList) do --遍历文件，写入数据
         if AnimalXml == nil then --解析失败
             goto continue
         end
-        if AnimalXml.attr.name and string.byte(AnimalXml.attr.name,1,1) == DollarChar then
+        if AnimalXml.attr.name and string.byte(AnimalXml.attr.name, 1, 1) == DollarChar then
             EnemiesTable[name].name = AnimalXml.attr.name --赋值为有本地化key的名字
         end
 
@@ -162,4 +185,9 @@ for k,_ in pairs(HasEnemiesIcon)do
 	end
 end
 
-return {EnemiesTable, OrderedListId}
+local KeyToEnemy = {}
+for i,v in ipairs(OrderedListId)do
+	KeyToEnemy[v] = i
+end
+
+return {EnemiesTable, OrderedListId, KeyToEnemy}

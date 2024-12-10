@@ -5,7 +5,7 @@
     Defaults to 10px reticle again.
   -->
   <SpriteComponent
-    image_file="mods/conjurer_reborn/files/gfx/eraser_pixel.png"
+    image_file="mods/raksa/files/gfx/eraser_pixel.png"
     offset_x="5"
     offset_y="5"
 
@@ -15,7 +15,7 @@
     z_index="80"
   ></SpriteComponent>
   <SpriteComponent
-    image_file="mods/conjurer_reborn/files/gfx/eraser_pixel.png"
+    image_file="mods/raksa/files/gfx/eraser_pixel.png"
     offset_x="-4"
     offset_y="-4"
 
@@ -25,7 +25,7 @@
     z_index="80"
   ></SpriteComponent>
   <SpriteComponent
-    image_file="mods/conjurer_reborn/files/gfx/eraser_pixel.png"
+    image_file="mods/raksa/files/gfx/eraser_pixel.png"
     offset_x="5"
     offset_y="-4"
 
@@ -35,7 +35,7 @@
     z_index="80"
   ></SpriteComponent>
   <SpriteComponent
-    image_file="mods/conjurer_reborn/files/gfx/eraser_pixel.png"
+    image_file="mods/raksa/files/gfx/eraser_pixel.png"
     offset_x="-4"
     offset_y="5"
 
@@ -45,3 +45,4 @@
     z_index="80"
   ></SpriteComponent>
 </Entity>
+

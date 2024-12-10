@@ -42,4 +42,8 @@ for modid,v in pairs(AppendsModToFile) do
 	perk_list = nil
 end
 
-return {PerkTable, OrderedListId}
+local KeyToPerk = {}
+for i,v in ipairs(OrderedListId)do
+	KeyToPerk[v] = i
+end
+return {PerkTable, OrderedListId, KeyToPerk}

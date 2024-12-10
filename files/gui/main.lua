@@ -5,7 +5,7 @@ dofile_once("mods/conjurer_reborn/files/scripts/utilities.lua")
 
 dofile_once("mods/conjurer_reborn/files/lib/gui.lua")
 
-dofile_once("mods/conjurer_reborn/files/gui/matwand.lua")
+--dofile_once("mods/conjurer_reborn/files/gui/matwand.lua")
 dofile_once("mods/conjurer_reborn/files/gui/entwand.lua")
 dofile_once("mods/conjurer_reborn/files/gui/editwand.lua")
 dofile_once("mods/conjurer_reborn/files/gui/powers.lua")

@@ -130,8 +130,13 @@ end
 ---返回当前选择的材料id
 ---@param UI Gui
 ---@return string
-function GetActiveMaterial(UI)
-	return WorldGlobalGet(UI, "MatwandPickedMaterial", GetMaterialList()[1])
+function GetActiveMaterial(UI)--如果材料不存在，那么就设置成默认的
+    local matid = WorldGlobalGet(UI, "MatwandPickedMaterial", GetMaterialList()[1])
+    if GetMaterial(matid) == nil then
+		matid = GetMaterialList()[1]
+		WorldGlobalSet(UI, "MatwandPickedMaterial", matid)
+	end
+	return matid
 end
 
 ---返回当前选择的材料贴图

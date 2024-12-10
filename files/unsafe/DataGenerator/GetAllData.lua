@@ -39,7 +39,7 @@ end
 
 ---返回天赋的有序列表
 ---@return table
-function GetSpellList()
+function GetPerkList()
     return GetPerks[2]
 end
 
@@ -96,4 +96,25 @@ end
 ---@return table
 function GetMaterialTypeList()
 	return GetMaterials[3]
+end
+
+---从给定的id获得对应的键
+---@param key string
+---@return integer
+function GetEnemyIDToKey(key)
+    return GetEnemies[3][key]
+end
+
+---从给定的id获得对应的键
+---@param key string
+---@return integer
+function GetPerkIDToKey(key)
+	return GetPerks[3][key]
+end
+
+---从给定的id获得对应的键
+---@param key string
+---@return integer
+function GetSpellIDToKey(key)
+	return GetSpells[4][key]
 end

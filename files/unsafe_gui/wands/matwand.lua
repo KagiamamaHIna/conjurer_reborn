@@ -44,6 +44,21 @@ end
 ---@param UI Gui
 ---@param id string
 local function MatTooltipText(UI, id)
+	local rightMargin = 72
+	local function NewLine(str1, str2)
+		local text = GameTextGetTranslatedOrNot(str1)
+		local w = GuiGetTextDimensions(UI.gui,text)
+        GuiLayoutBeginHorizontal(UI.gui, 0, 0, true, 2, -1)
+        GuiText(UI.gui, 0, 0, text)
+        GuiRGBAColorSetForNextWidget(UI.gui, 255, 222, 173, 255)
+		if w + 8 > rightMargin then
+			GuiText(UI.gui, w + 8 - w, 0, str2)
+        else
+			GuiText(UI.gui, rightMargin - w, 0, str2)
+		end
+		GuiLayoutEnd(UI.gui)
+	end
+
     local name = GetMatNameOrKey(MatTable[id].attr.ui_name)
 	if name == "" then
 		name = MatTable[id].attr.name
@@ -54,9 +69,47 @@ local function MatTooltipText(UI, id)
 	
 	UI.NextColor(127, 127, 255, 255)
 	local typeText = GameTextGet(MatTypeToLocal[MatTable[id].conjurer_unsafe_type])
-	UI.Text(0, 0, typeText)--类型显示
-
-	UI.VerticalSpacing(2)
+    UI.Text(0, 0, typeText) --类型显示
+    local shift = InputIsKeyDown(Key_RSHIFT) or InputIsKeyDown(Key_LSHIFT)
+	if shift then
+		local tagStr
+        if MatTable[id].attr.tags then
+            tagStr = table.concat(MatTable[id].attr.tags, ",")
+        end
+        if tagStr == "" then
+            tagStr = GameTextGet("$conjurer_reborn_material_tooltip_tag_none")
+        end
+		
+        UI.Text(0, 0, GameTextGet("$conjurer_reborn_material_tooltip_tag", tagStr))
+        local liquid_static = MatTable[id].attr.liquid_static == "1"--是否静态
+        NewLine("$conjurer_reborn_material_tooltip_static", liquid_static and "$menu_yes" or "$menu_no")
+        local electrical_conductivity = MatTable[id].attr.electrical_conductivity == "1"--是否导电
+        NewLine("$conjurer_reborn_material_tooltip_electrical", electrical_conductivity and "$menu_yes" or "$menu_no")
+		local burnable = MatTable[id].attr.burnable == "1"--是否可燃
+        NewLine("$conjurer_reborn_material_tooltip_burns", burnable and "$menu_yes" or "$menu_no")
+        local on_fire = MatTable[id].attr.on_fire == "1"--是否始终燃烧
+        NewLine("$conjurer_reborn_material_tooltip_on_fire", on_fire and "$menu_yes" or "$menu_no")
+		if burnable or on_fire then
+			NewLine("$conjurer_reborn_material_tooltip_fire_hp", MatTable[id].attr.fire_hp)
+		end
+		NewLine("$conjurer_reborn_material_tooltip_hp", MatTable[id].attr.hp)
+        NewLine("$conjurer_reborn_material_tooltip_density", MatTable[id].attr.density)
+        NewLine("$conjurer_reborn_material_tooltip_durability", MatTable[id].attr.durability)
+		if MatTable[id].attr._parent then
+			local list = {id}
+            local CurrentMat = MatTable[id].attr._parent
+            while CurrentMat do
+                list[#list + 1] = CurrentMat
+                CurrentMat = MatTable[CurrentMat].attr._parent
+            end
+            local Inherited = table.concat(list, " <- ")
+			NewLine("$conjurer_reborn_material_tooltip_inheritance", Inherited)
+		end
+    else
+		UI.Text(0, 0, "$conjurer_reborn_material_tooltip_tip")
+	end
+	
+	UI.VerticalSpacing(3)
 	UI.NextColor(72, 209, 204, 255)
 	local modName
 	if MatTable[id].conjurer_unsafe_from_id ~= "Noita" then
@@ -430,7 +483,7 @@ local function MatPicker(UI)
             refresh = true
         end
 		UI.BetterTooltipsNoCenter(function ()
-			UI.Text(0,0,GameTextGet(v.name))
+            UI.Text(0, 0, v.name)
         end, UI.GetZDeep() - 10, 10, 3)
 
 		UI.NextZDeep(0)
@@ -443,19 +496,19 @@ local function MatPicker(UI)
     local PageId = "MatWandPage" .. SwtichType[SwitchIndex].id
 	UI.NextZDeep(0)
     list, return_keyword = SearchInputBox(UI, "MatwandSearch", list, X + 30, Y + 215, 102.5, 0, refresh,
-		function (item, keyword)
-            local score = 0
+        function(item, keyword)
+			keyword = keyword:lower()
             local Name = GetMatNameOrKey(MatTable[item].attr.ui_name) --搜索材料本地化名字
             if Name == "" then
                 Name = MatTable[item].attr.name
             end
 			local lowerName = Name:lower()
-			local newScore = Cpp.AbsPartialPinyinRatio(lowerName,keyword)
-            if newScore > score then
-				score = newScore
-			end
+            --默认分数是0，分数最低下限也是0，那么第一次获取分数可以不用判断直接赋值
+			--减少分支优化
+			local score = Cpp.AbsPartialPinyinRatio(lowerName,keyword)
+
 			local lowerId = MatTable[item].attr.name:lower()
-            newScore = Cpp.AbsPartialPinyinRatio(lowerId, keyword)--搜索材料id
+            local newScore = Cpp.AbsPartialPinyinRatio(lowerId, keyword)--搜索材料id
             if newScore > score then
                 score = newScore
             end
@@ -614,7 +667,7 @@ local MainMatBtns = {
             ToggleActiveOverlay(BrushPicker)
 		end,
 		desc = function (UI)
-			UI.Text(0,0,GameTextGet("$conjurer_reborn_material_brush_options_desc"))
+			UI.Text(0,0,"$conjurer_reborn_material_brush_options_desc")
 		end
 	},
     {
@@ -627,7 +680,7 @@ local MainMatBtns = {
             ToggleActiveOverlay(EraserPicker)
 		end,
 		desc = function (UI)
-			UI.Text(0,0,GameTextGet("$conjurer_reborn_material_eraser_options_desc"))
+			UI.Text(0,0,"$conjurer_reborn_material_eraser_options_desc")
 		end
 	},
 }

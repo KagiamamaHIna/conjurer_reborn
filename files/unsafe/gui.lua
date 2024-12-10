@@ -149,15 +149,45 @@ function UI.tooltips(callback, z, xOffset, yOffset, NoYAutoMove, YMoreOffset)
 end
 
 local BTooltipsNC = {}
+local BTNCDraw = false
+local BTNCHasAlways = false
+local ThisRunBTNCHasAlways = false
+local IsLastAlway = false
+local LastNx
+local LastNy
 ---组件悬浮窗提示,应当在一个组件后面使用
 ---@param callback function
 ---@param z integer?
 ---@param xOffset integer?
 ---@param yOffset integer?
-function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, rightMargin)
+---@param leftMargin number?
+---@param rightMargin number?
+---@param always boolean?
+function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, rightMargin, always, nx, ny)
 	local left_click, right_click, hover, x, y, width, height, draw_x, draw_y, draw_width, draw_height =
         GuiGetPreviousWidgetInfo(this.public.gui)
-    if hover then
+    if hover or always then
+		BTNCDraw = true
+		BTNCHasAlways = BTNCHasAlways or always
+		ThisRunBTNCHasAlways = ThisRunBTNCHasAlways or always
+		if not always and BTNCHasAlways and LastNx ~= x and LastNy ~= y then
+			return
+		end
+        if always then
+            x = nx or 0
+            y = ny or 0
+			LastNx = x
+			LastNy = y
+            BTNCHasAlways = true
+        	IsLastAlway = true
+		end
+		local DrawAnimate = true
+		if IsLastAlway and x ~= LastNx or y ~= LastNy then
+			IsLastAlway = false
+		end
+		if IsLastAlway and x == LastNx and y == LastNy then
+            DrawAnimate = false
+        end
         local gui = this.public.gui
 		xOffset = Default(xOffset, 0)
     	yOffset = Default(yOffset, 0)
@@ -170,7 +200,7 @@ function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, ri
         GuiLayoutBeginLayer(gui)
         GuiLayoutBeginVertical(gui, (x + xOffset + width), y + yOffset, true)
 		GuiBeginAutoBox(gui)
-        callback()
+        callback(true)
 		GuiZSetForNextWidget(gui, z + 1)
 		GuiEndAutoBoxNinePiece(gui)
 		GuiLayoutEnd(gui)
@@ -188,7 +218,6 @@ function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, ri
 				end
 			end
 		end
-
 		BTooltipsNC[1] = math.floor(x)
 		BTooltipsNC[2] = math.floor(y)
 		if x > this.public.ScreenWidth / 2 then
@@ -196,7 +225,15 @@ function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, ri
         else
 			xOffset = xOffset + width
 		end
-
+		
+		if x + OffsetW + 10 + 5 > this.public.ScreenWidth then--右超出
+			xOffset = -((x + OffsetW) - this.public.ScreenWidth + 5)
+		end
+        if x + xOffset - leftMargin < 0 then --左超出
+            x = leftMargin + 5
+            xOffset = 0
+        end
+		
         if y + yOffset - 10 < 0 then --上超出
             yOffset = 0
         	y = 10
@@ -206,12 +243,13 @@ function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, ri
 		end
 
         GuiZSet(gui, z)
-		
-        GuiAnimateBegin(gui)
-		GuiIdPushString(gui,"BetterTooltipsNoCenterAlpha")
-        GuiAnimateAlphaFadeIn(gui, tooltipID,0.08, 0.1, false)
-        GuiAnimateScaleIn(gui, tooltipID, 0.08, false)
-		GuiIdPop(gui)
+		if DrawAnimate then
+			GuiAnimateBegin(gui)
+			GuiIdPushString(gui,"BetterTooltipsNoCenterAlpha")
+			GuiAnimateAlphaFadeIn(gui, tooltipID,0.08, 0.1, false)
+			GuiAnimateScaleIn(gui, tooltipID, 0.08, false)
+			GuiIdPop(gui)
+		end
 
         GuiLayoutBeginLayer(gui)
         GuiLayoutBeginVertical(gui, (x + xOffset), (y + yOffset), true)
@@ -221,8 +259,9 @@ function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, ri
 		GuiEndAutoBoxNinePiece(gui)
 		GuiLayoutEnd(gui)
         GuiLayoutEndLayer(gui)
-
-		GuiAnimateEnd(gui)
+		if DrawAnimate then
+			GuiAnimateEnd(gui)
+		end
 	end
 end
 
@@ -2136,6 +2175,15 @@ function UI.DispatchMessage()
     end
     this.private.TextInputDrawPosHas = false
     this.private.ZDeep = DefaultZDeep
+
+    if not ThisRunBTNCHasAlways then--用于限制和恢复固定悬浮窗的情况
+		BTNCHasAlways = false
+    end
+    ThisRunBTNCHasAlways = false
+	if not BTNCDraw then--用于让被固定的悬浮窗停止和恢复动画
+		IsLastAlway = false
+	end
+	BTNCDraw = false
 end
 
 return UI

@@ -5,6 +5,10 @@ function ClickSound()
 	GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", GameGetCameraPos())
 end
 
+function ItemSound()
+	GamePlaySound("data/audio/Desktop/ui.bank", "ui/item_equipped", GameGetCameraPos())
+end
+
 ---从当前世界的全局获取值或从UserData缓存的获取
 ---@param UI Gui
 ---@param key string

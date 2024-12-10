@@ -8,7 +8,8 @@ dofile_once("mods/conjurer_reborn/files/unsafe_gui/utilities.lua")
 CSV = ParseCSV(ModTextFileGetContent("data/translations/common.csv"))
 
 --GUI加载
-dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/matwand.lua")
+dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/matwand.lua")--材料法杖
+dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/entwand.lua")
 
 ---@type table|nil
 local ActiveTable
@@ -26,10 +27,6 @@ end
 
 local BtnX = 20
 local BtnY = 7.5
-
-local function A()
-	
-end
 
 local function B()
 	
@@ -54,7 +51,7 @@ local MainBtns = {
 		desc = "$conjurer_reborn_wand_entwand_desc",
         id = "EntWandBtn",
         image = "mods/conjurer_reborn/files/wands/entwand/entwand.png",
-        action = A,
+        action = DrawEntWandGui,
 		active = function ()
 			
 		end,

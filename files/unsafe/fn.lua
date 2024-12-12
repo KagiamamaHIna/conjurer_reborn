@@ -303,50 +303,53 @@ function ParseXmlAndBase(file)
 		return
 	end
 	local result = Nxml.parse(text)
-
-    local function recursionBase(xmlData) --递归解析器
-        local function recursion(this) --处理所有子元素的
-            for _, v in pairs(this.children) do
-                if v.children ~= nil then --如果存在子元素
-                    recursionBase(v.children)
-                end
+    local function RecursiveParse(ReadTable, WriteTable)
+        for k, v in pairs(ReadTable.attr or {}) do --继承后子元素会继承值，所以需要递归解析子元素
+            if WriteTable.attr[k] == nil then
+                WriteTable.attr[k] = v
             end
         end
-        if xmlData.children ~= nil then --如果不为空
-            local BaseList = {}
-            local HasComp = {}
-            local NameToCompTable = {}
-            local BaseCompChildList = {} --记录子元素
-            for _, v in pairs(xmlData.children) do
-                if v.name == "Base" then
-                    BaseList[#BaseList + 1] = Nxml.parse(ModTextFileGetContent(v.attr.file)).children
-                    for _, bv in pairs(v.children) do
-                        HasComp[bv.name] = true
-                        NameToCompTable[bv.name] = bv
-                        BaseCompChildList[#BaseCompChildList + 1] = bv
-                    end
-                end
-            end
-            for _, v in pairs(BaseCompChildList) do --优先级最高
-                xmlData.children[#xmlData.children + 1] = v
-            end
-            for _, v in pairs(BaseList) do
-                for _, ChildV in pairs(v) do
-                    if HasComp[ChildV.name] == nil then --判断是否被覆盖
-                        xmlData.children[#xmlData.children + 1] = ChildV
-                    else                 --如果是被覆盖的
-                        for key, attr in pairs(ChildV.attr) do
-                            if NameToCompTable[ChildV.name].attr[key] == nil then
-                                NameToCompTable[ChildV.name].attr[key] = attr
-                            end
-                        end
-                    end
-                end
-            end
-            recursion(xmlData)
+        if ReadTable.children then
+            RecursiveParse(ReadTable.children, WriteTable)
         end
     end
-	local flag = pcall(recursionBase,result)
+    local function recursionBase(SrcXml)
+        local BaseList = {}
+        local HasElem = {}
+        for _, v in pairs(SrcXml.children) do --遍历子元素
+            if v.name ~= "Base" then          --把不是base的存下来
+                if HasElem[v.name] == nil then
+                    HasElem[v.name] = v--只记录第一个
+                end
+            else --是base的存入另一个表
+                BaseList[#BaseList + 1] = v
+            end
+        end
+        for _, base in pairs(BaseList) do --先遍历，对已有的最高优先级元素，覆盖
+            for _, v in pairs(base.children) do
+                if HasElem[v.name] then
+					RecursiveParse(v, HasElem[v.name])
+                else
+                    HasElem[v.name] = v
+                    SrcXml:add_child(v)
+                end
+            end
+        end
+        for _, base in pairs(BaseList) do
+            local NewXml = Nxml.parse(ModTextFileGetContent(base.attr.file))
+            recursionBase(NewXml)
+            RecursiveParse(NewXml, SrcXml)--最外层的属性继承
+            for _, v in pairs(NewXml.children) do--子元素递归继承
+                if HasElem[v.name] then
+                    RecursiveParse(v, HasElem[v.name])
+                else
+                    HasElem[v.name] = v
+                    SrcXml:add_child(v)
+                end
+            end
+        end
+    end
+	local flag = pcall(recursionBase, result)
 	if not flag then
 		return
 	end

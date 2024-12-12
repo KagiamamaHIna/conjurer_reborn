@@ -265,7 +265,7 @@ local function HandleRelease(matid, brush, x, y)
 
 	-- No other default release actions yet needed.
 	if is_box2d_material then
-		ReleaseBox2D(matid, brush, x, y)
+		ReleaseBox2D(matid, brush)
 	end
 end
 

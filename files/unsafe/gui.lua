@@ -163,7 +163,7 @@ local LastNy
 ---@param leftMargin number?
 ---@param rightMargin number?
 ---@param always boolean?
-function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, rightMargin, always, nx, ny)
+function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, rightMargin, always, nx, ny, IsDrawAni)
 	local left_click, right_click, hover, x, y, width, height, draw_x, draw_y, draw_width, draw_height =
         GuiGetPreviousWidgetInfo(this.public.gui)
     if hover or always then
@@ -174,8 +174,8 @@ function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, ri
 			return
 		end
         if always then
-            x = nx or 0
-            y = ny or 0
+            x = nx or x
+            y = ny or y
 			LastNx = x
 			LastNy = y
             BTNCHasAlways = true
@@ -243,7 +243,7 @@ function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, ri
 		end
 
         GuiZSet(gui, z)
-		if DrawAnimate then
+		if DrawAnimate or IsDrawAni then
 			GuiAnimateBegin(gui)
 			GuiIdPushString(gui,"BetterTooltipsNoCenterAlpha")
 			GuiAnimateAlphaFadeIn(gui, tooltipID,0.08, 0.1, false)
@@ -259,7 +259,7 @@ function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, ri
 		GuiEndAutoBoxNinePiece(gui)
 		GuiLayoutEnd(gui)
         GuiLayoutEndLayer(gui)
-		if DrawAnimate then
+		if DrawAnimate or IsDrawAni then
 			GuiAnimateEnd(gui)
 		end
 	end

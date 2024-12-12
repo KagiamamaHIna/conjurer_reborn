@@ -98,14 +98,11 @@ end
 
 local function ChildExpansion(mat)
     local function RecursiveParse(ReadTable, WriteTable)
-		local RecursiveBase = function (t1, t2)--继承后子元素会继承值，所以需要递归解析子元素
-			for k,v in pairs(t1 or {}) do
-                if t2[k] == nil then
-					t2[k] = v
-				end
+		for k,v in pairs(ReadTable.attr or {}) do--继承后子元素会继承值，所以需要递归解析子元素
+			if WriteTable.attr[k] == nil then
+				WriteTable.attr[k] = v
 			end
 		end
-        RecursiveBase(ReadTable.attr, WriteTable.attr)
 		if ReadTable.children then
 			RecursiveParse(ReadTable.children, WriteTable)
 		end
@@ -213,6 +210,10 @@ for i = 1, #MatOrderedIdList do--通过有序表来获得数据，确保归类�
     if IsNil(v.attr.on_fire) then--默认不会始终燃烧
         v.attr.on_fire = "0"
     end
+
+	if IsNil(v.attr.liquid_stains) then--默认关闭
+		v.attr.liquid_stains = "0"
+	end
 
 	if IsNil(v.attr.electrical_conductivity) then
 		if v.attr.liquid_sand == "0" and v.attr.cell_type == "liquid" then--液体材料情况下默认导电

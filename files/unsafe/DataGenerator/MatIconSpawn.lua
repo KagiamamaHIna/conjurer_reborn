@@ -16,7 +16,8 @@ for _,v in pairs(IconList.File)do--用于判断是否需要生成新图片/删�
         if MatTable[key] then
             IconTable[key] = true
         else--不存在就删除缓存
-			Cpp.Remove(v)
+            Cpp.Remove(v)
+			Cpp.Remove("mods/conjurer_unsafe/cache/MatWang/"..key..".png")
 		end
 	end
 end
@@ -68,19 +69,24 @@ for matid, mat in pairs(MatTable) do
     if IconTable[matid] then--已有的直接跳过
 		goto continue
 	end
-	local WritePath = "mods/conjurer_unsafe/cache/MatIcon/" .. matid .. ".png"
-	local WriteFlag = false
+    local WritePath = "mods/conjurer_unsafe/cache/MatIcon/" .. matid .. ".png"
+	local WriteWangPath = "mods/conjurer_unsafe/cache/MatWang/" .. matid .. ".png"
+    local WriteFlag = false
+	local r, g, b, a = StrGetRGBANumber(MatWangRGBA(mat.attr.wang_color, true, true))
+	if r ~= nil then--生成王浩瓷砖纯色图
+		Cpp.RGBAPng(WriteWangPath, 8, 8, r, g, b, 255)
+	end
     for _, v in pairs(mat.children) do
         if IsDataPng(v) then
-			local flag = false--用于判断是否正常执行
-			if datawak:HasFile(v.attr.texture_file) then--判断是否真的存在于data
-				flag = true
-				if NearestTable[mat.attr.name] then
-					datawak:GetImgToScale(v.attr.texture_file, WritePath, IconWidth, IconHeight)
-				else
-					datawak:GetImgFlatAndCropping(v.attr.texture_file, WritePath, IconWidth, IconHeight)
-				end
-            else--判断模组写入到了data里的逻辑
+            local flag = false                  --用于判断是否正常执行
+            if datawak:HasFile(v.attr.texture_file) then --判断是否真的存在于data
+                flag = true
+                if NearestTable[mat.attr.name] then
+                    datawak:GetImgToScale(v.attr.texture_file, WritePath, IconWidth, IconHeight)
+                else
+                    datawak:GetImgFlatAndCropping(v.attr.texture_file, WritePath, IconWidth, IconHeight)
+                end
+            else --判断模组写入到了data里的逻辑
                 for _, path in pairs(ModsToDataPath) do
                     local ModDataPath = path .. v.attr.texture_file
                     if Cpp.PathExists(ModDataPath) then
@@ -90,14 +96,14 @@ for matid, mat in pairs(MatTable) do
                         else
                             Cpp.PngFlatAndCroppingToFile(ModDataPath, WritePath, IconWidth, IconHeight)
                         end
-						break--退出这里的循环
+                        break --退出这里的循环
                     end
                 end
-			end
-			if flag then--如果正常执行了，那么就设置标志位并退出，否则就到下一步渲染纯色图片
-				WriteFlag = true
-				break
-			end
+            end
+            if flag then --如果正常执行了，那么就设置标志位并退出，否则就到下一步渲染纯色图片
+                WriteFlag = true
+                break
+            end
         elseif IsModPng(v) then
             local PngPath = v.attr.texture_file
             local modid = PathGetModId(v.attr.texture_file) --可能是被覆写的，所以这样获得id
@@ -107,10 +113,10 @@ for matid, mat in pairs(MatTable) do
             end
             PngPath = ModPath .. string.gsub(PngPath, "mods/" .. modid .. "/", "", 1) --删掉前缀再拼上去真实路径
             if NearestTable[mat.attr.name] then
-				Cpp.PngScaleToFile(PngPath, WritePath, IconWidth, IconHeight)
+                Cpp.PngScaleToFile(PngPath, WritePath, IconWidth, IconHeight)
             else
-				Cpp.PngFlatAndCroppingToFile(PngPath, WritePath, IconWidth, IconHeight)
-			end
+                Cpp.PngFlatAndCroppingToFile(PngPath, WritePath, IconWidth, IconHeight)
+            end
             WriteFlag = true
             break
         elseif v.name == "Graphics" and v.attr.color and v.attr.color ~= "" then --判断Graphics纯色
@@ -118,7 +124,7 @@ for matid, mat in pairs(MatTable) do
             if r == nil then
                 goto continue
             end
-			Cpp.RGBAPng(WritePath, IconWidth, IconHeight, r, g, b, 255)
+            Cpp.RGBAPng(WritePath, IconWidth, IconHeight, r, g, b, 255)
             WriteFlag = true
             break
         end

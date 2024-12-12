@@ -143,16 +143,31 @@ for modid, t in pairs(AnimalList) do --遍历文件，写入数据
 			if modid == "Noita" then--假定出现了Noita，那么就强制设置，因为noita的实体可能被覆盖
 				EnemiesTable[name].from_id = "Noita"
 			end
-        else--单文件
-			EnemiesTable[name] = { name = name, from_id = modid, tags = nil, png = Cpp.ConcatStr("data/ui_gfx/animal_icons/", name, ".png"), files = {v} }
+        else --单文件
+            local LocalKey = "$animal_" .. name
+            local LocalName = GameTextGetTranslatedOrNot(LocalKey)
+			if LocalName == "" then--如果获取失败
+				LocalKey = name--设置成id
+			end
+            EnemiesTable[name] = {
+				name = LocalKey,
+				from_id = modid,
+				tags = nil,
+                png = Cpp.ConcatStr("data/ui_gfx/animal_icons/", name, ".png"),
+				files = {v},
+                fileXMLMap = {},
+			}
 		end
 
         local AnimalXml = ParseXmlAndBase(v)
         if AnimalXml == nil then --解析失败
             goto continue
         end
+		EnemiesTable[name].fileXMLMap[v] = AnimalXml
         if AnimalXml.attr.name and string.byte(AnimalXml.attr.name, 1, 1) == DollarChar then
-            EnemiesTable[name].name = AnimalXml.attr.name --赋值为有本地化key的名字
+			if string.byte(EnemiesTable[name].name,1,1) ~= DollarChar then
+				EnemiesTable[name].name = AnimalXml.attr.name --赋值为有本地化key的名字
+			end
         end
 
 		if EnemiesTable[name].herd_id == nil then--假定多文件情况下herd_id不变

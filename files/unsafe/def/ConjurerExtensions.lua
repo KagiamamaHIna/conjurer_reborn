@@ -242,7 +242,7 @@ function Cpp.PngScaleToFile(PngPath, ToFile, Width, Height)end
 ---@return boolean
 function Cpp.PngFlatAndCroppingToFile(PngPath, ToFile, Width, Height)end
 
----给定写入到的文件，高宽和rgba，创造一个纯色图片
+---给定写入到的文件，高宽和rgba，创建一个纯色图片
 ---@param ToFile string
 ---@param Width integer
 ---@param Height integer
@@ -276,7 +276,7 @@ function Image:GetWidth()end
 function Image:GetHeight()end
 
 ---从给定坐标上获取图片像素，返回r, g, b ,a如果是其他通道，则少返回后面的数值
----@return integer,integer|nil,integer|nil,integer|nil
+---@return integer r,integer|nil g,integer|nil b,integer|nil a
 function Image:GetPixel(x, y)end
 
 ---从给定坐标上获取图片像素，返回十六进制字符串
@@ -288,7 +288,7 @@ function Image:GetPixelHex(x, y)end
 ---@param y integer
 ---@param color integer
 ---@param ... integer?
-function Image:SetPixel(x,y,color, ...)end
+function Image:SetPixel(x, y, color, ...)end
 
 ---给定路径，写入文件
 ---@param path string
@@ -305,3 +305,10 @@ function Cpp.ImageCreate(path)end
 ---@param channels integer
 ---@return Image
 function Cpp.NullImageCreate(Width, Height, channels)end
+
+---给定路径读取文件用AES128CTR解密/加密文件
+---@param str string
+---@param key table<integer, 16>
+---@param iv table<integer, 16>
+---@return string
+function Cpp.AES128CTR(str, key, iv)end

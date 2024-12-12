@@ -45,16 +45,19 @@ end
 ---@param id string
 local function MatTooltipText(UI, id)
 	local rightMargin = 72
-	local function NewLine(str1, str2)
+	local function NewLine(str1, str2, callback)
 		local text = GameTextGetTranslatedOrNot(str1)
 		local w = GuiGetTextDimensions(UI.gui,text)
         GuiLayoutBeginHorizontal(UI.gui, 0, 0, true, 2, -1)
         GuiText(UI.gui, 0, 0, text)
         GuiRGBAColorSetForNextWidget(UI.gui, 255, 222, 173, 255)
-		if w + 8 > rightMargin then
-			GuiText(UI.gui, w + 8 - w, 0, str2)
+        if w + 8 > rightMargin then
+            GuiText(UI.gui, w + 8 - w, 0, str2)
         else
-			GuiText(UI.gui, rightMargin - w, 0, str2)
+            GuiText(UI.gui, rightMargin - w, 0, str2)
+        end
+		if callback then
+			callback()
 		end
 		GuiLayoutEnd(UI.gui)
 	end
@@ -81,13 +84,21 @@ local function MatTooltipText(UI, id)
         end
 		
         UI.Text(0, 0, GameTextGet("$conjurer_reborn_material_tooltip_tag", tagStr))
-        local liquid_static = MatTable[id].attr.liquid_static == "1"--是否静态
+		
+        NewLine("$conjurer_reborn_material_tooltip_wang_color", MatTable[id].attr.wang_color:upper(), function()
+            local wang = "mods/conjurer_unsafe/cache/MatWang/" .. id .. ".png"
+            local _, _, _, _, _, _, height = UI.WidgetInfo()
+            local ImgHeight = GuiGetImageDimensions(UI.gui, wang)
+            UI.Image("MatTooltipWangColorImg", 0, height / 2 - ImgHeight / 2, wang)--居中算法
+		end)
+
+        local liquid_static = MatTable[id].attr.liquid_static ~= "0"--是否静态
         NewLine("$conjurer_reborn_material_tooltip_static", liquid_static and "$menu_yes" or "$menu_no")
-        local electrical_conductivity = MatTable[id].attr.electrical_conductivity == "1"--是否导电
+        local electrical_conductivity = MatTable[id].attr.electrical_conductivity ~= "0"--是否导电
         NewLine("$conjurer_reborn_material_tooltip_electrical", electrical_conductivity and "$menu_yes" or "$menu_no")
-		local burnable = MatTable[id].attr.burnable == "1"--是否可燃
+		local burnable = MatTable[id].attr.burnable ~= "0"--是否可燃
         NewLine("$conjurer_reborn_material_tooltip_burns", burnable and "$menu_yes" or "$menu_no")
-        local on_fire = MatTable[id].attr.on_fire == "1"--是否始终燃烧
+        local on_fire = MatTable[id].attr.on_fire ~= "0"--是否始终燃烧
         NewLine("$conjurer_reborn_material_tooltip_on_fire", on_fire and "$menu_yes" or "$menu_no")
 		if burnable or on_fire then
 			NewLine("$conjurer_reborn_material_tooltip_fire_hp", MatTable[id].attr.fire_hp)
@@ -95,7 +106,85 @@ local function MatTooltipText(UI, id)
 		NewLine("$conjurer_reborn_material_tooltip_hp", MatTable[id].attr.hp)
         NewLine("$conjurer_reborn_material_tooltip_density", MatTable[id].attr.density)
         NewLine("$conjurer_reborn_material_tooltip_durability", MatTable[id].attr.durability)
-		if MatTable[id].attr._parent then
+        local StainsEffect = nil
+		local HasStains = false
+		local IngestionEffect = nil
+		if MatTable[id].attr.status_effects and MatTable[id].attr.liquid_stains ~= "0" then
+            StainsEffect = {MatTable[id].attr.status_effects}
+			HasStains = true
+		end
+        for _, v in pairs(MatTable[id].children) do --为了健壮性的实现索引写的很复杂
+            if v.name ~= "StatusEffects" then
+                goto continue
+            end
+            for _, EffectElem in pairs(v.children) do
+                for _, effect in pairs(EffectElem.children) do
+                    if effect.name ~= "StatusEffect" then --过滤垃圾
+                        goto continue
+                    end
+                    if EffectElem.name == "Stains" then          --两步判断也是过滤垃圾
+                        if StainsEffect then                     --判断是否已经有了
+                            if HasStains and StainsEffect[1] == effect.attr.type then --沾湿与字段沾湿定义判重
+                                goto continue
+                            else                                 --如果不是重复的或不是提前定义的
+                                StainsEffect[#StainsEffect + 1] = effect.attr.type
+                            end
+                        else --没有的话，那么就新建表增加
+                            StainsEffect = { effect.attr.type }
+                        end
+                    elseif EffectElem.name == "Ingestion" then
+                        if IngestionEffect then
+                            IngestionEffect[#IngestionEffect+1] = { effect.attr.type, effect.attr.amount }
+                        else
+                            IngestionEffect = {
+                                { effect.attr.type, effect.attr.amount },
+							}
+                        end
+                    end
+                    ::continue::
+                end
+            end
+            ::continue::
+        end
+        if StainsEffect then--显示沾湿状态
+            NewLine("$conjurer_reborn_material_tooltip_stain", "", function()
+                for k, v in ipairs(StainsEffect) do
+					local effect = StatusTable[v][1]
+					if effect == nil then
+						goto continue
+					end
+                    local Name = GetMatNameOrKey(effect.ui_name)
+					local _,TextHeight = GuiGetTextDimensions(UI.gui, Name)
+                    local ImgHeight = GuiGetImageDimensions(UI.gui, effect.ui_icon)
+                    local ImgX = k == 1 and -5 or 0--第一个向左偏移一点，好看
+					
+					UI.Image(Name..tostring(k).."Stain",ImgX,TextHeight / 2 - ImgHeight / 2, effect.ui_icon)
+                    UI.Text(-2, 0, Name)
+					::continue::
+				end
+			end)
+        end
+		if IngestionEffect then--显示摄取状态
+			NewLine("$conjurer_reborn_material_tooltip_ingest", "",function ()
+				for k,v in ipairs(IngestionEffect)do
+                    local effect = StatusTable[v[1]][1]
+					if effect == nil then
+						goto continue
+					end
+                    local Name = GetMatNameOrKey(effect.ui_name)
+                    local _,TextHeight = GuiGetTextDimensions(UI.gui, Name)
+                    local ImgHeight = GuiGetImageDimensions(UI.gui, effect.ui_icon)
+                    local ImgX = k == 1 and -5 or 0
+					
+					UI.Image(Name..tostring(k).."Stain",ImgX,TextHeight / 2 - ImgHeight / 2, effect.ui_icon)
+                    UI.Text(-2, 0, Name)
+					local PxielText = GameTextGet("$conjurer_reborn_material_tooltip_ingest_pixel",v[2])
+                    UI.Text(0, 0, PxielText)
+					::continue::
+				end
+			end)
+		end
+		if MatTable[id].attr._parent then--显示继承链
 			local list = {id}
             local CurrentMat = MatTable[id].attr._parent
             while CurrentMat do
@@ -304,6 +393,10 @@ local function AddBrushFav(CategoryIndex, Index)
 	SavedFavToSetting()
 end
 
+---添加橡皮擦到收藏中
+---@param mode string
+---@param CategoryIndex integer
+---@param Index integer
 local function AddEraserFav(mode, CategoryIndex, Index)
 	table.insert(favItems, {
         Type = favType.Eraser,
@@ -379,7 +472,7 @@ local function EraserPicker(UI)
 			
 			local GridSliderText = GameTextGet("$conjurer_reborn_material_eraser_grid")
             local value = EasySlider(UI, "EraserPickerGridSlider", 0, 0, GridSliderText, 1, 100, 1, 100, GetEraserGridSize(UI))
-			UI.GuiTooltip(GameTextGet("$conjurer_reborn_material_eraser_grid_desc"))
+			UI.GuiTooltip("$conjurer_reborn_material_eraser_grid_desc")
 			SetEraserGridSize(UI, value)
 		end
 
@@ -397,38 +490,39 @@ end
 ---绘制画刷选择器
 ---@param UI Gui
 local function BrushPicker(UI)
-    local function DrawGridSlot(row, list, TypeIndex)--绘制格子内容
+    local function DrawGridSlot(row, list, TypeIndex) --绘制格子内容
         local count = 1
-		UI.BeginHorizontal(0, 0, true)
-        for i,v in ipairs(list) do--遍历列表，绘制图标
+        UI.BeginHorizontal(0, 0, true)
+        for i, v in ipairs(list) do --遍历列表，绘制图标
             if count > row then
                 count = 1
                 UI.LayoutEnd()
                 UI.BeginHorizontal(0, 0, true)
             end
             count = count + 1
-			UI.NextZDeep(0)
-            local left,right = UI.ImageButton("BrushPickerBox" .. v.name, 0, 0, v.icon_file)--点击操作
+            UI.NextZDeep(0)
+            local left, right = UI.ImageButton("BrushPickerBox" .. v.name, 0, 0, v.icon_file) --点击操作
             if left then
                 ClickSound()
                 ChangeActiveBrush(UI, TypeIndex, i)
             end
             if right then
-				ClickSound()
-				AddBrushFav(TypeIndex, i)
-			end
-            local Text = GameTextGet(v.name)
-            if v.desc then--如果有多余的文本需要，那么就附加上去
-				Text = Text .. "\n" .. GameTextGet(v.desc)
+                ClickSound()
+                AddBrushFav(TypeIndex, i)
             end
-			UI.GuiTooltip(Text)
+            local Text = GameTextGet(v.name)
+            if v.desc then --如果有多余的文本需要，那么就附加上去
+                Text = Text .. "\n" .. GameTextGet(v.desc)
+            end
+            UI.GuiTooltip(Text)
         end
-		UI.LayoutEnd()
-	end
+        UI.LayoutEnd()
+    end
+	
 	local X = 30
     local Y = 66
 	
-    UI.Text(X + 2, Y-19, GameTextGet("$conjurer_reborn_material_brush_options_head"))
+    UI.Text(X + 2, Y-19, "$conjurer_reborn_material_brush_options_head")
     UI.ScrollContainer("BrushPickerBox", X, Y-2, 0, 0, 2, 2)--自动宽高
 	UI.AddAnywhereItem("BrushPickerBox",function ()
         for i,v in ipairs(Brushes) do
@@ -453,6 +547,7 @@ end
 
 local SpeChar = string.byte('@')
 
+local LastKeyword
 ---绘制材料选择框
 ---@param UI Gui
 local function MatPicker(UI)
@@ -530,8 +625,13 @@ local function MatPicker(UI)
 			return score
         end)
 	if return_keyword ~= "" then
-        PageId = PageId .. "Searched"
-		UI.UserData["PageGridIndex"..PageId] = 1
+		PageId = PageId .. "Searched"
+	end
+    if return_keyword ~= "" and LastKeyword ~= return_keyword then
+		LastKeyword = return_keyword
+        UI.UserData["PageGridIndex" .. PageId] = 1
+	elseif return_keyword == "" and LastKeyword then
+        LastKeyword = nil
 	end
 	PageGrid(UI, PageId,list,X,Y+10,160,200,9,10,MatWandSpriteBG,
 		function(id)--回调执行表格操作
@@ -701,7 +801,7 @@ local function MatwandButtons(UI)
             UI.Text(0, 0, GameTextGet(v.name))--文本间隔
 			UI.VerticalSpacing(3)
             v.desc(UI)
-        end, UI.GetZDeep() - 10, 10, 3)
+        end, UI.GetZDeep() - 1000, 10, 3)
     end
 	UI.NextZDeep(-10)
     GuiEndAutoBoxNinePiece(UI.gui, 1, 0, 0, false, 0, MatWandSpriteBG, MatWandSpriteBG)

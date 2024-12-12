@@ -1,6 +1,8 @@
 dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetAllData.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/utilities.lua")
 dofile_once("mods/conjurer_reborn/files/wandhelper/ent_helper.lua")
+dofile_once("mods/conjurer_reborn/files/wandhelper/ent_reticle_entity.lua")
+dofile_once("mods/conjurer_reborn/files/wandhelper/ent_draw.lua")
 dofile_once("data/scripts/gun/gun_enums.lua")
 
 local EntWandSpriteBG = "mods/conjurer_reborn/files/gfx/9piece_blue.png"
@@ -35,6 +37,10 @@ end
 
 local SpeChar = string.byte('@')
 
+---简化的id搜索流程
+---@param keyword string
+---@param id string
+---@return number
 local function FromIdSearch(keyword, id)
 	local score = 0
     if string.byte(keyword, 1, 1) == SpeChar then --搜索模组id/模组名字
@@ -79,7 +85,7 @@ local function EnemyTooltipText(UI, id, isNoDraw, MainFn)
 		UI.NextColor(127, 127, 255, 255)
 		UI.Text(0, 0, enemy.herd_id)--阵营显示
 	end
-	
+	local HasHover = false
     UI.VerticalSpacing(3)
     if shift and #enemy.files > 1 then
         for i, v in ipairs(enemy.files) do
@@ -87,6 +93,8 @@ local function EnemyTooltipText(UI, id, isNoDraw, MainFn)
 			UI.BeginHorizontal(0,0,true,0,0)
             UI.Text(0, 0, file)
             local _, _, hover = UI.WidgetInfo()
+			HasHover = hover or HasHover
+
             if hover and not isNoDraw and UI.UserData[FileIKey] ~= i then
                 UI.UserData[FileIKey] = i
 				ItemSound()
@@ -102,7 +110,10 @@ local function EnemyTooltipText(UI, id, isNoDraw, MainFn)
         end
     else
 		local file = enemy.files[UI.UserData[FileIKey]]:gsub("data/entities/",".../",1)
-		UI.Text(0,0,GameTextGet("$conjurer_reborn_entwand_enemy_list_active",file))
+        UI.Text(0, 0, GameTextGet("$conjurer_reborn_entwand_enemy_list_active", file))
+        local _, _, hover = UI.WidgetInfo()
+        HasHover = hover or HasHover
+		
 		UI.VerticalSpacing(1)
 		if #enemy.files == 1 then
 			UI.NextColor(127, 127, 127, 255)
@@ -111,7 +122,14 @@ local function EnemyTooltipText(UI, id, isNoDraw, MainFn)
 			UI.Text(0, 0, "$conjurer_reborn_entwand_enemy_list_desc")
 		end
     end
-	
+	if HasHover then--如果悬浮到文件文本，自动切换选择的实体
+		local Active,cindex = GetActiveEntity(UI)
+		if Active ~= id or cindex ~= 1 then--第二个是防重名情况
+			local true_index = ALL_ENTITIES[1].conjurer_reborn_index_table[id]
+			SetActiveEntity(UI, 1, true_index)
+			ClickSound()
+		end
+	end
 	UI.VerticalSpacing(3)
 	UI.NextColor(72, 209, 204, 255)
 	local modName
@@ -123,35 +141,36 @@ local function EnemyTooltipText(UI, id, isNoDraw, MainFn)
 	UI.Text(0,0,modName)
 end
 
-local ActiveHoverEnemy = nil
-local IsMain = false--这两个is参数用于判断主函数还是选择器的悬浮窗，确保不会发现窗口重叠问题
-local IsPicker = false
+local HasActive = false
 local ActiveHoverX = 0
 local ActiveHoverY = 0
 ---绘制敌人的悬浮窗
 ---@param UI Gui
 ---@param id string
-local function EnemyTooltip(UI, id, MainFn)
+---@param index integer 多例实现用
+---@param MainFn function 给主函数开放的特别函数，用于在前面加上选择实体的文本
+local function EnemyTooltip(UI, id, index, MainFn)
     local _, _, hover, x, y = UI.WidgetInfo()
-	if IsMain and MainFn == nil or IsPicker and MainFn ~= nil then
+    local ActiveKey = "EntWandActiveHoverEnemy" .. tostring(index)--多例实现，通过索引区分不同的情况
+    local thisActive = UI.UserData[ActiveKey]
+	if HasActive and thisActive == nil then
 		return
 	end
     local shift = InputIsKeyDown(Key_RSHIFT) or InputIsKeyDown(Key_LSHIFT)
-    if hover and ActiveHoverEnemy == nil and shift then
-		if MainFn then
-            IsMain = true
-        else
-			IsPicker = true
+	if not shift and thisActive then
+		UI.UserData[ActiveKey] = nil--清空状态
+        HasActive = false
+		if not hover then--非悬浮状态下少渲染一帧，提升观感，悬浮状态下不禁止渲染悬浮窗，为了连贯性
+			return
 		end
-        ActiveHoverEnemy = id
+	end
+    if hover and thisActive == nil and shift then
+        UI.UserData[ActiveKey] = true
+        HasActive = true
         ActiveHoverX = x
 		ActiveHoverY = y
-    elseif ActiveHoverEnemy and not shift then
-        ActiveHoverEnemy = nil
-		IsMain = false
-		IsPicker = false
     end
-    if ActiveHoverEnemy and ActiveHoverEnemy == id then
+    if thisActive then--固定悬浮窗的调用
         UI.BetterTooltipsNoCenter(function(isNoDraw)
             EnemyTooltipText(UI, id, isNoDraw, MainFn)
         end, UI.GetZDeep() - 10, 10, 3, nil, nil, true, ActiveHoverX, ActiveHoverY)
@@ -236,6 +255,7 @@ local function PerkTooltipText(UI, id)
 	UI.Text(0,0,modName)
 end
 
+local LastKeyword
 ---绘制实体选择框
 ---@param UI Gui
 local function EntPicker(UI)
@@ -329,9 +349,14 @@ local function EntPicker(UI)
 			return score
         end)
 	if return_keyword ~= "" then
-        PageId = PageId .. "Searched"
-		UI.UserData["PageGridIndex"..PageId] = 1
+		PageId = PageId .. "Searched"
 	end
+    if return_keyword ~= "" and LastKeyword ~= return_keyword then
+        LastKeyword = return_keyword
+        UI.UserData["PageGridIndex" .. PageId] = 1
+    elseif return_keyword == "" and LastKeyword then
+        LastKeyword = nil
+    end
 	PageGrid(UI, PageId,list,X,Y+10,160,200,9,10,EntWandSpriteBG,
 		function(item, index)--回调执行表格操作
 			UI.NextZDeep(0)
@@ -339,7 +364,7 @@ local function EntPicker(UI)
             if ALL_ENTITIES[SwitchIndex].Type == EntityType.Enemy then
                 local enemy = GetEnemy(item)
                 left = UI.ImageButton("EntIconEnemy" .. enemy.name .. index, 0, 0, enemy.png)
-                EnemyTooltip(UI, item)
+                EnemyTooltip(UI, item, index)
             elseif ALL_ENTITIES[SwitchIndex].Type == EntityType.Perk then
                 local perk = GetPerk(item)
                 left = UI.ImageButton("EntIconPerk" .. perk.id .. index, 0, 0, perk.perk_icon)
@@ -356,11 +381,152 @@ local function EntPicker(UI)
                 left = UI.ImageButton("EntIconOther" .. item.name .. index, 0, 0, item.image)
                 UI.GuiTooltip(GetEntNameOrKey(item.name))
             end
-			if left then
-				SetActiveEntity(UI,SwitchIndex,index)
+            if left then
+				local true_index = ALL_ENTITIES[SwitchIndex].conjurer_reborn_index_table[item]
+				SetActiveEntity(UI,SwitchIndex,true_index)
 			end
         end
 	)
+end
+
+---特化的，可以对齐的滑条
+---@param UI Gui
+---@param id string
+---@param x number
+---@param y number
+---@param text string
+---@param value_min number
+---@param value_max number
+---@param value_default number
+---@param width number
+---@param savedValue number
+---@return number
+local function EntSlider(UI, id, x, y, text, value_min, value_max, value_default, width, savedValue)
+    UI.BeginHorizontal(0, 0, true)
+    UI.NextZDeep(0)
+	local Aligin = 0--对齐位置
+	local desc = text.."_desc"--特化的，都满足这么个条件，所以可以少传参数
+    ---因为是特化的，所以我们在这里计算最大对齐宽度
+    local BigestWidth = GuiGetTextDimensions(UI.gui, GameTextGet("$conjurer_reborn_entwand_options_row"))
+    local new = GuiGetTextDimensions(UI.gui, GameTextGet("$conjurer_reborn_entwand_options_col"))
+    if new > BigestWidth then
+        BigestWidth = new
+    end
+    new = GuiGetTextDimensions(UI.gui, GameTextGet("$conjurer_reborn_entwand_options_grid"))
+    if new > BigestWidth then
+        BigestWidth = new
+    end
+	Aligin = BigestWidth + 2
+	text = GameTextGet(text)
+    local left = UI.TextBtn(id .. "TextBtn", 0, 0, text)
+    if left then
+        UI.SetSliderValue(id, value_min)
+    end
+    local _, _, hover,tx,ty,textWitdh = UI.WidgetInfo()
+    local number = tostring(UI.GetSliderValue(id))
+	if hover then
+        UI.NextOption(GUI_OPTION.Layout_NoLayouting)
+        UI.NextZDeep(0)
+		UI.Text(tx + textWitdh + width + 6 +  Aligin - textWitdh, ty+1, number)
+        UI.BetterTooltipsNoCenter(function()--强制绘制悬浮窗
+			UI.Text(0,0,desc)
+        end, -3000, 8, nil, nil, nil, true, nil, nil, true)
+	end
+	UI.NextZDeep(0)
+    local result = EasySlider(UI, id, x + Aligin - textWitdh, y+1, "", value_min, value_max, value_default, width, savedValue)
+    UI.GuiTooltip(desc)
+
+    GuiAnimateBegin(UI.gui)--帮助滑条能完整的显示文本
+	GuiAnimateAlphaFadeIn(UI.gui, UI.NewID(id.."ANI"), 0, 0, false)
+    UI.Text(0, 0, number)
+    GuiAnimateEnd(UI.gui)
+	
+    UI.LayoutEnd()
+	
+	return result
+end
+
+---实体法杖设置选项
+---@param UI Gui
+local function EntOptions(UI)
+	local X = 30
+    local Y = 66
+
+	UI.Text(X + 2, Y-19, GameTextGet("$conjurer_reborn_entwand_options_head"))
+    UI.ScrollContainer("EntOptionsBox", X, Y - 2, 0, 0, 2, 2) --自动宽高
+    UI.AddAnywhereItem("EntOptionsBox", function()
+        UI.NextZDeep(0)
+		UI.NextColor(155, 173, 183, 255)
+        UI.Text(0, 0, "$conjurer_reborn_entwand_options_spawning")
+		
+		UI.VerticalSpacing(2)
+        local HoldingFlag, HoldingClick = ConjurerCheckbox(UI, "EntWandHoldingSpawn", 0, 0, "$conjurer_reborn_entwand_options_holding")
+		UI.GuiTooltip("$conjurer_reborn_entwand_options_holding_desc")
+        if HoldingClick then
+            SetEntWandHoldSpawn(UI, HoldingFlag)
+        end
+		UI.VerticalSpacing(2)
+		
+		local RowValue = EntSlider(UI, "EntWandRowSlider",0,0,"$conjurer_reborn_entwand_options_row",1,50,1,100,GetEntWandRows(UI))
+        SetEntWandRows(UI, RowValue)
+
+		UI.VerticalSpacing(1)
+		local ColValue = EntSlider(UI, "EntWandColSlider",0,0,"$conjurer_reborn_entwand_options_col",1,50,1,100,GetEntWandCols(UI))
+        SetEntWandCols(UI, ColValue)
+
+		UI.VerticalSpacing(1)
+		local GridValue = EntSlider(UI, "EntWandGridSlider",0,0,"$conjurer_reborn_entwand_options_grid",1,50,1,100,GetEntWandGridSize(UI))
+        SetEntWandGridSize(UI, GridValue)
+
+		UI.VerticalSpacing(6)
+		UI.NextZDeep(0)
+		UI.NextColor(155, 173, 183, 255)
+        UI.Text(0, 0, "$conjurer_reborn_entwand_options_deleting")
+        UI.VerticalSpacing(2)
+		
+		UI.VerticalSpacing(2)
+        local KillFlag, KillClick = ConjurerCheckbox(UI, "EntWandKill", 0, 0, "$conjurer_reborn_entwand_options_kill")
+		UI.GuiTooltip("$conjurer_reborn_entwand_options_kill_desc")
+        if KillClick then
+            SetEntWandKillInstead(UI, KillFlag)
+        end
+
+		UI.VerticalSpacing(2)
+        local HoldDeleteFlag, HoldDeleteClick = ConjurerCheckbox(UI, "EntWandHoldDelete", 0, 0, "$conjurer_reborn_entwand_options_holding_delete")
+		UI.GuiTooltip("$conjurer_reborn_entwand_options_holding_delete_desc")
+        if HoldDeleteClick then
+            SetEntWandHoldDelete(UI, HoldDeleteFlag)
+        end
+
+		UI.VerticalSpacing(2)
+        local DeleteMultipleFlag, DeleteMultipleClick = ConjurerCheckbox(UI, "EntWandDeleteMultiple", 0, 0, "$conjurer_reborn_entwand_options_delete_multiple")
+		UI.GuiTooltip("$conjurer_reborn_entwand_options_delete_multiple_desc")
+        if DeleteMultipleClick then
+            SetEntWandDeleteAll(UI, DeleteMultipleFlag)
+        end
+
+		UI.VerticalSpacing(2)
+        local NotDeBGFGFlag, NotDeBGFGClick = ConjurerCheckbox(UI, "EntWandNotDeBGFG", 0, 0, "$conjurer_reborn_entwand_options_not_delete_bg_fg")
+		UI.GuiTooltip("$conjurer_reborn_entwand_options_not_delete_bg_fg_desc")
+        if NotDeBGFGClick then
+            SetEntWandIgnoreBG(UI, NotDeBGFGFlag)
+        end
+
+		UI.VerticalSpacing(6)
+		UI.NextZDeep(0)
+		UI.NextColor(155, 173, 183, 255)
+        UI.Text(0, 0, "$conjurer_reborn_entwand_options_other")
+        UI.VerticalSpacing(2)
+
+		UI.VerticalSpacing(2)
+        local GoldFlag, GoldClick = ConjurerCheckbox(UI, "EntWandGoldDrop", 0, 0, "$conjurer_reborn_entwand_options_gold_drop")
+		UI.GuiTooltip("$conjurer_reborn_entwand_options_gold_drop_desc")
+        if GoldClick then
+            SetDropGold(GoldFlag)
+        end
+    end)
+	
+	UI.DrawScrollContainer("EntOptionsBox", false, true, EntWandSpriteBG)
 end
 
 local MainEntBtns = {
@@ -394,7 +560,7 @@ local MainEntBtns = {
 			return "mods/conjurer_reborn/files/gfx/entwand_icons/icon_entity_staff_options.png"
 		end,
         action = function()
-
+			ToggleActiveOverlay(EntOptions)
 		end,
         desc = function(UI)
 			UI.Text(0,0,"$conjurer_reborn_entwand_options_desc")
@@ -406,7 +572,7 @@ local MainEntBtns = {
 		image_func = function (UI)
 			return "mods/conjurer_reborn/files/gfx/entwand_icons/icon_delete_entity.png"
 		end,
-        action = function()
+        action = function()--不执行，纯属提示
 
 		end,
         desc = function(UI)
@@ -430,7 +596,7 @@ local function EntwandButtons(UI)
 		if k == 1 then
             local item, index = GetActiveEntity(UI)
 			if ALL_ENTITIES[index].Type == EntityType.Enemy then
-				EnemyTooltip(UI,item,function ()
+				EnemyTooltip(UI,item, -1,function ()
 					UI.Text(0, 0, GameTextGet(v.name))--文本间隔
 					UI.VerticalSpacing(3)
 				end)
@@ -459,7 +625,9 @@ end
 ---绘制Entwand的GUI
 ---@param UI Gui
 function DrawEntWandGui(UI)
+	EnabledReticle(UI, true)
     EntwandButtons(UI)
 	
+	EntEntityUpdate(UI)
 	DrawActiveEntwandFn(UI)
 end

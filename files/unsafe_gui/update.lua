@@ -53,10 +53,10 @@ local MainBtns = {
         image = "mods/conjurer_reborn/files/wands/entwand/entwand.png",
         action = DrawEntWandGui,
 		active = function ()
-			
+			EnabledReticle(UI, true)
 		end,
 		release = function ()
-			
+			EnabledReticle(UI, false)
 		end
     },
 	{

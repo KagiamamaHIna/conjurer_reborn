@@ -12,11 +12,12 @@ dofile_once("data/scripts/perks/perk_list.lua")
 local PerkTable = {}
 local OrderedListId = {}
 
-for _,v in pairs(perk_list) do
+for _, v in pairs(perk_list) do
     PerkTable[v.id] = v
-	PerkTable[v.id].conjurer_unsafe_from_id = "?"--提前标记为?，方便后续处理，因为不能检测set文件的
-	OrderedListId[#OrderedListId+1] = v.id
+    PerkTable[v.id].conjurer_unsafe_from_id = "?" --提前标记为?，方便后续处理，因为不能检测set文件的
+    OrderedListId[#OrderedListId + 1] = v.id
 end
+local src_perk_list = perk_list
 perk_list = nil
 
 --加载原生的内容
@@ -41,6 +42,7 @@ for modid,v in pairs(AppendsModToFile) do
     end
 	perk_list = nil
 end
+perk_list = src_perk_list --为了能让天赋生成函数正常的生成
 
 local KeyToPerk = {}
 for i,v in ipairs(OrderedListId)do

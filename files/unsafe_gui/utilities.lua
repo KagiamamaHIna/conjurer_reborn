@@ -324,6 +324,18 @@ function HasClickedMouse1(ignore_guncomponent)
 	return click_frame == GameGetFrameNum()
 end
 
+function HasClickedMouse2(ignore_guncomponent)
+	local click_frame = EntityGetValue(
+		GetPlayer(), "ControlsComponent", SELECTED_BUTTON.click
+	)
+
+	if not ignore_guncomponent and not ShootingIsEnabled() then
+		return false
+	end
+
+	return click_frame == GameGetFrameNum()
+end
+
 ---页面表格框
 ---@param UI Gui
 ---@param id string

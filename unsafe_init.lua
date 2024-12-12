@@ -16,6 +16,11 @@ if not Cpp.PathExists(MatIconCachePath) then
     Cpp.CreateDir(MatIconCachePath)
 end
 
+local MatWangCachePath = "mods/conjurer_unsafe/cache/MatWang"
+if not Cpp.PathExists(MatWangCachePath) then
+    Cpp.CreateDir(MatWangCachePath)
+end
+
 function OnPlayerSpawned(player)
     RestoreInput()
 end
@@ -31,9 +36,5 @@ function OnWorldPostUpdate()
         --加载流程
         ClearDofileOnceCache("mods/conjurer_reborn/files/unsafe/DataGenerator/GetDataWak.lua") --清除缓存，将datawak的数据交给lua销毁
     end
-    local player = GetPlayer()
-    if player and InputIsKeyDown(Key_q) then
-		local comp = EntityGetFirstComponentIncludingDisabled(player,"Inventory2Component")
-	end
 	GuiUpdate()
 end

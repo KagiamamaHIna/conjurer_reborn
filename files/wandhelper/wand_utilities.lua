@@ -67,7 +67,7 @@ function IsValidEntity(UI, entity)
 		name ~= "conjurer_reborn_editwand_cursor" and
 		name ~= "conjurer_reborn_grid_overlay" and
 		-- The reticle shouldn't ever even be detected, but good to have anyway.
-		name ~= RETICLE_NAME and
+		name ~= "conjurer_reborn_spawner_reticle" and
 		not IsPlayer(entity) and
 		entity ~= GameGetWorldStateEntity() and
 		-- This is something that always exists in 0,0.
@@ -87,4 +87,31 @@ function IsValidEntity(UI, entity)
 	end
 
 	return true
+end
+
+---杀死或删除实体
+---@param id integer
+function EntityTrueKillOrDelete(id)
+    if id == nil or id == 0 then
+        return
+    end
+    local DamageModel = EntityGetFirstComponentIncludingDisabled(id, "DamageModelComponent")
+	if DamageModel then
+        EntitySetComponentIsEnabled(id, DamageModel, true)
+		--[[
+		for _, v in pairs(EntityGetAllChildren(id) or {}) do
+            for _, comp in pairs(EntityGetComponentIncludingDisabled(v, "GameEffectComponent") or {}) do
+                ComponentSetValue2(comp, "effect", 0)
+                ComponentSetValue2(comp, "frames", 0)
+            end
+        end]]
+		ComponentSetValue2(DamageModel, "wait_for_kill_flag_on_death", true)
+        ComponentSetValue2(DamageModel, "kill_now", true)
+		-- Thanks KeithSammut!
+		ComponentSetValue2(DamageModel, "hp", -1)
+		ComponentSetValue2(DamageModel, "air_needed", true)
+        ComponentSetValue2(DamageModel, "air_in_lungs", 0)
+    else
+		EntityKill(id)
+	end
 end

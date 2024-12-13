@@ -6,7 +6,7 @@ function ClickSound()
 end
 
 function ItemSound()
-	GamePlaySound("data/audio/Desktop/ui.bank", "ui/item_equipped", GameGetCameraPos())
+	GamePlaySound("data/audio/Desktop/ui.bank", "ui/item_switch_places", GameGetCameraPos())
 end
 
 ---从当前世界的全局获取值或从UserData缓存的获取

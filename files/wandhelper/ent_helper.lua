@@ -76,7 +76,11 @@ end
 ---@param UI Gui
 ---@param value integer
 function SetEntWandGridSize(UI, value)
-	WorldGlobalSet(UI, "EntWandGridSize", value)
+	local last = GetEntWandGridSize(UI)
+	if last ~= value then
+        WorldGlobalSet(UI, "EntWandGridSize", value)
+		ChangeSpawnerReticle(UI)
+	end
 end
 
 ---返回实体法杖是否是按下一直生成

@@ -1,0 +1,29 @@
+<Entity name="conjurer_reborn_wand_entity">
+	<HitboxComponent 
+        _tags="enabled_in_world"
+        aabb_min_x="-4" 
+        aabb_max_x="4" 
+        aabb_min_y="-4" 
+        aabb_max_y="4"
+    ></HitboxComponent>
+
+    <SimplePhysicsComponent
+        _tags="enabled_in_world" 
+    ></SimplePhysicsComponent>
+
+    <VelocityComponent
+        _tags="enabled_in_world"
+		gravity_y="0"
+    ></VelocityComponent>
+
+	<SpriteComponent 
+		image_file="mods/conjurer_reborn/files/wands/matwand/matwand.png"
+		>
+	</SpriteComponent>
+	
+	<LuaComponent 
+		script_source_file="mods/conjurer_reborn/files/wands/wand_move.lua"
+		execute_every_n_frame="1"
+		>
+	</LuaComponent>
+</Entity>

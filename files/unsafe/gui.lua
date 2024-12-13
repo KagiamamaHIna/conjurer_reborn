@@ -219,17 +219,21 @@ function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, ri
 			end
 		end
 		BTooltipsNC[1] = math.floor(x)
-		BTooltipsNC[2] = math.floor(y)
+        BTooltipsNC[2] = math.floor(y)
+		local leftOrRight
 		if x > this.public.ScreenWidth / 2 then
-        	xOffset = -(OffsetW - 10 + xOffset)
+            xOffset = -(OffsetW - 10 + xOffset)
+			leftOrRight = true
         else
 			xOffset = xOffset + width
+			leftOrRight = false
 		end
 		
-		if x + OffsetW + 10 + 5 > this.public.ScreenWidth then--右超出
-			xOffset = -((x + OffsetW) - this.public.ScreenWidth + 5)
-		end
-        if x + xOffset - leftMargin < 0 then --左超出
+        if not leftOrRight and x + OffsetW + 10 + 5 > this.public.ScreenWidth then --右超出
+            xOffset = -((x + OffsetW) - this.public.ScreenWidth + 5)
+        end
+		
+        if leftOrRight and x + xOffset - leftMargin < 0 then --左超出
             x = leftMargin + 5
             xOffset = 0
         end

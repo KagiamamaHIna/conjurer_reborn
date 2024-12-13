@@ -657,7 +657,7 @@ end
 ---@param UI Gui
 local function DrawFav(UI)
 	local OnceRemove = false
-    VerticalPage(UI, "FavVerticalPage", favItems, 6, 138, 0, 0, 9, MatWandSpriteBG, function(value, index)
+    VerticalPage(UI, "MatWandFavVerticalPage", favItems, 6, 138, 0, 0, 9, MatWandSpriteBG, function(value, index)
 		UI.NextZDeep(0)
         local right = false
 		local left = false
@@ -766,8 +766,8 @@ local MainMatBtns = {
         action = function()
             ToggleActiveOverlay(BrushPicker)
 		end,
-		desc = function (UI)
-			UI.Text(0,0,"$conjurer_reborn_material_brush_options_desc")
+        desc = function(UI)
+            UI.Text(0, 0, "$conjurer_reborn_material_brush_options_desc")
 		end
 	},
     {
@@ -798,7 +798,7 @@ local function MatwandButtons(UI)
             v.action()
         end
         UI.BetterTooltipsNoCenter(function()
-            UI.Text(0, 0, GameTextGet(v.name))--文本间隔
+            UI.Text(0, 0, v.name)--文本间隔
 			UI.VerticalSpacing(3)
             v.desc(UI)
         end, UI.GetZDeep() - 1000, 10, 3)
@@ -814,17 +814,20 @@ end
 ---@param UI Gui
 function DrawMatWandGui(UI)
     EnabledBrushes(UI, true) --保持存在
+    MaterialToolEntityUpdate(UI)
+	if GetPlayer() == nil or GameIsInventoryOpen() then
+		return
+	end
 	MatText(UI)
     if EyedropperEnable then--判断吸管工具触发
         EyedropperEnable = false
         local id = GlobalsGetValue("conjurer_reborn.checkmat_material_str_id")
-        if IngoreMatTable[id] == nil then
+        if IngoreMatTable[id] == nil and id then
             SetActiveMaterial(UI, id)
         end
     end
 	
     MatwandButtons(UI)
 	DrawFav(UI)
-    MaterialToolEntityUpdate(UI)
     DrawActiveMatwandFn(UI)
 end

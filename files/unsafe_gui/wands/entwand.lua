@@ -124,7 +124,7 @@ local function EnemyTooltipText(UI, id, isNoDraw, MainFn)
     end
 	if HasHover then--如果悬浮到文件文本，自动切换选择的实体
 		local Active,cindex = GetActiveEntity(UI)
-		if Active ~= id or cindex ~= 1 then--第二个是防重名情况
+		if Active ~= id or ALL_ENTITIES[cindex].Type ~= EntityType.Enemy then--第二个是防重名情况
 			local true_index = ALL_ENTITIES[1].conjurer_reborn_index_table[id]
 			SetActiveEntity(UI, 1, true_index)
 			ClickSound()
@@ -148,7 +148,7 @@ local ActiveHoverY = 0
 ---@param UI Gui
 ---@param id string
 ---@param index integer 多例实现用
----@param MainFn function 给主函数开放的特别函数，用于在前面加上选择实体的文本
+---@param MainFn function? 给主函数开放的特别函数，用于在前面加上选择实体的文本
 local function EnemyTooltip(UI, id, index, MainFn)
     local _, _, hover, x, y = UI.WidgetInfo()
     local ActiveKey = "EntWandActiveHoverEnemy" .. tostring(index)--多例实现，通过索引区分不同的情况
@@ -173,11 +173,11 @@ local function EnemyTooltip(UI, id, index, MainFn)
     if thisActive then--固定悬浮窗的调用
         UI.BetterTooltipsNoCenter(function(isNoDraw)
             EnemyTooltipText(UI, id, isNoDraw, MainFn)
-        end, UI.GetZDeep() - 10, 10, 3, nil, nil, true, ActiveHoverX, ActiveHoverY)
+        end, UI.GetZDeep() - 1000, 10, 3, nil, nil, true, ActiveHoverX, ActiveHoverY)
     else
 		UI.BetterTooltipsNoCenter(function (isNoDraw)
 			EnemyTooltipText(UI, id, isNoDraw, MainFn)
-		end, UI.GetZDeep() - 10, 10, 3)
+		end, UI.GetZDeep() - 1000, 10, 3)
 	end
 end
 
@@ -253,6 +253,110 @@ local function PerkTooltipText(UI, id)
 		modName = "Noita"
 	end
 	UI.Text(0,0,modName)
+end
+
+local favItems
+local favStr = ModSettingGet(ModID .. "EntWandFav")
+if favStr == nil then
+	favItems = {}
+else
+	local str = loadstring(favStr)
+	if str ~= nil then
+		favItems = str()
+	else
+		favItems = {}
+	end
+end
+
+local function SavedFavToSetting()
+	ModSettingSet(ModID.."EntWandFav", "return {"..SerializeTable(favItems).."}")
+end
+
+---增加收藏
+---@param type string
+---@param c_index integer
+---@param ItemOrIndex string|integer
+local function AddFav(type, c_index, ItemOrIndex)
+	local temp = {
+        Type = type,
+        c_index = c_index,
+        item = ItemOrIndex,
+    }
+	if type == EntityType.Other then
+		temp.name = ALL_ENTITIES[c_index].entities[ItemOrIndex].name
+	end
+	table.insert(favItems, temp)
+	SavedFavToSetting()
+end
+
+---绘制收藏格
+---@param UI Gui
+local function DrawFav(UI)
+    local OnceRemove = false
+	local NoHasItem = false
+	local count = -0x7FFFFFFF
+    VerticalPage(UI, "EntWandFavVerticalPage", favItems, 6, 138, 0, 0, 9, EntWandSpriteBG, function(value, index)
+		UI.NextZDeep(0)
+        local left
+		local right
+		if value.Type == EntityType.Enemy then
+            local enemy = GetEnemy(value.item)
+			if enemy == nil then
+				NoHasItem = true
+            else
+				left, right = UI.ImageButton("FavEntIconEnemy" .. enemy.name .. index, 0, 0, enemy.png)
+				EnemyTooltip(UI, value.item, count)
+			end
+		elseif value.Type == EntityType.Perk then
+            local perk = GetPerk(value.item)
+			if perk == nil then
+                NoHasItem = true
+            else
+				left, right = UI.ImageButton("FavEntIconPerk" .. perk.id .. index, 0, 0, perk.perk_icon)
+				UI.BetterTooltipsNoCenter(function()
+					PerkTooltipText(UI, value.item)
+				end, UI.GetZDeep() - 10, 10, 3)
+			end
+		elseif value.Type == EntityType.Spell then
+            local spell = GetSpell(value.item)
+			if spell == nil then
+				NoHasItem = true
+            else
+				left, right = UI.ImageButton("FavEntIconSpell" .. spell.id .. index, 0, 0, spell.sprite)
+				UI.BetterTooltipsNoCenter(function()
+					SpellTooltipText(UI, value.item)
+				end, UI.GetZDeep() - 10, 10, 3)
+			end
+        else
+            local item = ALL_ENTITIES[value.c_index].entities[value.item]
+			if item.name ~= value.name then
+				NoHasItem = true
+            else
+				left, right = UI.ImageButton("FavEntIconOther" .. item.name .. index, 0, 0, item.image)
+				UI.GuiTooltip(GetEntNameOrKey(item.name))
+			end
+		end
+        if left then
+			ClickSound()
+			if value.Type ~= EntityType.Other then
+				local true_index = ALL_ENTITIES[value.c_index].conjurer_reborn_index_table[value.item]
+                SetActiveEntity(UI, value.c_index, true_index)
+            else
+				SetActiveEntity(UI, value.c_index, value.item)
+			end
+		end
+        count = count + 1
+		if right then
+			ClickSound()
+		end
+		if (right or NoHasItem) and not OnceRemove then--异步执行删除
+			OnceRemove = true
+			UI.OnceCallOnExecute(function ()
+                table.remove(favItems, index)
+				SavedFavToSetting()
+            end)
+		end
+	end)
 end
 
 local LastKeyword
@@ -360,30 +464,39 @@ local function EntPicker(UI)
 	PageGrid(UI, PageId,list,X,Y+10,160,200,9,10,EntWandSpriteBG,
 		function(item, index)--回调执行表格操作
 			UI.NextZDeep(0)
-			local left
+			local left, right
             if ALL_ENTITIES[SwitchIndex].Type == EntityType.Enemy then
                 local enemy = GetEnemy(item)
-                left = UI.ImageButton("EntIconEnemy" .. enemy.name .. index, 0, 0, enemy.png)
+                left, right = UI.ImageButton("EntIconEnemy" .. enemy.name .. index, 0, 0, enemy.png)
                 EnemyTooltip(UI, item, index)
             elseif ALL_ENTITIES[SwitchIndex].Type == EntityType.Perk then
                 local perk = GetPerk(item)
-                left = UI.ImageButton("EntIconPerk" .. perk.id .. index, 0, 0, perk.perk_icon)
+                left, right = UI.ImageButton("EntIconPerk" .. perk.id .. index, 0, 0, perk.perk_icon)
                 UI.BetterTooltipsNoCenter(function()
                     PerkTooltipText(UI, item)
                 end, UI.GetZDeep() - 10, 10, 3)
             elseif ALL_ENTITIES[SwitchIndex].Type == EntityType.Spell then
                 local spell = GetSpell(item)
-                left = UI.ImageButton("EntIconSpell" .. spell.id .. index, 0, 0, spell.sprite)
+                left, right = UI.ImageButton("EntIconSpell" .. spell.id .. index, 0, 0, spell.sprite)
                 UI.BetterTooltipsNoCenter(function()
                     SpellTooltipText(UI, item)
                 end, UI.GetZDeep() - 10, 10, 3)
             else
-                left = UI.ImageButton("EntIconOther" .. item.name .. index, 0, 0, item.image)
+                left, right = UI.ImageButton("EntIconOther" .. item.name .. index, 0, 0, item.image)
                 UI.GuiTooltip(GetEntNameOrKey(item.name))
             end
             if left then
-				local true_index = ALL_ENTITIES[SwitchIndex].conjurer_reborn_index_table[item]
-				SetActiveEntity(UI,SwitchIndex,true_index)
+                local true_index = ALL_ENTITIES[SwitchIndex].conjurer_reborn_index_table[item]
+                SetActiveEntity(UI, SwitchIndex, true_index)
+            end
+            if right then
+                if ALL_ENTITIES[SwitchIndex].Type == EntityType.Other then
+                    local true_index = ALL_ENTITIES[SwitchIndex].conjurer_reborn_index_table[item]
+                    AddFav(ALL_ENTITIES[SwitchIndex].Type, SwitchIndex, true_index)
+                else
+                    AddFav(ALL_ENTITIES[SwitchIndex].Type, SwitchIndex, item)
+                end
+				ClickSound()
 			end
         end
 	)
@@ -423,7 +536,7 @@ local function EntSlider(UI, id, x, y, text, value_min, value_max, value_default
         UI.SetSliderValue(id, value_min)
     end
     local _, _, hover,tx,ty,textWitdh = UI.WidgetInfo()
-    local number = tostring(UI.GetSliderValue(id))
+    local number = tostring(math.ceil(UI.GetSliderValue(id) or 0))
 	if hover then
         UI.NextOption(GUI_OPTION.Layout_NoLayouting)
         UI.NextZDeep(0)
@@ -435,7 +548,6 @@ local function EntSlider(UI, id, x, y, text, value_min, value_max, value_default
 	UI.NextZDeep(0)
     local result = EasySlider(UI, id, x + Aligin - textWitdh, y+1, "", value_min, value_max, value_default, width, savedValue)
     UI.GuiTooltip(desc)
-
     GuiAnimateBegin(UI.gui)--帮助滑条能完整的显示文本
 	GuiAnimateAlphaFadeIn(UI.gui, UI.NewID(id.."ANI"), 0, 0, false)
     UI.Text(0, 0, number)
@@ -597,22 +709,22 @@ local function EntwandButtons(UI)
             local item, index = GetActiveEntity(UI)
 			if ALL_ENTITIES[index].Type == EntityType.Enemy then
 				EnemyTooltip(UI,item, -1,function ()
-					UI.Text(0, 0, GameTextGet(v.name))--文本间隔
+					UI.Text(0, 0, v.name)--文本间隔
 					UI.VerticalSpacing(3)
 				end)
             else
 				UI.BetterTooltipsNoCenter(function()
-					UI.Text(0, 0, GameTextGet(v.name))--文本间隔
+					UI.Text(0, 0, v.name)--文本间隔
 					UI.VerticalSpacing(3)
 					v.desc(UI)
-				end, UI.GetZDeep() - 10, 10, 3)
+				end, UI.GetZDeep() - 1000, 10, 3)
 			end
         else
 			UI.BetterTooltipsNoCenter(function()
-				UI.Text(0, 0, GameTextGet(v.name))--文本间隔
+				UI.Text(0, 0, v.name)--文本间隔
 				UI.VerticalSpacing(3)
 				v.desc(UI)
-			end, UI.GetZDeep() - 10, 10, 3)
+			end, UI.GetZDeep() - 1000, 10, 3)
 		end
     end
 	UI.NextZDeep(-10)
@@ -626,8 +738,11 @@ end
 ---@param UI Gui
 function DrawEntWandGui(UI)
 	EnabledReticle(UI, true)
+    EntEntityUpdate(UI)
+	if GetPlayer() == nil or GameIsInventoryOpen() then
+		return
+	end
     EntwandButtons(UI)
-	
-	EntEntityUpdate(UI)
+	DrawFav(UI)
 	DrawActiveEntwandFn(UI)
 end

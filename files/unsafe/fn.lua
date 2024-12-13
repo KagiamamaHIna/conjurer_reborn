@@ -519,14 +519,19 @@ end
 
 ---设置玩家手持物品
 ---@param id integer
-function SetActiveItem(id)
+function SetActiveItem(id, NoRefresh)
 	if id == nil then
 		return
 	end
     local player = GetPlayer()
+	if player == nil then
+		return
+	end
     local inventory2 = EntityGetFirstComponent(player, "Inventory2Component")
     if inventory2 ~= nil then
-		ComponentSetValue2(inventory2, "mForceRefresh", true)
+		if not NoRefresh then
+			ComponentSetValue2(inventory2, "mForceRefresh", true)
+		end
         ComponentSetValue2(inventory2, "mActiveItem", id)
 	end
 end

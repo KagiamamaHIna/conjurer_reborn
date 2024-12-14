@@ -22,19 +22,6 @@ local function DrawActiveEntwandFn(UI)
 	end
 end
 
----@param key string
----@return string
-local function GetEntNameOrKey(key)
-	if key == nil then
-		return ""
-	end
-	local name = GameTextGetTranslatedOrNot(key)
-    if name == "" then
-        name = string.sub(key, 2)
-    end
-	return name
-end
-
 local SpeChar = string.byte('@')
 
 ---简化的id搜索流程
@@ -67,7 +54,7 @@ end
 ---@param isNoDraw boolean?
 local function EnemyTooltipText(UI, id, isNoDraw, MainFn)
 	local enemy = GetEnemy(id)
-    local name = GetEntNameOrKey(enemy.name)
+    local name = GetNameOrKey(enemy.name)
     local shift = InputIsKeyDown(Key_RSHIFT) or InputIsKeyDown(Key_LSHIFT)
 	local FileIKey = "EntWandEnemyFileIndex"..id
 	if UI.UserData[FileIKey] == nil then
@@ -207,13 +194,13 @@ end
 ---@param id string
 local function SpellTooltipText(UI, id)
     local spell = GetSpell(id)
-    local name = GetEntNameOrKey(spell.name)
+    local name = GetNameOrKey(spell.name)
     UI.Text(0, 0, name)           --本地化名称显示
 	
 	UI.NextColor(127, 127, 127, 255) --id显示
     UI.Text(0, 0, id)
 
-	local desc = GetEntNameOrKey(spell.description)
+	local desc = GetNameOrKey(spell.description)
 	UI.Text(0, 0, desc)--描述
 
     UI.NextColor(127, 127, 255, 255)--法术类型
@@ -235,13 +222,13 @@ end
 ---@param id string
 local function PerkTooltipText(UI, id)
     local perk = GetPerk(id)
-	local name = GetEntNameOrKey(perk.ui_name)
+	local name = GetNameOrKey(perk.ui_name)
     UI.Text(0, 0, name)           --本地化名称显示
 	
 	UI.NextColor(127, 127, 127, 255) --id显示
     UI.Text(0, 0, id)
 
-    local desc = GetEntNameOrKey(perk.ui_description)
+    local desc = GetNameOrKey(perk.ui_description)
     UI.Text(0, 0, desc) --描述显示
 	
 	UI.VerticalSpacing(3)
@@ -333,7 +320,7 @@ local function DrawFav(UI)
 				NoHasItem = true
             else
 				left, right = UI.ImageButton("FavEntIconOther" .. item.name .. index, 0, 0, item.image)
-				UI.GuiTooltip(GetEntNameOrKey(item.name))
+				UI.GuiTooltip(GetNameOrKey(item.name))
 			end
 		end
         if left then
@@ -412,7 +399,7 @@ local function EntPicker(UI)
 			keyword = keyword:lower()
             if ALL_ENTITIES[SwitchIndex].Type == EntityType.Enemy then
                 local enemy = GetEnemy(item)
-                local lowerName = GetEntNameOrKey(enemy.name):lower()
+                local lowerName = GetNameOrKey(enemy.name):lower()
                 score = Cpp.AbsPartialPinyinRatio(lowerName, keyword)
 				local newScore = Cpp.AbsPartialPinyinRatio(item:lower(), keyword)--搜索id
                 if newScore > score then
@@ -424,7 +411,7 @@ local function EntPicker(UI)
                 end
             elseif ALL_ENTITIES[SwitchIndex].Type == EntityType.Perk then
                 local perk = GetPerk(item)
-                local lowerName = GetEntNameOrKey(perk.ui_name):lower()
+                local lowerName = GetNameOrKey(perk.ui_name):lower()
                 score = Cpp.AbsPartialPinyinRatio(lowerName, keyword)
 				local newScore = Cpp.AbsPartialPinyinRatio(item:lower(), keyword)--搜索id
                 if newScore > score then
@@ -436,7 +423,7 @@ local function EntPicker(UI)
                 end
             elseif ALL_ENTITIES[SwitchIndex].Type == EntityType.Spell then
                 local spell = GetSpell(item)
-				local lowerName = GetEntNameOrKey(spell.name):lower()--搜索名字
+				local lowerName = GetNameOrKey(spell.name):lower()--搜索名字
                 score = Cpp.AbsPartialPinyinRatio(lowerName, keyword)
 				local newScore = Cpp.AbsPartialPinyinRatio(item:lower(), keyword)--搜索id
                 if newScore > score then
@@ -447,7 +434,7 @@ local function EntPicker(UI)
                     score = newScore
                 end
             else
-                local lowerName = GetEntNameOrKey(item.name):lower()
+                local lowerName = GetNameOrKey(item.name):lower()
 				score = Cpp.AbsPartialPinyinRatio(lowerName, keyword)
 			end
 			return score
@@ -483,7 +470,7 @@ local function EntPicker(UI)
                 end, UI.GetZDeep() - 10, 10, 3)
             else
                 left, right = UI.ImageButton("EntIconOther" .. item.name .. index, 0, 0, item.image)
-                UI.GuiTooltip(GetEntNameOrKey(item.name))
+                UI.GuiTooltip(GetNameOrKey(item.name))
             end
             if left then
                 local true_index = ALL_ENTITIES[SwitchIndex].conjurer_reborn_index_table[item]

@@ -21,10 +21,8 @@ replace_biome_map()
 
 function handle_inventory(player)
   local ITEMS_QUICK = {
-    "mods/conjurer_reborn/files/wands/matwand/entity.xml",
-    "mods/conjurer_reborn/files/wands/entwand/entity.xml",
-    "mods/conjurer_reborn/files/wands/editwand/entity.xml",
     "data/entities/items/starting_wand_rng.xml",
+    "data/entities/items/starting_bomb_wand_rng.xml",
     "mods/conjurer_reborn/files/wands/carrot/entity.xml",
   }
   local ITEMS_FULL = {

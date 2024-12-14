@@ -27,19 +27,6 @@ local function DrawActiveMatwandFn(UI)
 	end
 end
 
----@param key string
----@return string
-local function GetMatNameOrKey(key)
-	if key == nil then
-		return ""
-	end
-	local name = GameTextGetTranslatedOrNot(key)
-    if name == "" then
-        name = string.sub(key, 2)
-    end
-	return name
-end
-
 ---绘制材料文本，不含悬浮窗
 ---@param UI Gui
 ---@param id string
@@ -62,7 +49,7 @@ local function MatTooltipText(UI, id)
 		GuiLayoutEnd(UI.gui)
 	end
 
-    local name = GetMatNameOrKey(MatTable[id].attr.ui_name)
+    local name = GetNameOrKey(MatTable[id].attr.ui_name)
 	if name == "" then
 		name = MatTable[id].attr.name
 	end
@@ -153,7 +140,7 @@ local function MatTooltipText(UI, id)
 					if effect == nil then
 						goto continue
 					end
-                    local Name = GetMatNameOrKey(effect.ui_name)
+                    local Name = GetNameOrKey(effect.ui_name)
 					local _,TextHeight = GuiGetTextDimensions(UI.gui, Name)
                     local ImgHeight = GuiGetImageDimensions(UI.gui, effect.ui_icon)
                     local ImgX = k == 1 and -5 or 0--第一个向左偏移一点，好看
@@ -171,7 +158,7 @@ local function MatTooltipText(UI, id)
 					if effect == nil then
 						goto continue
 					end
-                    local Name = GetMatNameOrKey(effect.ui_name)
+                    local Name = GetNameOrKey(effect.ui_name)
                     local _,TextHeight = GuiGetTextDimensions(UI.gui, Name)
                     local ImgHeight = GuiGetImageDimensions(UI.gui, effect.ui_icon)
                     local ImgX = k == 1 and -5 or 0
@@ -262,11 +249,11 @@ local SwtichType = {
 }
 
 for _, t in pairs(SwtichType) do--移除掉被指定需要被忽略的材料
-    for k, v in pairs(t.items) do
-        if IngoreMatTable[v] then
+	for k=#t.items,1,-1 do
+		if IngoreMatTable[t.items[k]] then
             table.remove(t.items, k)
         end
-    end
+	end
 end
 
 local MatWandSpriteBG = "mods/conjurer_reborn/files/gfx/9piece_brown.png"
@@ -593,7 +580,7 @@ local function MatPicker(UI)
     list, return_keyword = SearchInputBox(UI, "MatwandSearch", list, X + 30, Y + 215, 102.5, 0, refresh,
         function(item, keyword)
 			keyword = keyword:lower()
-            local Name = GetMatNameOrKey(MatTable[item].attr.ui_name) --搜索材料本地化名字
+            local Name = GetNameOrKey(MatTable[item].attr.ui_name) --搜索材料本地化名字
             if Name == "" then
                 Name = MatTable[item].attr.name
             end

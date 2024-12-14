@@ -32,8 +32,6 @@ lerp_amount = lerp_amount - (r * lerp_amount * 0.01)
 target_y = target_y + math.sin(time * bob_speed_y) * bob_h
 target_x = target_x + math.sin(time * bob_speed_x) * bob_w
 
-local dist_x = pos_x - target_x
-
 -- move towards target
 pos_x, pos_y = vec_lerp(pos_x, pos_y, target_x, target_y, lerp_amount)
 

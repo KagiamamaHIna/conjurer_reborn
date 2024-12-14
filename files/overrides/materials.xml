@@ -1,104 +1,5 @@
 <Materials>
 
-<!-- Edge Graphics:
-  * COLOR_EDGE_PIXELS
-  * EVERYWHERE
-  * CARDINAL_DIRECTIONS
-  * NORMAL_BASED
--->
-
-<!-- list of materials required:
-  * fire
-  * smoke
-  * water
--->
-
-<!-- order of materials:
-  fire (for hax reasons)
-  static
-  sand - ground stuff
-    sand - rare metals
-    sand - other
-  liquid
-  gas
-  box2d (solid+physics)
-  special
-  hax
-  bad jokes
--->
-
-<!-- tags:
-  [fire]
-  [static]
-  [sand_ground]
-  [sand_metal]
-  [sand_other]
-  [liquid]
-  [gas]
-  [box2d]
-  [hax]
-
-  [acid]
-  [lava]
-  [slime]
-  [plant]
-  [corrodible]
-  [meltable]
-  [meltable_to_lava]
-  [molten]
-  [soluble]
-  [evaporable]
-  [evaporable_fast]
-  [frozen]
-  [radioactive]
-  [requires_air]
-  [requires_water]
-  [grows_grass]
-
-
-  NOTE: [meltable] materials need to have a MATERIALNAME_molten variation
--->
-
-<!--
-  solid_static_type=
-  SOLID_DYNAMIC = 0,
-  SOLID_STATIC_ALWAYS = 1,
-  SOLID_STATIC_BUT_BREAK = 2,
-  SOLID_STATIC_TREE_BREAK = 3,
-  SOLID_DYNAMIC_BREAK_INTO_OTHER_MATERIAL = 4,
-  SOLID_STATIC_ICE_BREAK = 5
--->
-
-<!-- =================================================================================================================  -->
-<!-- FIRE -->
-  <CellData
-    name="construction_steel"
-    ui_name="Construction Steel"
-    tags="[static],[corrodible],[meltable_to_lava],[alchemy],[solid]"
-    burnable="0"
-    density="100"
-    cell_type="liquid"
-    wang_color="ff111122"
-    liquid_gravity="1.2"
-    liquid_sand="1"
-    liquid_static="1"
-    solid_static_type="1"
-    durability="100"
-    on_fire="0"
-    hp="1000000000000"
-    platform_type="1"
-    audio_physics_material_event="metalhollow"
-    audio_physics_material_wall="metalwall"
-    audio_physics_material_solid="metalhollow"
-    electrical_conductivity="1"
-    show_in_creative_mode="0"
-  >
-    <Graphics
-      texture_file="mods/conjurer_reborn/files/gfx/materials/construction.png"
-      color="ff111122"
-    ></Graphics>
-  </CellData>
-
   <CellData
     name="conjurer_reborn_construction_steel"
     ui_name="$conjurer_reborn_new_material_construction_steel"
@@ -128,33 +29,9 @@
   </CellData>
 
   <CellData
-    name="construction_paste"
-    ui_name="Construction Paste"
-    tags="[liquid],[impure]"
-    burnable="0"
-    density="0"
-    lifetime="1350"
-    cell_type="liquid"
-    wang_color="ff111133"
-    generates_smoke="0"
-    liquid_sand="0"
-    liquid_static="0"
-    liquid_gravity="0.00002"
-    liquid_flow_speed="0.00002"
-    on_fire="0"
-    requires_oxygen="0"
-    temperature_of_fire="60"
-  >
-    <Graphics
-      texture_file="mods/conjurer_reborn/files/gfx/materials/construction.png"
-      color="ff111133"
-    ></Graphics>
-  </CellData>
-
-  <CellData
     name="conjurer_reborn_construction_paste"
     ui_name="$conjurer_reborn_new_material_construction_paste"
-    tags="[liquid],[impure]"
+    tags="[liquid]"
     burnable="0"
     density="0"
     lifetime="1350"
@@ -183,18 +60,10 @@
     output_cell2="conjurer_reborn_construction_paste"
   ></Reaction>
 
-  <Reaction
-    probability="100"
-    input_cell1="construction_paste"
-    input_cell2="air"
-    output_cell1="construction_paste"
-    output_cell2="construction_paste"
-  ></Reaction>
-
   <CellDataChild
     _parent="coal"
     _inherit_reactions="1"
-    name="ash"
+    name="conjurer_reborn_ash"
     ui_name="ash"
     tags="[liquid],[corrodible],[soluble],[impure]"
     wang_color="ff121213"
@@ -216,7 +85,7 @@
     _parent="fungi"
     _inherit_reactions="0"
     stickyness="0.7"
-    name="carrot"
+    name="conjurer_reborn_carrot"
     ui_name="enchanted carrot"
     wang_color="fff58718"
     audio_physics_material_wall="organicbouncy"

@@ -497,13 +497,14 @@ function GetPlayer()
 end
 
 ---刷新玩家手持法杖以同步数据
-function RefreshHeldWands()
+function RefreshHeldWands(NextItemEquip)
+	NextItemEquip = Default(NextItemEquip, true)
 	local player = GetPlayer()
 	local inventory2 = EntityGetFirstComponent(player, "Inventory2Component")
 	if inventory2 ~= nil then
 		ComponentSetValue2(inventory2, "mForceRefresh", true)
         ComponentSetValue2(inventory2, "mActualActiveItem", 0)
-		ComponentSetValue2(inventory2, "mDontLogNextItemEquip", true)
+		ComponentSetValue2(inventory2, "mDontLogNextItemEquip", NextItemEquip)
 	end
 end
 

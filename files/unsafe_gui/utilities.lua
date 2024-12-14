@@ -9,6 +9,19 @@ function ItemSound()
 	GamePlaySound("data/audio/Desktop/ui.bank", "ui/item_switch_places", GameGetCameraPos())
 end
 
+---@param key string
+---@return string
+function GetNameOrKey(key)
+	if key == nil then
+		return ""
+	end
+	local name = GameTextGetTranslatedOrNot(key)
+    if name == "" then
+        name = string.sub(key, 2)
+    end
+	return name
+end
+
 ---从当前世界的全局获取值或从UserData缓存的获取
 ---@param UI Gui
 ---@param key string
@@ -95,38 +108,38 @@ end
 ---@return number
 function EasyCeilSlider(UI, id, x, y, text, value_min, value_max, value_default, width, value_formatting)
 	value_formatting = Default(value_formatting, "")
-    local value = UI.Slider(id, x, y, text, value_min, value_max, value_default, 1, value_formatting, width)
-	local _,_, hover = UI.WidgetInfo()
+	local value = UI.Slider(id, x, y, text, value_min, value_max, value_default, 1, value_formatting, width)
+	local _, _, hover = UI.WidgetInfo()
 	local result = math.ceil(value)
-    UI.SetSliderValue(id, result)
-	local SliderFrKey = id.."SliderFr"
-    if hover then
+	UI.SetSliderValue(id, result)
+	local SliderFrKey = id .. "SliderFr"
+	if hover then
 		local function MoveSlider()
 			local left = InputIsKeyDown(Key_KP_MINUS) or InputIsKeyDown(Key_LEFT) or InputIsKeyDown(Key_MINUS)
 			local right = InputIsKeyDown(Key_KP_PLUS) or InputIsKeyDown(Key_RIGHT) or InputIsKeyDown(Key_EQUALS)
 			local num = 1
 			if left then
-                UI.SetSliderValue(id, value - num)
-            elseif right then
+				UI.SetSliderValue(id, value - num)
+			elseif right then
 				UI.SetSliderValue(id, value + num)
 			end
 		end
-        local hasPush = InputIsKeyDown(Key_KP_MINUS) or InputIsKeyDown(Key_LEFT) or InputIsKeyDown(Key_MINUS)
-            or InputIsKeyDown(Key_KP_PLUS) or InputIsKeyDown(Key_RIGHT) or InputIsKeyDown(Key_EQUALS)
+		local hasPush = InputIsKeyDown(Key_KP_MINUS) or InputIsKeyDown(Key_LEFT) or InputIsKeyDown(Key_MINUS)
+			or InputIsKeyDown(Key_KP_PLUS) or InputIsKeyDown(Key_RIGHT) or InputIsKeyDown(Key_EQUALS)
 		if hasPush then
-            if UI.UserData[SliderFrKey] == nil then --如果在悬浮，就分配一个帧检测时间
+			if UI.UserData[SliderFrKey] == nil then --如果在悬浮，就分配一个帧检测时间
 				UI.UserData[SliderFrKey] = 30
-            else
-                if UI.UserData[SliderFrKey] == 30 then
-                    MoveSlider()
-                end
+			else
+				if UI.UserData[SliderFrKey] == 30 then
+					MoveSlider()
+				end
 				if UI.UserData[SliderFrKey] ~= 0 then
 					UI.UserData[SliderFrKey] = UI.UserData[SliderFrKey] - 1
 				else --如果到了0
 					MoveSlider()
 				end
-            end
-        else
+			end
+		else
 			UI.UserData[SliderFrKey] = 30
 		end
 	else
@@ -149,14 +162,14 @@ end
 ---@param value_formatting string?
 ---@return number
 function EasySlider(UI, id, x, y, text, value_min, value_max, value_default, width, savedValue, value_formatting)
-    value_formatting = Default(value_formatting, "")
+	value_formatting = Default(value_formatting, "")
 	local flag = false
 	if UI.GetSliderValue(id) == nil then
 		flag = true
 	end
-    EasyCeilSlider(UI, id, x, y, text, value_min, value_max, value_default, width,value_formatting)
+	EasyCeilSlider(UI, id, x, y, text, value_min, value_max, value_default, width, value_formatting)
 	if flag and savedValue then
-        UI.SetSliderValue(id, savedValue)
+		UI.SetSliderValue(id, savedValue)
 	end
 	return UI.GetSliderValue(id)
 end
@@ -171,7 +184,7 @@ end
 ---@param default boolean?
 ---@return boolean enable, boolean click
 function ConjurerCheckbox(UI, id, x, y, text, zdeep, default)
-    zdeep = Default(zdeep, 0)
+	zdeep = Default(zdeep, 0)
 	default = Default(default, false)
 	local StatusKey = id .. "Status"
 	local Status = WorldGlobalGetBool(UI, StatusKey, default)
@@ -203,10 +216,10 @@ end
 ---@param default boolean?
 ---@return boolean enable, boolean click
 function ConjurerCheckboxNoSave(UI, id, x, y, text, zdeep, default)
-    zdeep = Default(zdeep, 0)
+	zdeep = Default(zdeep, 0)
 	default = Default(default, false)
 	local StatusKey = id .. "Status"
-    local Status = UI.UserData[StatusKey]
+	local Status = UI.UserData[StatusKey]
 	if Status == nil then
 		Status = default
 		UI.UserData[StatusKey] = default
@@ -305,8 +318,21 @@ end
 function EntitySetValues(entity, component_name, values)
 	if entity == nil or entity == 0 then return end
 
-	local comp = EntityGetFirstComponentIncludingDisabled(entity, component_name)
+    local comp = EntityGetFirstComponentIncludingDisabled(entity, component_name)
+	if comp == nil or comp == 0 then
+		return nil
+	end
 	ComponentSetValues(comp, values)
+end
+
+-- Shorthands for a really common actions
+function EntityGetValue(entity, component_name, attr_name)
+	if entity == nil or entity == 0 then return nil end
+    local comp = EntityGetFirstComponentIncludingDisabled(entity, component_name)
+	if comp == nil or comp == 0 then
+		return nil
+	end
+	return ComponentGetValue2(comp, attr_name)
 end
 
 ---来源于原版conjurer
@@ -324,6 +350,19 @@ function HasClickedMouse1(ignore_guncomponent)
 	return click_frame == GameGetFrameNum()
 end
 
+---来源于原版conjurer
+---@return boolean
+function HasClickedInteract()
+	local click_frame = EntityGetValue(
+		GetPlayer(), "ControlsComponent", "mButtonFrameInteract"
+	)
+
+	return click_frame == GameGetFrameNum()
+end
+
+---来源于原版conjurer
+---@param ignore_guncomponent boolean?
+---@return boolean
 function HasClickedMouse2(ignore_guncomponent)
 	local click_frame = EntityGetValue(
 		GetPlayer(), "ControlsComponent", SELECTED_BUTTON.click
@@ -397,7 +436,7 @@ function PageGrid(UI, id, items, x, y, width, height, row, column, sprite, BtnCa
 		end
 	end)
 
-    UI.DrawScrollContainer(id, true, true, sprite, nil, nil, -100)
+	UI.DrawScrollContainer(id, true, true, sprite, nil, nil, -100)
 	--下面是绘制两个按钮和文本
 	local ScrollHeight = UI.GetScrollHeight(id)
 	local ScrollWidth = UI.GetScrollWidth(id)
@@ -472,11 +511,11 @@ end
 ---@param sprite string
 ---@param BtnCallBack function
 function VerticalPage(UI, id, items, x, y, width, height, ColumnMax, sprite, BtnCallBack)
-    local itemLen = #items
-	if itemLen == 0 then--没元素不渲染
+	local itemLen = #items
+	if itemLen == 0 then --没元素不渲染
 		return
-    end
-    local PageSize = math.ceil(itemLen / ColumnMax) --所有页面数
+	end
+	local PageSize = math.ceil(itemLen / ColumnMax) --所有页面数
 
 	local PageIndexKey = "VerticalPageIndex" .. id
 	local PageIndex = UI.UserData[PageIndexKey] --页面索引
@@ -495,37 +534,38 @@ function VerticalPage(UI, id, items, x, y, width, height, ColumnMax, sprite, Btn
 	end
 	--计算起始和终止范围
 	local StartIndex = ColumnMax * (PageIndex - 1) + 1
-    local EndIndex = math.min(ColumnMax * PageIndex, itemLen) --防止越界
-	
+	local EndIndex = math.min(ColumnMax * PageIndex, itemLen) --防止越界
+
 	UI.ScrollContainer(id, x, y, width, height, 1)
 	local YText = 0
-    UI.AddAnywhereItem(id, function()
+	UI.AddAnywhereItem(id, function()
 		GuiAnimateBegin(UI.gui)
-        GuiAnimateAlphaFadeIn(UI.gui, UI.NewID("VerticalPageAlpha0" .. id), 0, 0, false)
-        UI.Text(0, 0, "<", 1, "mods/conjurer_reborn/files/font/VerticalPageFont.xml")
+		GuiAnimateAlphaFadeIn(UI.gui, UI.NewID("VerticalPageAlpha0" .. id), 0, 0, false)
+		UI.Text(0, 0, "<", 1, "mods/conjurer_reborn/files/font/VerticalPageFont.xml")
 		UI.VerticalSpacing(6)
-        GuiAnimateEnd(UI.gui)
-		
-        for i = StartIndex, EndIndex do
-            BtnCallBack(items[i], i)
-            UI.VerticalSpacing(2)
-        end
-        --绘制页面数的文本控件
+		GuiAnimateEnd(UI.gui)
+
+		for i = StartIndex, EndIndex do
+			BtnCallBack(items[i], i)
+			UI.VerticalSpacing(2)
+		end
+		--绘制页面数的文本控件
 		local ScrollWidth = UI.GetScrollWidth(id)
 		local PageTextScale = 0.7
-		GuiAnimateBegin(UI.gui)--腾出空间并计算y轴
-        GuiAnimateAlphaFadeIn(UI.gui, UI.NewID("VerticalPageDownTextAlpha0" .. id), 0, 0, false)
+		GuiAnimateBegin(UI.gui) --腾出空间并计算y轴
+		GuiAnimateAlphaFadeIn(UI.gui, UI.NewID("VerticalPageDownTextAlpha0" .. id), 0, 0, false)
 		local pageText = string.format("%d/%d", PageIndex, PageSize)
-        UI.Text(0, 0, pageText, PageTextScale, "data/fonts/font_pixel.xml")
-        local _, _, _, PageTextX, PageTextY = UI.WidgetInfo()
+		UI.Text(0, 0, pageText, PageTextScale, "data/fonts/font_pixel.xml")
+		local _, _, _, PageTextX, PageTextY = UI.WidgetInfo()
 		YText = PageTextY
 		UI.VerticalSpacing(6)
 		UI.Text(0, 0, "<", 1, "mods/conjurer_reborn/files/font/VerticalPageFont.xml")
-        GuiAnimateEnd(UI.gui)
-        local pageTextWidth = UI.TextDimensions(pageText, nil, PageTextScale, "data/fonts/font_pixel.xml")
-		UI.NextOption(GUI_OPTION.Layout_NoLayouting)--让文本绝对定位
+		GuiAnimateEnd(UI.gui)
+		local pageTextWidth = UI.TextDimensions(pageText, nil, PageTextScale, "data/fonts/font_pixel.xml")
+		UI.NextOption(GUI_OPTION.Layout_NoLayouting) --让文本绝对定位
 		UI.NextZDeep(2)
-		UI.Text(ScrollWidth / 2 + PageTextX - pageTextWidth / 2 + 1.5, PageTextY, pageText, PageTextScale, "data/fonts/font_pixel.xml")
+		UI.Text(ScrollWidth / 2 + PageTextX - pageTextWidth / 2 + 1.5, PageTextY, pageText, PageTextScale,
+			"data/fonts/font_pixel.xml")
 	end)
 
 	UI.DrawScrollContainer(id, true, true, sprite, nil, nil, -100)
@@ -538,10 +578,10 @@ function VerticalPage(UI, id, items, x, y, width, height, ColumnMax, sprite, Btn
 	mx = mx / UI.GetScale()
 	my = my / UI.GetScale()
 	local LeftBtnHover = UI.GetScrollHover(LeftBtnId, true)
-    UI.AddAnywhereItem(LeftBtnId, function()
-        GuiAnimateBegin(UI.gui)
-        GuiAnimateAlphaFadeIn(UI.gui, UI.NewID("VerticalPageLeftAlpha0" .. id), 0, 0, false)
-		UI.Text( 0, 0, "<", 1, "mods/conjurer_reborn/files/font/VerticalPageFont.xml")
+	UI.AddAnywhereItem(LeftBtnId, function()
+		GuiAnimateBegin(UI.gui)
+		GuiAnimateAlphaFadeIn(UI.gui, UI.NewID("VerticalPageLeftAlpha0" .. id), 0, 0, false)
+		UI.Text(0, 0, "<", 1, "mods/conjurer_reborn/files/font/VerticalPageFont.xml")
 		GuiAnimateEnd(UI.gui)
 		if LeftBtnHover then
 			UI.NextColor(255, 165, 0, 255)
@@ -554,18 +594,18 @@ function VerticalPage(UI, id, items, x, y, width, height, ColumnMax, sprite, Btn
 				UI.UserData[PageIndexKey] = UI.UserData[PageIndexKey] - 1
 			end
 		end
-        UI.NextZDeep(2)
+		UI.NextZDeep(2)
 		UI.NextOption(GUI_OPTION.Layout_NoLayouting)
-		UI.Text(x + (ScrollWidth-4)/2 - 0.5, y+1, "<", 1, "mods/conjurer_reborn/files/font/VerticalPageFont.xml")
+		UI.Text(x + (ScrollWidth - 4) / 2 - 0.5, y + 1, "<", 1, "mods/conjurer_reborn/files/font/VerticalPageFont.xml")
 	end)
-    UI.DrawScrollContainer(LeftBtnId, true, true, sprite, nil, nil, -99)
-	
-	UI.ScrollContainer(RightBtnId, x, YText + 13,  ScrollWidth - 4, 0)
+	UI.DrawScrollContainer(LeftBtnId, true, true, sprite, nil, nil, -99)
+
+	UI.ScrollContainer(RightBtnId, x, YText + 13, ScrollWidth - 4, 0)
 	local RightBtnHover = UI.GetScrollHover(RightBtnId, true)
 	UI.AddAnywhereItem(RightBtnId, function()
-        GuiAnimateBegin(UI.gui)
-        GuiAnimateAlphaFadeIn(UI.gui, UI.NewID("VerticalPageRightAlpha0" .. id), 0, 0, false)
-		UI.Text( 0, 0, ">", 1, "mods/conjurer_reborn/files/font/VerticalPageFont.xml")
+		GuiAnimateBegin(UI.gui)
+		GuiAnimateAlphaFadeIn(UI.gui, UI.NewID("VerticalPageRightAlpha0" .. id), 0, 0, false)
+		UI.Text(0, 0, ">", 1, "mods/conjurer_reborn/files/font/VerticalPageFont.xml")
 		GuiAnimateEnd(UI.gui)
 		if RightBtnHover then
 			UI.NextColor(255, 165, 0, 255)
@@ -578,11 +618,12 @@ function VerticalPage(UI, id, items, x, y, width, height, ColumnMax, sprite, Btn
 				UI.UserData[PageIndexKey] = UI.UserData[PageIndexKey] + 1
 			end
 		end
-        UI.NextZDeep(2)
+		UI.NextZDeep(2)
 		UI.NextOption(GUI_OPTION.Layout_NoLayouting)
-		UI.Text(x + (ScrollWidth-4)/2 - 0.5, YText + 13, ">", 1, "mods/conjurer_reborn/files/font/VerticalPageFont.xml")
-    end)
-    UI.DrawScrollContainer(RightBtnId, true, true, sprite, nil, nil, -99)
+		UI.Text(x + (ScrollWidth - 4) / 2 - 0.5, YText + 13, ">", 1,
+			"mods/conjurer_reborn/files/font/VerticalPageFont.xml")
+	end)
+	UI.DrawScrollContainer(RightBtnId, true, true, sprite, nil, nil, -99)
 
 	--滚轮翻页
 	local GridHover = UI.GetScrollHover(id, true)

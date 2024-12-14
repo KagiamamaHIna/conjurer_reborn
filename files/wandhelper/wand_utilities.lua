@@ -91,7 +91,7 @@ end
 
 ---杀死或删除实体
 ---@param id integer
-function EntityTrueKillOrDelete(id)
+function EntityTrueKillOrDelete(id, no_delete)
     if id == nil or id == 0 then
         return
     end
@@ -111,7 +111,7 @@ function EntityTrueKillOrDelete(id)
 		ComponentSetValue2(DamageModel, "hp", -1)
 		ComponentSetValue2(DamageModel, "air_needed", true)
         ComponentSetValue2(DamageModel, "air_in_lungs", 0)
-    else
+    elseif not no_delete then
 		EntityKill(id)
 	end
 end

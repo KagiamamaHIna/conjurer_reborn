@@ -1,3 +1,4 @@
+--[[
 dofile_once("mods/conjurer_reborn/files/unsafe/unsafe.lua")
 
 local ffi = require("ffi")
@@ -53,3 +54,4 @@ function SetSEDCompVectorValue(comp, array_name, key, value)
     end
     VecPtr[key] = value
 end
+]]

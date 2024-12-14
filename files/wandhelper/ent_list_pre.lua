@@ -65,7 +65,7 @@ ALL_ENTITIES = {
 		entities = BACKGROUNDS,
 	},
 	{
-		name = "conjurer_reborn_entwand_foregrounds_tab",
+		name = "$conjurer_reborn_entwand_foregrounds_tab",
 		icon = "mods/conjurer_reborn/files/gfx/entwand_icons/icon_foregrounds.png",
         icon_off = "mods/conjurer_reborn/files/gfx/entwand_icons/icon_foregrounds_off.png",
 		Type = EntityType.Other,

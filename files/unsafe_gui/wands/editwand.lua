@@ -405,7 +405,11 @@ end
 ---绘制Entwand的GUI
 ---@param UI Gui
 function DrawEditWandGui(UI)
+    EditWandUpdate(UI)
+	if GameIsInventoryOpen() then --下面只是按钮绘制
+		return
+	end
+
 	EditwandButtons(UI)
-	EditWandUpdate(UI)
 	EditwandInspect(UI)
 end

@@ -109,6 +109,15 @@ end)
 
 local ItemSwitch = false
 
+local function RefreshSwitchWand()
+	local CurrentActive = GetActiveItem()
+	if ItemSwitch and ActiveTable and CurrentActive ~= -1 then--最后决定切换等操作
+		ItemSwitch = false
+		ActiveTable.release()
+		ActiveTable = nil
+	end
+end
+
 UI.MainTickFn["Main"] = function()
 	if UI.UserData["EditWandEntityToInspectEntity"] == nil then--每帧尝试移除一次
 		local indicator = EntityGetWithName("conjurer_reborn_editwand_indicator")
@@ -177,6 +186,7 @@ UI.MainTickFn["Main"] = function()
 	end
 
 	if GameIsInventoryOpen() then --下面只是按钮绘制
+		RefreshSwitchWand()
 		return
 	end
 
@@ -220,33 +230,28 @@ UI.MainTickFn["Main"] = function()
 		end
 	end
 
-	for i = 1, #MainBtns do
-		if ActiveTable ~= MainBtns[i] then --未激活是半透明的
-			UI.NextOption(GUI_OPTION.DrawSemiTransparent)
-		end
-		UI.NextZDeep(0)
-		local left = UI.EasyMoveImgBtn(MainBtns[i].id, BtnX + 20 * (i - 1), BtnY, MainBtns[i].image)
-		UI.BetterTooltipsNoCenter(function()
-			UI.Text(0, 0, MainBtns[i].name)
-			UI.VerticalSpacing(2)
-			UI.Text(0, 0, MainBtns[i].desc)
-			UI.VerticalSpacing(2)
-			UI.Text(0, 0, GameTextGet("$conjurer_reborn_wand_switch", tostring(i)))
-		end, -3000, 10)
+    for i = 1, #MainBtns do
+        if ActiveTable ~= MainBtns[i] then --未激活是半透明的
+            UI.NextOption(GUI_OPTION.DrawSemiTransparent)
+        end
+        UI.NextZDeep(0)
+        local left = UI.EasyMoveImgBtn(MainBtns[i].id, BtnX + 20 * (i - 1), BtnY, MainBtns[i].image)
+        UI.BetterTooltipsNoCenter(function()
+            UI.Text(0, 0, MainBtns[i].name)
+            UI.VerticalSpacing(2)
+            UI.Text(0, 0, MainBtns[i].desc)
+            UI.VerticalSpacing(2)
+            UI.Text(0, 0, GameTextGet("$conjurer_reborn_wand_switch", tostring(i)))
+        end, -3000, 10)
 
-		if left then
-			ClickSound()
-			ToggleActiveOverlay(MainBtns[i])
-			ActiveImage = MainBtns[i].image
-		end
-	end
-
-	local CurrentActive = GetActiveItem()
-	if ItemSwitch and ActiveTable and CurrentActive ~= -1 then
-		ItemSwitch = false
-		ActiveTable.release()
-		ActiveTable = nil
-	end
+        if left then
+            ClickSound()
+            ToggleActiveOverlay(MainBtns[i])
+            ActiveImage = MainBtns[i].image
+        end
+    end
+	
+	RefreshSwitchWand()
 end
 
 return UI.DispatchMessage

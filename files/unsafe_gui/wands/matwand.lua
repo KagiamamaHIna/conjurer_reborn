@@ -258,6 +258,7 @@ end
 
 local MatWandSpriteBG = "mods/conjurer_reborn/files/gfx/9piece_brown.png"
 local MatWandSpriteTab = "mods/conjurer_reborn/files/gfx/9piece_brown_tab.png"
+local MatWandSpriteLeft = "mods/conjurer_reborn/files/gfx/9piece_brown_left.png"
 
 local function GetEraserCategories(UI)
     local ActiveMaterial = GetActiveMaterial(UI)
@@ -637,7 +638,44 @@ local function MatPicker(UI)
 				AddMatFav(id)
 			end
         end
-	)
+    )
+	UI.BeginVertical(X + 168, Y+15, true, 2,2)
+    GuiBeginAutoBox(UI.gui) --框住用的自动盒子
+
+	local ActiveMat = GetActiveMaterial(UI)
+	local player = GetPlayer()
+
+    local function SpawnMatContainers(id, png, entityfile, size, tooltip)
+		png = "mods/conjurer_reborn/files/gfx/matwand_icons/" .. png
+		UI.NextZDeep(0)
+        local left = UI.ImageButton(id, 0, 0, png)
+		UI.BetterTooltipsNoCenter(function()
+			UI.Text(0,0,tooltip)
+			UI.VerticalSpacing(3)
+			MatTooltipText(UI, ActiveMat)
+        end, UI.GetZDeep() - 10, 10, 3)
+		if left and player then
+            local x, y = EntityGetTransform(player)
+            local entity = EntityLoad(entityfile, x, y)
+			RemoveMaterialInventoryMaterial(entity)
+			AddMaterialInventoryMaterial(entity, ActiveMat, size)
+			ClickSound()
+		end
+	end
+
+	SpawnMatContainers("MatwandGetPotion", "get_potion.png", "data/entities/items/pickup/potion.xml", 1000, "$conjurer_reborn_matwand_get_potion")
+    UI.VerticalSpacing(1)
+	SpawnMatContainers("MatwandGetJar", "get_jar.png", "data/entities/items/pickup/jar.xml", 1000, "$conjurer_reborn_matwand_get_jar")
+	UI.VerticalSpacing(1)
+	SpawnMatContainers("MatwandGetPowder", "get_powder.png", "data/entities/items/pickup/powder_stash.xml", 1500, "$conjurer_reborn_matwand_get_powder")
+	UI.VerticalSpacing(1)
+	SpawnMatContainers("MatwandGetCan", "get_can.png", "data/entities/items/easter/minit_watering.xml", 1000, "$conjurer_reborn_matwand_get_can")
+	UI.VerticalSpacing(1)
+	SpawnMatContainers("MatwandGetBeer", "get_beer.png", "data/entities/items/easter/beer_bottle.xml", 1000, "$conjurer_reborn_matwand_get_beer")
+	
+	UI.NextZDeep(-99)
+    GuiEndAutoBoxNinePiece(UI.gui, 1, 0, 0, false, 0, MatWandSpriteLeft, MatWandSpriteLeft)
+	UI.LayoutEnd()
 end
 
 ---绘制收藏格

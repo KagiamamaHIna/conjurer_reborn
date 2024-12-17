@@ -37,7 +37,7 @@
 
   <InteractableComponent
     radius="33"
-    ui_text="Press $0 to operate hatch"
+    ui_text="$conjurer_reborn_hatch"
     name="Hatch"
   ></InteractableComponent>
 

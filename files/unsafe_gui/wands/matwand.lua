@@ -30,7 +30,7 @@ end
 ---绘制材料文本，不含悬浮窗
 ---@param UI Gui
 ---@param id string
-local function MatTooltipText(UI, id)
+function MatTooltipText(UI, id)
 	local rightMargin = 72
 	local function NewLine(str1, str2, callback)
 		local text = GameTextGetTranslatedOrNot(str1)
@@ -90,7 +90,11 @@ local function MatTooltipText(UI, id)
 		if burnable or on_fire then
 			NewLine("$conjurer_reborn_material_tooltip_fire_hp", MatTable[id].attr.fire_hp)
 		end
-		NewLine("$conjurer_reborn_material_tooltip_hp", MatTable[id].attr.hp)
+        NewLine("$conjurer_reborn_material_tooltip_hp", MatTable[id].attr.hp)
+        if MatTable[id].attr.lifetime ~= "0" then
+            local Str = FrToSecondStr(tonumber(MatTable[id].attr.lifetime))
+			NewLine("$conjurer_reborn_material_tooltip_lifetime", string.format("%ss(%sf)", Str, MatTable[id].attr.lifetime))
+		end
         NewLine("$conjurer_reborn_material_tooltip_density", MatTable[id].attr.density)
         NewLine("$conjurer_reborn_material_tooltip_durability", MatTable[id].attr.durability)
         local StainsEffect = nil
@@ -400,7 +404,8 @@ end
 local function EraserPicker(UI)
 	local X = 30
     local Y = 66
-	local eraser_categories = GetEraserCategories(UI)
+    local eraser_categories = GetEraserCategories(UI)
+	UI.NextZDeep(0)
     UI.Text(X + 2, Y - 19, GameTextGet("$conjurer_reborn_material_eraser_options_head"))
     UI.ScrollContainer("EraserPickerBox", X, Y - 2, 0, 0, 2, 2) --自动宽高
     UI.AddAnywhereItem("EraserPickerBox", function()
@@ -510,6 +515,7 @@ local function BrushPicker(UI)
 	local X = 30
     local Y = 66
 	
+	UI.NextZDeep(0)
     UI.Text(X + 2, Y-19, "$conjurer_reborn_material_brush_options_head")
     UI.ScrollContainer("BrushPickerBox", X, Y-2, 0, 0, 2, 2)--自动宽高
 	UI.AddAnywhereItem("BrushPickerBox",function ()
@@ -534,6 +540,7 @@ local function BrushPicker(UI)
 end
 
 local SpeChar = string.byte('@')
+local SpeChar2 = string.byte('[')
 
 local LastKeyword
 ---绘制材料选择框
@@ -595,16 +602,32 @@ local function MatPicker(UI)
             if newScore > score then
                 score = newScore
             end
-			if string.byte(keyword,1,1) == SpeChar then--搜索模组id/模组名字
-				local modId = MatTable[item].conjurer_unsafe_from_id or "?"
-				local lowerModId = modId:lower()
-				newScore = Cpp.AbsPartialPinyinRatio(lowerModId, string.sub(keyword,2):lower())
+			local EnName = CSV.get(string.sub(MatTable[item].attr.ui_name,2), "en")
+			if EnName then--判断英文原名
+                newScore = Cpp.AbsPartialPinyinRatio(EnName:lower(), keyword)
+				if newScore > score then
+					score = newScore
+				end
+			end
+
+            if string.byte(keyword, 1, 1) == SpeChar then --搜索模组id/模组名字
+                local modId = MatTable[item].conjurer_unsafe_from_id or "?"
+                local lowerModId = modId:lower()
+                newScore = Cpp.AbsPartialPinyinRatio(lowerModId, string.sub(keyword, 2):lower())
                 if newScore > score then
                     score = newScore
                 end
-				local modName = ModIdToName(modId)--获取模组名字
-				if modName then--对模组名字判空
-					newScore = Cpp.AbsPartialPinyinRatio(modName:lower(), string.sub(keyword,2):lower())
+                local modName = ModIdToName(modId) --获取模组名字
+                if modName then                    --对模组名字判空
+                    newScore = Cpp.AbsPartialPinyinRatio(modName:lower(), string.sub(keyword, 2):lower())
+                    if newScore > score then
+                        score = newScore
+                    end
+                end
+            end
+			if string.byte(keyword,1,1) == SpeChar2 then
+				for _,v in ipairs(MatTable[item].attr.tags) do--计算tag符合
+					newScore = Cpp.AbsPartialPinyinRatio(v:lower(), keyword)
 					if newScore > score then
 						score = newScore
 					end
@@ -612,6 +635,7 @@ local function MatPicker(UI)
 			end
 			return score
         end)
+	UI.GuiTooltip("$conjurer_reborn_material_search_desc")
 	if return_keyword ~= "" then
 		PageId = PageId .. "Searched"
 	end
@@ -628,10 +652,16 @@ local function MatPicker(UI)
 			local left,right = UI.ImageButton("MatwandMatPicker" .. id, 0, 0, path)
 			UI.BetterTooltipsNoCenter(function()
 				MatTooltipText(UI, id)
-            end, UI.GetZDeep() - 10, 10, 3)
-			
-            if left then
-                SetActiveMaterial(UI, id)
+            end, UI.GetZDeep() - 1000, 10, 3)
+			local ctrl = InputIsKeyDown(Key_LCTRL) or InputIsKeyDown(Key_RCTRL)
+            if left and ctrl then
+				if MatTable[id].conjurer_unsafe_type == MatType.Box2d then
+					GamePrint("$conjurer_reborn_power_weather_active_rain_mat_error")
+				else
+					WorldGlobalSet(UI, "RainContMat", id)
+				end
+			elseif left then
+				SetActiveMaterial(UI, id)
             end
             if right then
 				ClickSound()
@@ -639,43 +669,68 @@ local function MatPicker(UI)
 			end
         end
     )
-	UI.BeginVertical(X + 168, Y+15, true, 2,2)
-    GuiBeginAutoBox(UI.gui) --框住用的自动盒子
-
-	local ActiveMat = GetActiveMaterial(UI)
-	local player = GetPlayer()
-
-    local function SpawnMatContainers(id, png, entityfile, size, tooltip)
-		png = "mods/conjurer_reborn/files/gfx/matwand_icons/" .. png
-		UI.NextZDeep(0)
-        local left = UI.ImageButton(id, 0, 0, png)
-		UI.BetterTooltipsNoCenter(function()
-			UI.Text(0,0,tooltip)
-			UI.VerticalSpacing(3)
-			MatTooltipText(UI, ActiveMat)
-        end, UI.GetZDeep() - 10, 10, 3)
-		if left and player then
-            local x, y = EntityGetTransform(player)
-            local entity = EntityLoad(entityfile, x, y)
-			RemoveMaterialInventoryMaterial(entity)
-			AddMaterialInventoryMaterial(entity, ActiveMat, size)
-			ClickSound()
+    UI.ScrollContainer("GetMaterialContainers", X + 167, Y + 15, 0, 0, 1, 1)
+	UI.AddAnywhereItem("GetMaterialContainers",function ()
+		local ActiveMat = GetActiveMaterial(UI)
+		local player = GetPlayer()
+		if UI.UserData["MatContainersQuantity"] == nil then
+			UI.UserData["MatContainersQuantity"] = 100
 		end
-	end
-
-	SpawnMatContainers("MatwandGetPotion", "get_potion.png", "data/entities/items/pickup/potion.xml", 1000, "$conjurer_reborn_matwand_get_potion")
-    UI.VerticalSpacing(1)
-	SpawnMatContainers("MatwandGetJar", "get_jar.png", "data/entities/items/pickup/jar.xml", 1000, "$conjurer_reborn_matwand_get_jar")
-	UI.VerticalSpacing(1)
-	SpawnMatContainers("MatwandGetPowder", "get_powder.png", "data/entities/items/pickup/powder_stash.xml", 1500, "$conjurer_reborn_matwand_get_powder")
-	UI.VerticalSpacing(1)
-	SpawnMatContainers("MatwandGetCan", "get_can.png", "data/entities/items/easter/minit_watering.xml", 1000, "$conjurer_reborn_matwand_get_can")
-	UI.VerticalSpacing(1)
-	SpawnMatContainers("MatwandGetBeer", "get_beer.png", "data/entities/items/easter/beer_bottle.xml", 1000, "$conjurer_reborn_matwand_get_beer")
+		local function SpawnMatContainers(id, png, entityfile, size, tooltip)
+			png = "mods/conjurer_reborn/files/gfx/matwand_icons/" .. png
+			UI.NextZDeep(0)
+            local left, right = UI.ImageButton(id, 0, 0, png)
+            local Info = UI.WidgetInfoTable()
+			if Info.hovered then
+				local ctrl = InputIsKeyDown(Key_LCTRL) or InputIsKeyDown(Key_RCTRL)
+				if InputIsMouseButtonJustDown(Mouse_wheel_up) then
+					if ctrl then
+						UI.UserData["MatContainersQuantity"] = UI.UserData["MatContainersQuantity"] + 10
+                    else
+						UI.UserData["MatContainersQuantity"] = UI.UserData["MatContainersQuantity"] + 1
+					end
+                elseif InputIsMouseButtonJustDown(Mouse_wheel_down) then
+					if ctrl then
+						UI.UserData["MatContainersQuantity"] = UI.UserData["MatContainersQuantity"] - 10
+                    else
+						UI.UserData["MatContainersQuantity"] = UI.UserData["MatContainersQuantity"] - 1
+					end
+					if UI.UserData["MatContainersQuantity"] < 0 then
+						UI.UserData["MatContainersQuantity"] = 0
+					end
+				end
+			end
+			UI.BetterTooltipsNoCenter(function()
+                UI.Text(0, 0, GameTextGet(tooltip,tostring(UI.UserData["MatContainersQuantity"])))
+				UI.VerticalSpacing(1)
+				UI.Text(0,0,"$conjurer_reborn_matwand_get_desc")
+				UI.VerticalSpacing(3)
+				MatTooltipText(UI, ActiveMat)
+			end, UI.GetZDeep() - 1000, 10, 3)
+            if left and player then
+                local x, y = EntityGetTransform(player)
+                local entity = EntityLoad(entityfile, x, y)
+                RemoveMaterialInventoryMaterial(entity)
+                AddMaterialInventoryMaterial(entity, ActiveMat, (UI.UserData["MatContainersQuantity"] / 100) * size)
+                ClickSound()
+            end
+            if right then
+				UI.UserData["MatContainersQuantity"] = 100
+				ClickSound()
+			end
+		end
 	
-	UI.NextZDeep(-99)
-    GuiEndAutoBoxNinePiece(UI.gui, 1, 0, 0, false, 0, MatWandSpriteLeft, MatWandSpriteLeft)
-	UI.LayoutEnd()
+		SpawnMatContainers("MatwandGetPotion", "get_potion.png", "data/entities/items/pickup/potion.xml", 1000, "$conjurer_reborn_matwand_get_potion")
+		UI.VerticalSpacing(1)
+		SpawnMatContainers("MatwandGetJar", "get_jar.png", "data/entities/items/pickup/jar.xml", 1000, "$conjurer_reborn_matwand_get_jar")
+		UI.VerticalSpacing(1)
+		SpawnMatContainers("MatwandGetPowder", "get_powder.png", "data/entities/items/pickup/powder_stash.xml", 1500, "$conjurer_reborn_matwand_get_powder")
+		UI.VerticalSpacing(1)
+		SpawnMatContainers("MatwandGetCan", "get_can.png", "data/entities/items/easter/minit_watering.xml", 1000, "$conjurer_reborn_matwand_get_can")
+		UI.VerticalSpacing(1)
+		SpawnMatContainers("MatwandGetBeer", "get_beer.png", "data/entities/items/easter/beer_bottle.xml", 1000, "$conjurer_reborn_matwand_get_beer")	
+    end)
+    UI.DrawScrollContainer("GetMaterialContainers", true, true, MatWandSpriteLeft, nil, nil, -99)
 end
 
 ---绘制收藏格
@@ -694,9 +749,17 @@ local function DrawFav(UI)
                 left, right = UI.ImageButton(id, 0, 0, path)
                 UI.BetterTooltipsNoCenter(function()
                     MatTooltipText(UI, value.matid)
-                end, UI.GetZDeep() - 100, 10)
-                if left then
+                end, UI.GetZDeep() - 1000, 10)
+				local ctrl = InputIsKeyDown(Key_LCTRL) or InputIsKeyDown(Key_RCTRL)
+                if left and ctrl then
                     ClickSound()
+					if MatTable[id].conjurer_unsafe_type == MatType.Box2d then
+						GamePrint("$conjurer_reborn_power_weather_active_rain_mat_error")
+                    else
+						WorldGlobalSet(UI, "RainContMat", id)
+					end
+                elseif left then
+					ClickSound()
                     SetActiveMaterial(UI, value.matid)
                 end
             else
@@ -844,7 +907,7 @@ function DrawMatWandGui(UI)
 		return
 	end
 	MatText(UI)
-    if EyedropperEnable then--判断吸管工具触发
+    if EyedropperEnable or InputIsMouseButtonJustUp(Mouse_middle) then--判断吸管工具触发
         EyedropperEnable = false
         local id = GlobalsGetValue("conjurer_reborn.checkmat_material_str_id")
         if IngoreMatTable[id] == nil and id then

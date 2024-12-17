@@ -48,7 +48,8 @@ local this = {
 		ConcatCache = {},
 		ResetAllCanMove = nil,
 		LastScreenWidth = -1,
-		LastScreenHeight = -1,
+        LastScreenHeight = -1,
+		TextInputHeight = 0
 	},
 	public = {
 		ScreenWidth = -1, --当前屏宽
@@ -1166,6 +1167,12 @@ local function jump_to_previous_position(text, cursor_pos)
     return 0
 end
 
+---返回输入框高度
+---@return number
+function UI.GetTextInputHeight()
+	return this.private.TextInputHeight
+end
+
 ---文本输入框，会保证文本不会超出限制
 ---@param id string
 ---@param x number
@@ -1843,6 +1850,39 @@ function UI.WidgetInfo()
 	return GuiGetPreviousWidgetInfo(this.public.gui)
 end
 
+---@class GuiInfo
+---@field clicked boolean
+---@field right_clicked boolean
+---@field hovered boolean
+---@field x number
+---@field y number
+---@field width number
+---@field height number
+---@field draw_x number
+---@field draw_y number
+---@field draw_width number
+---@field draw_height number
+
+---获取上个控件的参数的表封装形式
+---@return GuiInfo
+function UI.WidgetInfoTable()
+	local clicked, right_clicked, hovered, x, y, width, height, draw_x, draw_y, draw_width, draw_height = GuiGetPreviousWidgetInfo(this.public.gui)
+    local result = {
+        clicked = clicked,
+        right_clicked = right_clicked,
+        hovered = hovered,
+        x = x,
+        y = y,
+        width = width,
+        height = height,
+        draw_x = draw_x,
+        draw_y = draw_y,
+        draw_width = draw_width,
+        draw_height = draw_height,
+    }
+	return result
+end
+
 ---GuiLayoutBeginHorizontal
 ---@param x number
 ---@param y number
@@ -2124,7 +2164,14 @@ function UI.DispatchMessage()
         GuiDestroy(GetScaleGui)
         this.private.Scale = SrcH / this.public.ScreenHeight
         this.private.LastScreenWidth = this.public.ScreenWidth
-		this.private.LastScreenHeight = this.public.ScreenHeight
+        this.private.LastScreenHeight = this.public.ScreenHeight
+
+        GuiAnimateBegin(this.public.gui)
+		GuiAnimateAlphaFadeIn(this.public.gui, UI.NewID("__GetInputHeightAni"), 0, 0, false)
+		GuiOptionsAddForNextWidget(this.public.gui,GUI_OPTION.NonInteractive)
+        GuiTextInput(this.public.gui, UI.NewID("__GetInputHeight"), 0, 0, "", 10, 1)
+        GuiAnimateEnd(this.public.gui)
+		this.private.TextInputHeight = UI.WidgetInfoTable().height
 	end
 	
     for _, fn in pairs(this.private.FirstEventFn) do

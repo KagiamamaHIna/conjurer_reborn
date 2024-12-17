@@ -3,7 +3,7 @@ local AddCsv = ModTextFileGetContent("mods/conjurer_reborn/files/lang/lang.csv")
 ModTextFileSetContent("data/translations/common.csv", SrcCsv .. AddCsv)
 
 ModMaterialsFileAdd("mods/conjurer_reborn/files/overrides/materials.xml")
-ModLuaFileAppend("data/scripts/gun/gun_actions.lua", "mods/conjurer_reborn/files/actions.lua")
+--ModLuaFileAppend("data/scripts/gun/gun_actions.lua", "mods/conjurer_reborn/files/actions.lua")
 ModLuaFileAppend("data/scripts/items/drop_money.lua", "mods/conjurer_reborn/files/overrides/drop_money.lua")
 
 dofile_once("mods/conjurer_reborn/files/scripts/utilities.lua")
@@ -15,9 +15,10 @@ dofile_once("mods/conjurer_reborn/files/scripts/world_handlers.lua")
 handle_zoom_setting()
 
 -- World overrides
+replace_biome_map()
 append_custom_biomes()
 replace_pixel_scenes()
-replace_biome_map()
+
 
 function handle_inventory(player)
   local ITEMS_QUICK = {
@@ -75,13 +76,14 @@ end
 
 function OnPlayerDied(player)
   GlobalsToggleBool(PLAYER_HAS_DIED)
+  GlobalsSetValue("conjurer_unsafePowerKalmaActive", "0")--让游戏给玩家在下次开启时添加无敌和防变形
   GamePrintImportant(
-    "Somehow you managed to die for real",
-    "[Save & Quit] and [Continue] to keep your progress and respawn"
+    "$conjurer_reborn_player_died1",
+    "$conjurer_reborn_player_died2"
   )
 end
 
-
+--[[
 function OnWorldPreUpdate()
   if GlobalsGetBool(RAIN_ENABLED) then
     -- TODO: Maybe add a little variance to the count?
@@ -118,3 +120,4 @@ function OnWorldPreUpdate()
     EntitySetValue(world, "WorldStateComponent", "rain_target_extra", clouds)
   end
 end
+]]

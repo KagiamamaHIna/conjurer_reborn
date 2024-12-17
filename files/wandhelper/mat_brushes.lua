@@ -247,7 +247,8 @@ local Tools = {
 		release_action = filler_release_action,
     },
 	{
-		name = "$conjurer_reborn_material_tools_eyedropper_tool",
+        name = "$conjurer_reborn_material_tools_eyedropper_tool",
+		desc = "$conjurer_reborn_material_tools_eyedropper_tool_desc",
 		offset_x = 0,
 		offset_y = 10,
 		reticle_file = "mods/conjurer_reborn/files/wands/matwand/brushes/eyedropper_reticle.png",

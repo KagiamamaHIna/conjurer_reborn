@@ -568,3 +568,53 @@ function RestoreInput()
 		ComponentSetValue2(Controls, "enabled", true)
 	end
 end
+
+---返回世界状态组件上特定的值
+---@param key string
+---@return any
+function GetWorldValue(key)
+    local world = GameGetWorldStateEntity()
+    local worldComp = EntityGetFirstComponent(world, "WorldStateComponent")
+	return ComponentGetValue2(worldComp, key)
+end
+
+---设置世界状态组件上特定的值
+---@param key string
+---@param ... any
+function SetWorldValue(key, ...)
+	local world = GameGetWorldStateEntity()
+    local worldComp = EntityGetFirstComponent(world, "WorldStateComponent")
+    ComponentSetValue2(worldComp, key, ...)
+end
+
+local TimeSize = 60 * 24
+
+---返回当前世界的世界
+---@return integer hour
+---@return integer minute
+function GetWorldTimeStr()
+	--0是12:00
+    --0.5是24:00
+	--1就是下一轮
+    local value = GetWorldValue("time")
+    local AllMinute = value * TimeSize
+	local BaseHour = 12
+    local hour = math.floor(AllMinute / 60)
+    local minute = math.floor(AllMinute % 60)
+    local resultHour = BaseHour + hour
+    if resultHour >= 24 then--24小时制
+        resultHour = resultHour - 24
+    end
+	return resultHour, minute
+end
+
+---返回当前世界天数，从1开始记
+---@return integer
+function GetWorldDays()
+    local value = GetWorldValue("day_count")
+    local h = GetWorldTimeStr()
+    if h < 12 then
+        value = value + 1
+    end
+	return value + 1
+end

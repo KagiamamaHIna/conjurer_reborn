@@ -11,7 +11,7 @@ CSV = ParseCSV(ModTextFileGetContent("data/translations/common.csv"))
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/matwand.lua")  --材料法杖
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/entwand.lua")  --实体法杖
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/editwand.lua") --编辑法杖
-dofile_once("mods/conjurer_reborn/files/unsafe_gui/bottom.lua")			--底部按钮
+dofile_once("mods/conjurer_reborn/files/unsafe_gui/bottom.lua")         --底部按钮
 
 ---@type table|nil
 local ActiveTable
@@ -102,7 +102,7 @@ local MainBtns = {
 }
 
 UI.OnceCallOnExecute(function() --尝试移除
-	for _,v in pairs(MainBtns)do
+	for _, v in pairs(MainBtns) do
 		v.release()
 	end
 end)
@@ -111,7 +111,7 @@ local ItemSwitch = false
 
 local function RefreshSwitchWand()
 	local CurrentActive = GetActiveItem()
-	if ItemSwitch and ActiveTable and CurrentActive ~= -1 then--最后决定切换等操作
+	if ItemSwitch and ActiveTable and CurrentActive ~= -1 then --最后决定切换等操作
 		ItemSwitch = false
 		ActiveTable.release()
 		ActiveTable = nil
@@ -119,7 +119,7 @@ local function RefreshSwitchWand()
 end
 
 UI.MainTickFn["Main"] = function()
-	if UI.UserData["EditWandEntityToInspectEntity"] == nil then--每帧尝试移除一次
+	if UI.UserData["EditWandEntityToInspectEntity"] == nil then --每帧尝试移除一次
 		local indicator = EntityGetWithName("conjurer_reborn_editwand_indicator")
 		if indicator and indicator ~= 0 then
 			EntityKill(indicator)
@@ -130,17 +130,32 @@ UI.MainTickFn["Main"] = function()
 	if player == nil then
 		return
 	end
+	if GlobalsGetValue("conjurer_reborn_next_refresh_hp", "0") == "1" then --全局变量通知大法（
+		UI.OnceCallOnExecute(function()--回满血用的
+			local this_player = GetPlayer()
+			if this_player then
+				GlobalsSetValue("conjurer_reborn_next_refresh_hp", "0")
+				local dmgComponent = EntityGetFirstComponentIncludingDisabled(player, "DamageModelComponent")
+				if dmgComponent then
+					local max_health = ComponentGetValue2(dmgComponent, "max_hp")
+					ComponentSetValue2(dmgComponent, "hp", max_health)
+				end
+			end
+		end)
+	end
+    BottomBtnDraw(UI) --底部功能按钮绘制
+    --因为有些功能必须更新
+    --所以提前到这里来调用
+	--但是内部关于具体的按钮项则是会根据玩家打开背包阻止渲染
 
-	BottomBtnDraw(UI)
-
-	if ActiveTable then
+	if ActiveTable then--魔杖对应的实体的一些操作
 		ActiveTable.action(UI)
 		local item = GetActiveItem()
-        if item ~= -1 and not ItemSwitch then
+		if item ~= -1 and not ItemSwitch then
 			GlobalsSetValue("conjurer_reborn_active_item", tostring(item))
 			SetActiveItem(-1)
 			ItemSwitch = true
-        end
+		end
 		if item == -1 then
 			ItemSwitch = true
 		end
@@ -168,10 +183,10 @@ UI.MainTickFn["Main"] = function()
 		local item = GetActiveItem()
 		if item == -1 then --重置手持物品
 			local temp = tonumber(GlobalsGetValue("conjurer_reborn_active_item", "0"))
-            ItemSwitch = false
-            local inv = EntityGetWithName("inventory_quick")
+			ItemSwitch = false
+			local inv = EntityGetWithName("inventory_quick")
 			local IsChild = false
-			for _,child in pairs(EntityGetAllChildren(inv) or {})do--不是背包中的就不要设置了
+			for _, child in pairs(EntityGetAllChildren(inv) or {}) do --不是背包中的就不要设置了
 				if child == temp then
 					IsChild = true
 					break
@@ -230,28 +245,81 @@ UI.MainTickFn["Main"] = function()
 		end
 	end
 
-    for i = 1, #MainBtns do
-        if ActiveTable ~= MainBtns[i] then --未激活是半透明的
-            UI.NextOption(GUI_OPTION.DrawSemiTransparent)
-        end
-        UI.NextZDeep(0)
-        local left = UI.EasyMoveImgBtn(MainBtns[i].id, BtnX + 20 * (i - 1), BtnY, MainBtns[i].image)
-        UI.BetterTooltipsNoCenter(function()
-            UI.Text(0, 0, MainBtns[i].name)
-            UI.VerticalSpacing(2)
-            UI.Text(0, 0, MainBtns[i].desc)
-            UI.VerticalSpacing(2)
-            UI.Text(0, 0, GameTextGet("$conjurer_reborn_wand_switch", tostring(i)))
-        end, -3000, 10)
+	for i = 1, #MainBtns do
+		if ActiveTable ~= MainBtns[i] then --未激活是半透明的
+			UI.NextOption(GUI_OPTION.DrawSemiTransparent)
+		end
+		UI.NextZDeep(0)
+		local left = UI.EasyMoveImgBtn(MainBtns[i].id, BtnX + 20 * (i - 1), BtnY, MainBtns[i].image)
+		UI.BetterTooltipsNoCenter(function()
+			UI.Text(0, 0, MainBtns[i].name)
+			UI.VerticalSpacing(2)
+			UI.Text(0, 0, MainBtns[i].desc)
+			UI.VerticalSpacing(2)
+			UI.Text(0, 0, GameTextGet("$conjurer_reborn_wand_switch", tostring(i)))
+		end, -3000, 10)
 
-        if left then
-            ClickSound()
-            ToggleActiveOverlay(MainBtns[i])
-            ActiveImage = MainBtns[i].image
-        end
-    end
-	
+		if left then
+			ClickSound()
+			ToggleActiveOverlay(MainBtns[i])
+			ActiveImage = MainBtns[i].image
+		end
+	end
+
 	RefreshSwitchWand()
+end
+
+UI.MiscEventFn["WeatherLoop"] = function()
+	local WorldGlobalGetNumber = Compose(tonumber, WorldGlobalGet)
+    if WorldGlobalGetBool(UI, "GlobalRainCont", false) then
+        local RainCount = WorldGlobalGetNumber(UI, "RainDropletsSliderSave", "10")
+        local RainWidth = WorldGlobalGetNumber(UI, "RainExtraWidthSave", "1280")
+        local Mat = WorldGlobalGet(UI, "RainContMat", "water")
+        local VelocityMin = WorldGlobalGetNumber(UI, "RainVelocityMinSave", "30")
+        local VelocityMax = WorldGlobalGetNumber(UI, "RainVelocityMaxSave", "60")
+        local Gravity = WorldGlobalGetNumber(UI, "RainGravitySliderSave", "10")
+        local bounce, bflag = GetConjurerCheckBoxStatus("RainBouncyDroplet")
+        if not bflag then
+            bounce = true
+        end
+        local long, lflag = GetConjurerCheckBoxStatus("RainLongDroplets")
+		if not lflag then
+			long = true
+		end
+        GameEmitRainParticles(RainCount, RainWidth, Mat, VelocityMin, VelocityMax, Gravity, bounce, long)
+	end
+	if GetConjurerCheckBoxStatus("WeatherWindCont") then
+		local value_multiplier = 100
+		local world = GameGetWorldStateEntity()
+
+		-- Wind control
+        local wind = UI.GetSliderValue("WeatherWindSlider")
+		if wind == nil then
+			wind = tonumber(WorldGlobalGet(UI, "WeatherWindSliderSave", "0"))
+		end
+		SetWorldValue("wind_speed", wind)
+		
+		-- Fog control
+        local fog = UI.GetSliderValue("WeatheFogSlider")
+        if fog == nil then
+            fog = tonumber(WorldGlobalGet(UI, "WeatherCloudsSliderSave", "0"))
+        end
+		fog = fog / value_multiplier
+		SetWorldValue("fog", fog)
+		SetWorldValue("fog_target", fog)
+		SetWorldValue("fog_target_extra", fog)
+
+		-- Cloud control
+		-- [sic] "Rain" variables, from the docs:
+		-- "should be called clouds, controls amount of cloud cover in the sky"
+        local clouds = UI.GetSliderValue("WeatherCloudsSlider")
+        if clouds == nil then
+            clouds = tonumber(WorldGlobalGet(UI, "WeatheFogSliderSave", "0"))
+        end
+        clouds = clouds / value_multiplier
+        SetWorldValue("rain", clouds)
+		SetWorldValue("rain_target_extra", clouds)
+	end
 end
 
 return UI.DispatchMessage

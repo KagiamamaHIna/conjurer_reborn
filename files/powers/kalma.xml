@@ -1,0 +1,12 @@
+<Entity name="conjurer_reborn_kalma">
+	<InheritTransformComponent>
+	</InheritTransformComponent>
+	<GameEffectComponent
+		effect="PROTECTION_ALL"
+		frames="-1"
+	/>
+	<GameEffectComponent 
+        effect="PROTECTION_POLYMORPH"
+        frames="-1"
+    />
+</Entity>

@@ -22,6 +22,8 @@ function GetNameOrKey(key)
 	return name
 end
 
+local Globaldefault = "__conjurer_reborn_is_not_has_any_value___yes_i_am_sajo_yukimi_p"
+
 ---从当前世界的全局获取值或从UserData缓存的获取
 ---@param UI Gui
 ---@param key string
@@ -33,8 +35,8 @@ function WorldGlobalGet(UI, key, default)
 		UI.UserData["__WorldGlobalCache"] = {}
 	end
 	if UI.UserData["__WorldGlobalCache"][key] == nil then
-		local value = GlobalsGetValue(ModID .. key, "__conjurer_reborn_is_not_has_any_value___yes_i_am_sajo_yukimi_p")
-		if value == "__conjurer_reborn_is_not_has_any_value___yes_i_am_sajo_yukimi_p" then
+		local value = GlobalsGetValue(ModID .. key, Globaldefault)
+		if value == Globaldefault then
 			GlobalsSetValue(ModID .. key, default)
 			value = default
 		end
@@ -174,6 +176,80 @@ function EasySlider(UI, id, x, y, text, value_min, value_max, value_default, wid
 	return UI.GetSliderValue(id)
 end
 
+---相同(左边)文本宽度的滑条
+---@param UI Gui
+---@param id string
+---@param Align number
+---@param x number
+---@param y number
+---@param text string
+---@param value_min number
+---@param value_max number
+---@param value_default number
+---@param width number
+---@param tooltip string?
+---@param savedValue number?
+---@return number
+function SameWidthSlider(UI, id, Align, x, y, text, value_min, value_max, value_default, width, tooltip, savedValue, isDecimals, format)
+	format = format or ""
+	UI.BeginHorizontal(0, 0, true)
+    UI.NextZDeep(0)
+	text = GameTextGet(text)
+    local left = UI.TextBtn(id .. "TextBtn", 0, 0, text)
+    if left then
+        UI.SetSliderValue(id, value_min)
+    end
+    local _, _, hover, tx, ty, textWitdh = UI.WidgetInfo()
+	local number
+	local numberStr
+	if isDecimals then
+        number = UI.GetSliderValue(id) or 0
+		numberStr = tostring(number)
+    else
+		number = math.ceil(UI.GetSliderValue(id) or 0)
+		if number and number < 0 then
+			numberStr = tostring(number - 1)
+		end
+	end
+	if format then
+		numberStr = format
+	end
+    if hover then
+
+        UI.NextOption(GUI_OPTION.Layout_NoLayouting)
+        UI.NextZDeep(0)
+        UI.Text(tx + textWitdh + width + 6 + Align - textWitdh, ty + 1, numberStr)
+		if tooltip then
+			UI.BetterTooltipsNoCenter(function()--强制绘制悬浮窗
+				UI.Text(0,0,tooltip)
+			end, -3000, 8, nil, nil, nil, true, nil, nil, true)
+		end
+	end
+    UI.NextZDeep(0)
+	local result
+    if isDecimals then
+		local flag = false
+		if UI.GetSliderValue(id) == nil then
+			flag = true
+		end
+        result = UI.Slider(id, x + Align - textWitdh, y + 1, "", value_min, value_max, value_default, 0.01, format, width)
+		if flag and savedValue then
+			UI.SetSliderValue(id, savedValue)
+		end
+	else
+		result = EasySlider(UI, id, x + Align - textWitdh, y+1, "", value_min, value_max, value_default, width, savedValue)
+	end
+	if tooltip then
+		UI.GuiTooltip(tooltip)
+	end
+    GuiAnimateBegin(UI.gui)--帮助滑条能完整的显示文本
+	GuiAnimateAlphaFadeIn(UI.gui, UI.NewID(id.."ANI"), 0, 0, false)
+    UI.Text(0, 0, numberStr)
+    GuiAnimateEnd(UI.gui)
+    UI.LayoutEnd()
+	return result
+end
+
 ---Conjurer风格的Checkbox
 ---@param UI Gui
 ---@param id string
@@ -204,6 +280,18 @@ function ConjurerCheckbox(UI, id, x, y, text, zdeep, default)
 	end
 	UI.LayoutEnd()
 	return WorldGlobalGetBool(UI, StatusKey), left
+end
+
+---获取开启状态，第二个是全局变量是否初始化
+---@param id string
+---@return boolean status, boolean init
+function GetConjurerCheckBoxStatus(id)
+    local StatusKey = "conjurer_unsafe".. id .. "Status"
+	local result = GlobalsGetValue(StatusKey, Globaldefault)
+	if result == Globaldefault then
+		return false, false
+	end
+	return result == "1", true
 end
 
 ---Conjurer风格的Checkbox，不持久性保存数据
@@ -325,7 +413,23 @@ function EntitySetValues(entity, component_name, values)
 	ComponentSetValues(comp, values)
 end
 
+---来源于原版conjurer
+---@param entity integer
+---@param component_name string
+---@param attr_name string
+---@param value any
+function EntitySetValue(entity, component_name, attr_name, value)
+	if entity == nil or entity == 0 then return end
+
+	return ComponentSetValue2(EntityGetFirstComponentIncludingDisabled(entity, component_name), attr_name, value)
+end
+
 -- Shorthands for a really common actions
+---来源于原版conjurer
+---@param entity integer
+---@param component_name string
+---@param attr_name string
+---@return any
 function EntityGetValue(entity, component_name, attr_name)
 	if entity == nil or entity == 0 then return nil end
     local comp = EntityGetFirstComponentIncludingDisabled(entity, component_name)
@@ -333,6 +437,17 @@ function EntityGetValue(entity, component_name, attr_name)
 		return nil
 	end
 	return ComponentGetValue2(comp, attr_name)
+end
+
+---来源于原版conjurer
+---@param entity integer
+---@param component_name string
+---@param attr_name string
+function EntityToggleValue(entity, component_name, attr_name)
+	if entity == nil or entity == 0 then return end
+
+	local value = EntityGetValue(entity, component_name, attr_name)
+	EntitySetValue(entity, component_name, attr_name, not value)
 end
 
 ---来源于原版conjurer
@@ -564,8 +679,7 @@ function VerticalPage(UI, id, items, x, y, width, height, ColumnMax, sprite, Btn
 		local pageTextWidth = UI.TextDimensions(pageText, nil, PageTextScale, "data/fonts/font_pixel.xml")
 		UI.NextOption(GUI_OPTION.Layout_NoLayouting) --让文本绝对定位
 		UI.NextZDeep(2)
-		UI.Text(ScrollWidth / 2 + PageTextX - pageTextWidth / 2 + 1.5, PageTextY, pageText, PageTextScale,
-			"data/fonts/font_pixel.xml")
+		UI.Text(ScrollWidth / 2 + PageTextX - pageTextWidth / 2 + 1.5, PageTextY, pageText, PageTextScale, "data/fonts/font_pixel.xml")
 	end)
 
 	UI.DrawScrollContainer(id, true, true, sprite, nil, nil, -100)
@@ -620,8 +734,7 @@ function VerticalPage(UI, id, items, x, y, width, height, ColumnMax, sprite, Btn
 		end
 		UI.NextZDeep(2)
 		UI.NextOption(GUI_OPTION.Layout_NoLayouting)
-		UI.Text(x + (ScrollWidth - 4) / 2 - 0.5, YText + 13, ">", 1,
-			"mods/conjurer_reborn/files/font/VerticalPageFont.xml")
+		UI.Text(x + (ScrollWidth - 4) / 2 - 0.5, YText + 13, ">", 1, "mods/conjurer_reborn/files/font/VerticalPageFont.xml")
 	end)
 	UI.DrawScrollContainer(RightBtnId, true, true, sprite, nil, nil, -99)
 

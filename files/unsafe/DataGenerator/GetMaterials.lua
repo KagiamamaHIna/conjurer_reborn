@@ -215,6 +215,10 @@ for i = 1, #MatOrderedIdList do--通过有序表来获得数据，确保归类�
 		v.attr.liquid_stains = "0"
 	end
 
+	if IsNil(v.attr.lifetime) then--存在时间默认是0，代表永久时间
+		v.attr.lifetime = "0"
+	end
+
 	if IsNil(v.attr.electrical_conductivity) then
 		if v.attr.liquid_sand == "0" and v.attr.cell_type == "liquid" then--液体材料情况下默认导电
             v.attr.electrical_conductivity = "1"

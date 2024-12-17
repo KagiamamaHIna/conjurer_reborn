@@ -35,5 +35,18 @@ target_x = target_x + math.sin(time * bob_speed_x) * bob_w
 -- move towards target
 pos_x, pos_y = vec_lerp(pos_x, pos_y, target_x, target_y, lerp_amount)
 
+local player_x, player_y = EntityGetTransform(EntityGetParent(entity_id))
+local len = math.sqrt((player_x - pos_x)^2 + (player_y - pos_y)^2)
+if len > 256 then--距离大于256之后直接传送
+	SetRandomSeed(pos_x, pos_y)
+    pos_x = player_x + Random(-10,10)
+    pos_y = player_y - Random(2,10)
+    local effect = EntityLoad("data/entities/particles/teleportation_blast.xml", pos_x, pos_y)
+    EntityAddComponent2(effect, "LifetimeComponent", {
+		lifetime = 15
+	})
+	GamePlaySound("data/audio/Desktop/misc.bank", "game_effect/teleport/tick", GameGetCameraPos())
+end
+
 local mx,my = DEBUG_GetMouseWorld()
 EntitySetTransform( entity_id, pos_x, pos_y, math.atan2(my - pos_y,mx - pos_x), 1, 1)

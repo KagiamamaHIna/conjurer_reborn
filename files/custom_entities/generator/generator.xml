@@ -25,7 +25,7 @@
 
   <UIInfoComponent
     _tags="enabled_in_world"
-    name="Chained Thunderstone"
+    name="$conjurer_reborn_chained_thunderstone_entity"
   ></UIInfoComponent>
 
   <SpriteParticleEmitterComponent

@@ -61,7 +61,7 @@
 
   <InteractableComponent
     radius="25"
-    ui_text="Press $0 to operate the door"
+    ui_text="$conjurer_reborn_door"
     name="door"
   ></InteractableComponent>
 

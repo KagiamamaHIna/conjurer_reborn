@@ -100,9 +100,10 @@ local function EditwandInspect(UI)
 	local X = 30
 	local Y = 66
 	local name = GetEntityName(entity)
-	if name == "" then
-		name = "$conjurer_reborn_editwand_entity_nameless"
-	end
+    if name == "" then
+        name = "$conjurer_reborn_editwand_entity_nameless"
+    end
+	UI.NextZDeep(0)
 	UI.Text(X + 2, Y - 19, name)
 	UI.ScrollContainer("EditWandEntityEdit", X, Y - 2, 0, 0, 3.5, 3.5) --自动宽高
 	UI.AddAnywhereItem("EditWandEntityEdit", function()
@@ -150,11 +151,12 @@ local function EditwandInspect(UI)
 		UI.LayoutEnd()
 
 		local tags = EntityGetTags(entity)
-		if not tags or tags == "" then
-			tags = "$conjurer_reborn_editwand_no_tag"
-		end
+        if not tags or tags == "" then
+            tags = "$conjurer_reborn_editwand_no_tag"
+        end
 		local TagsText = GameTextGet("$conjurer_reborn_editwand_tag", GameTextGetTranslatedOrNot(tags))
 		local XmlPath = GameTextGet("$conjurer_reborn_editwand_entity", EntityGetFilename(entity))
+		local EntityIDText = GameTextGet("$conjurer_reborn_editwand_entity_id", tostring(entity))
 		UI.BeginHorizontal(0, 0, true)
 		UI.NextZDeep(0)
 		UI.Image("EditWandHoverImg", 0, 0, "mods/conjurer_reborn/files/gfx/editwand_icons/info_xml.png")
@@ -164,7 +166,7 @@ local function EditwandInspect(UI)
 		UI.NextColor(180, 159, 129, 255)
 		UI.NextZDeep(0)
 		UI.Text(0, 0, "$conjurer_reborn_editwand_info_xml_text")
-		UI.GuiTooltip(XmlPath .. "\n" .. TagsText)
+		UI.GuiTooltip(EntityIDText.."\n"..XmlPath .. "\n" .. TagsText)
 		UI.LayoutEnd()
 
 		UI.VerticalSpacing(2)

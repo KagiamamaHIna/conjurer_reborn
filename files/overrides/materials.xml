@@ -64,7 +64,7 @@
     _parent="coal"
     _inherit_reactions="1"
     name="conjurer_reborn_ash"
-    ui_name="ash"
+    ui_name="$conjurer_reborn_new_material_ash"
     tags="[liquid],[corrodible],[soluble],[impure]"
     wang_color="ff121213"
     show_in_creative_mode="1"

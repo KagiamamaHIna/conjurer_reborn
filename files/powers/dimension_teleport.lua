@@ -34,9 +34,23 @@ function collision_trigger(entity)
     teleport_if_necessary(destination_world)
 
     -- Mimic a "real" seeds that base worlds get. Something between 8 and 10 digits
-    local seed = Random(10000000, 9999999999)
-    SetWorldSeed(seed)
-
+    local GlobalSeed = GlobalsGetValue("conjurer_reborn_power_world_seed", "")
+	local seed
+	if GlobalSeed == "" then--没有就随机化
+    	seed = Random(0, 0x7FFFFFFE)
+	else
+		local tempSeed = tonumber(GlobalSeed)
+		if tempSeed then
+			seed = tempSeed
+		else--如果真的没有的话，就随机吧
+			seed = Random(0, 0x7FFFFFFE)
+		end
+	end
+	SetWorldSeed(seed)
+    local seedStr = tostring(seed)
+	
+	GamePrint(GameTextGet("$log_worldseed", seedStr))
+	
     -- Override all our own fun stuff with things necessary for loading NG+
     if destination_biome == BIOME_NOITA_NG then
       GameClearOrbsFoundThisRun()
@@ -48,15 +62,15 @@ function collision_trigger(entity)
 
     -- Actually change the map
     BiomeMapLoad_KeepPlayer(biome_file, scene_file)
-
+	
     -- Update current location
     GlobalsSetValue(BIOME_CURRENT, destination_biome)
     GlobalsSetValue(WORLD_CURRENT, destination_world)
-
+--[[
     -- Fix a case where you couldn't draw after a teleport, before swapping wands.
     if EntityGetName(get_active_wand()) == "matwand" then
       create_brush()
-    end
+    end]]
     return
   end
 

@@ -21,13 +21,13 @@
 
   <InteractableComponent
     radius="15"
-    ui_text="Press $0 to toggle power"
+    ui_text="$conjurer_reborn_chained_thunderstone"
     name="switch"
   ></InteractableComponent>
 
   <UIInfoComponent
     _tags="enabled_in_world"
-    name="Switch">
+    name="$conjurer_reborn_chained_thunderstone_switch">
   </UIInfoComponent>
 
   <LuaComponent

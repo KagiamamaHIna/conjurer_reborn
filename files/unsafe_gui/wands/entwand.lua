@@ -302,7 +302,7 @@ local function DrawFav(UI)
 				left, right = UI.ImageButton("FavEntIconPerk" .. perk.id .. index, 0, 0, perk.perk_icon)
 				UI.BetterTooltipsNoCenter(function()
 					PerkTooltipText(UI, value.item)
-				end, UI.GetZDeep() - 10, 10, 3)
+				end, UI.GetZDeep() - 1000, 10, 3)
 			end
 		elseif value.Type == EntityType.Spell then
             local spell = GetSpell(value.item)
@@ -312,7 +312,7 @@ local function DrawFav(UI)
 				left, right = UI.ImageButton("FavEntIconSpell" .. spell.id .. index, 0, 0, spell.sprite)
 				UI.BetterTooltipsNoCenter(function()
 					SpellTooltipText(UI, value.item)
-				end, UI.GetZDeep() - 10, 10, 3)
+				end, UI.GetZDeep() - 1000, 10, 3)
 			end
         else
             local item = ALL_ENTITIES[value.c_index].entities[value.item]
@@ -382,7 +382,7 @@ local function EntPicker(UI)
 			if v.desc then
 				UI.Text(0, 0, v.desc)
 			end
-        end, UI.GetZDeep() - 10, 10, 3)
+        end, UI.GetZDeep() - 1000, 10, 3)
 
 		UI.NextZDeep(0)
         GuiEndAutoBoxNinePiece(UI.gui, 0, 0, 0, false, 0, ThisBG)
@@ -405,6 +405,13 @@ local function EntPicker(UI)
                 if newScore > score then
                     score = newScore
                 end
+                local EnName = CSV.get(string.sub(enemy.name, 2), "en")
+				if EnName then
+					newScore = Cpp.AbsPartialPinyinRatio(EnName:lower(), keyword)
+					if newScore > score then
+						score = newScore
+					end
+				end
                 newScore = FromIdSearch(keyword, enemy.from_id)--搜索模组
 				if newScore > score then
                     score = newScore
@@ -417,6 +424,13 @@ local function EntPicker(UI)
                 if newScore > score then
                     score = newScore
                 end
+				local EnName = CSV.get(string.sub(perk.ui_name, 2), "en")
+				if EnName then
+					newScore = Cpp.AbsPartialPinyinRatio(EnName:lower(), keyword)
+					if newScore > score then
+						score = newScore
+					end
+				end
 				newScore = FromIdSearch(keyword, perk.conjurer_unsafe_from_id)
 				if newScore > score then
                     score = newScore
@@ -429,6 +443,13 @@ local function EntPicker(UI)
                 if newScore > score then
                     score = newScore
                 end
+				local EnName = CSV.get(string.sub(spell.name, 2), "en")
+				if EnName then
+					newScore = Cpp.AbsPartialPinyinRatio(EnName:lower(), keyword)
+					if newScore > score then
+						score = newScore
+					end
+				end
 				newScore = FromIdSearch(keyword, spell.conjurer_unsafe_from_id)
 				if newScore > score then
                     score = newScore
@@ -461,13 +482,13 @@ local function EntPicker(UI)
                 left, right = UI.ImageButton("EntIconPerk" .. perk.id .. index, 0, 0, perk.perk_icon)
                 UI.BetterTooltipsNoCenter(function()
                     PerkTooltipText(UI, item)
-                end, UI.GetZDeep() - 10, 10, 3)
+                end, UI.GetZDeep() - 1000, 10, 3)
             elseif ALL_ENTITIES[SwitchIndex].Type == EntityType.Spell then
                 local spell = GetSpell(item)
                 left, right = UI.ImageButton("EntIconSpell" .. spell.id .. index, 0, 0, spell.sprite)
                 UI.BetterTooltipsNoCenter(function()
                     SpellTooltipText(UI, item)
-                end, UI.GetZDeep() - 10, 10, 3)
+                end, UI.GetZDeep() - 1000, 10, 3)
             else
                 left, right = UI.ImageButton("EntIconOther" .. item.name .. index, 0, 0, item.image)
                 UI.GuiTooltip(GetNameOrKey(item.name))
@@ -502,9 +523,7 @@ end
 ---@param savedValue number
 ---@return number
 local function EntSlider(UI, id, x, y, text, value_min, value_max, value_default, width, savedValue)
-    UI.BeginHorizontal(0, 0, true)
-    UI.NextZDeep(0)
-	local Aligin = 0--对齐位置
+	local Align = 0--对齐位置
 	local desc = text.."_desc"--特化的，都满足这么个条件，所以可以少传参数
     ---因为是特化的，所以我们在这里计算最大对齐宽度
     local BigestWidth = GuiGetTextDimensions(UI.gui, GameTextGet("$conjurer_reborn_entwand_options_row"))
@@ -516,33 +535,8 @@ local function EntSlider(UI, id, x, y, text, value_min, value_max, value_default
     if new > BigestWidth then
         BigestWidth = new
     end
-	Aligin = BigestWidth + 2
-	text = GameTextGet(text)
-    local left = UI.TextBtn(id .. "TextBtn", 0, 0, text)
-    if left then
-        UI.SetSliderValue(id, value_min)
-    end
-    local _, _, hover,tx,ty,textWitdh = UI.WidgetInfo()
-    local number = tostring(math.ceil(UI.GetSliderValue(id) or 0))
-	if hover then
-        UI.NextOption(GUI_OPTION.Layout_NoLayouting)
-        UI.NextZDeep(0)
-		UI.Text(tx + textWitdh + width + 6 +  Aligin - textWitdh, ty+1, number)
-        UI.BetterTooltipsNoCenter(function()--强制绘制悬浮窗
-			UI.Text(0,0,desc)
-        end, -3000, 8, nil, nil, nil, true, nil, nil, true)
-	end
-	UI.NextZDeep(0)
-    local result = EasySlider(UI, id, x + Aligin - textWitdh, y+1, "", value_min, value_max, value_default, width, savedValue)
-    UI.GuiTooltip(desc)
-    GuiAnimateBegin(UI.gui)--帮助滑条能完整的显示文本
-	GuiAnimateAlphaFadeIn(UI.gui, UI.NewID(id.."ANI"), 0, 0, false)
-    UI.Text(0, 0, number)
-    GuiAnimateEnd(UI.gui)
-	
-    UI.LayoutEnd()
-	
-	return result
+	Align = BigestWidth + 2
+    return SameWidthSlider(UI, id, Align, x, y, text, value_min, value_max, value_default, width, desc, savedValue)
 end
 
 ---实体法杖设置选项
@@ -550,7 +544,8 @@ end
 local function EntOptions(UI)
 	local X = 30
     local Y = 66
-
+	
+	UI.NextZDeep(0)
 	UI.Text(X + 2, Y-19, GameTextGet("$conjurer_reborn_entwand_options_head"))
     UI.ScrollContainer("EntOptionsBox", X, Y - 2, 0, 0, 2, 2) --自动宽高
     UI.AddAnywhereItem("EntOptionsBox", function()

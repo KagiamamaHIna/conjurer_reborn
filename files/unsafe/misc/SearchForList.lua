@@ -140,6 +140,14 @@ function SearchInputBox(UI, id, list, x, y, width, score_min, refresh, callback)
         end
         UI.UserData[SavedKey] = true
     end
+
+    if hover and (InputIsKeyDown(Key_LCTRL) or InputIsKeyDown(Key_RCTRL)) and InputIsKeyJustDown(Key_v) then
+		local Clipboard = Cpp.GetClipboard()
+        Clipboard = Cpp.ANSIToUTF8(Clipboard)
+		if Clipboard and Clipboard ~= "" then
+			UI.SetInputText(id, keyword..Clipboard)
+		end
+	end
 	return cacheList, keyword
 end
 

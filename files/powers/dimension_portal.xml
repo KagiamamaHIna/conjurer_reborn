@@ -1,6 +1,6 @@
 <Entity name="dimension_portal" serialize="1">
   <UIInfoComponent
-    name="UNSTABLE TRANS-DIMENSIONAL PORTAL"
+    name="$conjurer_reborn_power_dim_portal"
   ></UIInfoComponent>
 
   <LightComponent

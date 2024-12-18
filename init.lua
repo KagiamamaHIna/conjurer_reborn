@@ -3,7 +3,6 @@ local AddCsv = ModTextFileGetContent("mods/conjurer_reborn/files/lang/lang.csv")
 ModTextFileSetContent("data/translations/common.csv", SrcCsv .. AddCsv)
 
 ModMaterialsFileAdd("mods/conjurer_reborn/files/overrides/materials.xml")
---ModLuaFileAppend("data/scripts/gun/gun_actions.lua", "mods/conjurer_reborn/files/actions.lua")
 ModLuaFileAppend("data/scripts/items/drop_money.lua", "mods/conjurer_reborn/files/overrides/drop_money.lua")
 
 dofile_once("mods/conjurer_reborn/files/scripts/utilities.lua")
@@ -56,11 +55,6 @@ end
 function OnPlayerSpawned(player)
   GameAddFlagRun("conjurer_reborn_world")
   handle_progression_setting()
-
-  -- Make real sure the global GUI container is loaded.
-  if #(EntityGetWithTag("conjurer_reborn_gui_container") or {}) == 0 then
-    --EntityLoad('mods/conjurer_reborn/files/gui/gui_container.xml' );
-  end
 
   if not GlobalsGetBool(FIRST_LOAD_DONE) or GlobalsGetBool(PLAYER_HAS_DIED) then
     handle_inventory(player)

@@ -1,5 +1,7 @@
 conjurer_reborn_lang_id,en,ru,pt-br,es-es,de,fr-fr,it,pl,zh-cn,jp,ko,,NOTES – use \n for newline,max length,,,,,,,,,,占位符，用于表示每一格对应的语言
 conjurer_reborn_unsafe_ver_error,"[Conjurer Reborn] requires [Conjurer Reborn Unsafe] version: v$0, but you currently have v$1 installed!",,,,,,,,[Conjurer Reborn]需要[Conjurer Reborn Unsafe] v$0 版本，但是你目前安装的是 v$1！,,,,,,,,,,,,,,,
+conjurer_reborn_unsafe_no_found1,[Conjurer-Reborn] requires [Conjurer-Reborn-Unsafe] mod to be enabled,,,,,,,,[Conjurer-Reborn]需要启用[Conjurer-Reborn-Unsafe]模组才能运行,,,,,,,,,,,,,,,
+conjurer_reborn_unsafe_no_found2,"[Conjurer-Reborn-Unsafe] can be downloaded at $0",,,,,,,,[Conjurer-Reborn-Unsafe]可以在$0下载,,,,,,,,,,,,,,,
 conjurer_reborn_hatch,Press $0 to operate hatch,,,,,,,,按 $0 开关活扳门,,,,,,,,,,,,,,,
 conjurer_reborn_door,Press $0 to operate the door,,,,,,,,按 $0 开关门,,,,,,,,,,,,,,,
 conjurer_reborn_book_manual_name,Trans-Dimensional Travel Guide - Page 2,,,,,,,,维度旅行指南 - 卷2,,,,,,,,,,,,,,,

@@ -1,7 +1,13 @@
 dofile_once("mods/conjurer_reborn/files/unsafe/unsafe.lua")
 if not UnsafeTrueVer then--如果版本检查没通过
-	function OnWorldPostUpdate()
-		GamePrint(GameTextGet("$conjurer_reborn_unsafe_ver_error",tostring(RequiredUnsafeVer),tostring(ConjurerRebornUnsafeVer)))
+	local count = 0
+    function OnWorldPostUpdate()
+		if count == 0 then
+			GamePrint(GameTextGet("$conjurer_reborn_unsafe_ver_error",tostring(RequiredUnsafeVer),tostring(ConjurerRebornUnsafeVer)))
+        elseif count >= 120 then
+			count = -1
+		end
+		count = count + 1
 	end
 	return
 end

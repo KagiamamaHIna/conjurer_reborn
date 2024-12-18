@@ -77,3 +77,16 @@ function OnPlayerDied(player)
     "$conjurer_reborn_player_died2"
   )
 end
+
+if not ModIsEnabled("conjurer_unsafe") then
+	local count = 0
+    function OnWorldPostUpdate()
+		if count == 0 then
+			GamePrint("$conjurer_reborn_unsafe_no_found1")
+			GamePrint(GameTextGet("$conjurer_reborn_unsafe_no_found2","It's not public yet :("))
+        elseif count >= 120 then
+			count = -1
+		end
+		count = count + 1
+	end
+end

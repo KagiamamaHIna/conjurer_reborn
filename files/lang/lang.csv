@@ -340,5 +340,5 @@ conjurer_reborn_setting_click_sound,Button click sound,,,,,,,,按钮点击音效
 conjurer_reborn_setting_other,Other,,,,,,,,其他,,,,,,,,,,,,,,,
 conjurer_reborn_setting_get_carrot,Give a carrot,,,,,,,,给一根胡萝卜,,,,,,,,,,,,,,,
 conjurer_reborn_setting_get_carrot_desc,"Did you lose your carrot?\nIf you still want one, click to get it!",,,,,,,,你的胡萝卜丢了吗？\n如果还想要一个，点击获得！,,,,,,,,,,,,,,,
-conjurer_reborn_setting_get_carrot_desc_error,"But you're not in the game!",,,,,,,,但是你还没进入游戏！,,,,,,,,,,,,,,,
+conjurer_reborn_setting_get_carrot_desc_error,"But you're not in the run!",,,,,,,,但是你还没进入游戏！,,,,,,,,,,,,,,,
 conjurer_reborn_setting_get_carrot_desc_no_conjurer,"But you're not in the conjurer's world right now!",,,,,,,,但是你现在不在conjurer的世界中！,,,,,,,,,,,,,,,

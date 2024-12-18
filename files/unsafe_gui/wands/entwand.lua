@@ -407,10 +407,16 @@ local function EntPicker(UI)
                 end
                 local EnName = CSV.get(string.sub(enemy.name, 2), "en")
 				if EnName then
-					newScore = Cpp.AbsPartialPinyinRatio(EnName:lower(), keyword)
-					if newScore > score then
-						score = newScore
-					end
+					local EnLowerName = EnName:lower()
+					newScore = Cpp.AbsPartialPinyinRatio(EnLowerName, keyword)
+                    if newScore > score then
+                        score = newScore
+                    end
+                    EnLowerName = Cpp.FinnishToEnLower(EnLowerName)
+					newScore = Cpp.AbsPartialPinyinRatio(EnLowerName, keyword)
+                    if newScore > score then
+                        score = newScore
+                    end
 				end
                 newScore = FromIdSearch(keyword, enemy.from_id)--搜索模组
 				if newScore > score then

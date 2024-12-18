@@ -58,7 +58,7 @@ function OnPlayerSpawned(player)
 
   -- Make real sure the global GUI container is loaded.
   if #(EntityGetWithTag("conjurer_reborn_gui_container") or {}) == 0 then
-    EntityLoad('mods/conjurer_reborn/files/gui/gui_container.xml' );
+    --EntityLoad('mods/conjurer_reborn/files/gui/gui_container.xml' );
   end
 
   if not GlobalsGetBool(FIRST_LOAD_DONE) or GlobalsGetBool(PLAYER_HAS_DIED) then

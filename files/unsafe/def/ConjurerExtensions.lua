@@ -312,3 +312,8 @@ function Cpp.NullImageCreate(Width, Height, channels)end
 ---@param iv table<integer, 16>
 ---@return string
 function Cpp.AES128CTR(str, key, iv)end
+
+---给定一个字符串，找到里面的芬兰语字母并将其转换为英文字母
+---@param str any
+---@return string
+function Cpp.FinnishToEnLower(str)end

@@ -976,9 +976,14 @@ function BottomBtnDraw(UI)
 	UI.NextZDeep(-99)
 	GuiEndAutoBoxNinePiece(UI.gui, 1, 0, 0, false, 0, SpriteBG, SpriteBG)
 	local info = UI.WidgetInfoTable()
-	BottomBoxX = UI.ScreenWidth * 0.5 - info.draw_width * 0.5 + 4 --居中
+	local mode = ModSettingGet("conjurer_reborn.bottom_pos")
+    if mode == "bottom_center" then
+		BottomBoxX = UI.ScreenWidth * 0.5 - info.draw_width * 0.5 + 4 --居中
+    elseif mode == "bottom_right" then
+		BottomBoxX = UI.ScreenWidth - info.draw_width - 2--靠右
+	end
+	
     BottomBoxY = info.y
-	--x = UI.ScreenWidth - info.draw_width - 2--靠右
 	UI.LayoutEnd()
 	DrawActiveFn(UI)
 end

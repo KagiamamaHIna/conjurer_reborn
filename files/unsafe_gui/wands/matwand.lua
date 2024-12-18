@@ -175,11 +175,14 @@ function MatTooltipText(UI, id)
 				end
 			end)
 		end
-		if MatTable[id].attr._parent then--显示继承链
+		if MatTable[id].name == "CellDataChild" and MatTable[id].attr._parent then--显示继承链
 			local list = {id}
             local CurrentMat = MatTable[id].attr._parent
             while CurrentMat do
                 list[#list + 1] = CurrentMat
+				if MatTable[CurrentMat].name == "CellData" then
+					break
+				end
                 CurrentMat = MatTable[CurrentMat].attr._parent
             end
             local Inherited = table.concat(list, " <- ")
@@ -602,8 +605,11 @@ local function MatPicker(UI)
             if newScore > score then
                 score = newScore
             end
-			local EnName = CSV.get(string.sub(MatTable[item].attr.ui_name,2), "en")
-			if EnName then--判断英文原名
+			local function GetEnName()
+				return CSV.get(string.sub(MatTable[item].attr.ui_name,2), "en")
+			end
+			local flag, EnName = pcall(GetEnName)
+			if flag and EnName then--判断英文原名
                 newScore = Cpp.AbsPartialPinyinRatio(EnName:lower(), keyword)
 				if newScore > score then
 					score = newScore

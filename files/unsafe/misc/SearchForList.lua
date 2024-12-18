@@ -69,7 +69,8 @@ function SearchInputBox(UI, id, list, x, y, width, score_min, refresh, callback)
     local _, _, hover = UI.WidgetInfo()
     local LastKeyword = UI.UserData["LastSearchKeyword" .. id]
     UI.UserData["LastSearchKeyword" .. id] = keyword
-	
+	UI.UserData["HasInputBoxHover"] = UI.UserData["HasInputBoxHover"] or hover
+
     if hover and InputIsMouseButtonJustDown(Mouse_right) then
 		ClickSound()
 		UI.TextInputRestore(id)

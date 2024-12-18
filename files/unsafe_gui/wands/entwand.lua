@@ -394,7 +394,10 @@ local function EntPicker(UI)
     local PageId = "EntWandPage" .. ALL_ENTITIES[SwitchIndex].name
 	UI.NextZDeep(0)
     list, return_keyword = SearchInputBox(UI, "EntwandSearch", list, X + 30, Y + 215, 102.5, 0, refresh,
-		function (item, keyword)
+        function(item, keyword)
+			local function GetEnName(str)
+				return CSV.get(string.sub(str, 2), "en")
+			end
 			local score
 			keyword = keyword:lower()
             if ALL_ENTITIES[SwitchIndex].Type == EntityType.Enemy then
@@ -405,8 +408,8 @@ local function EntPicker(UI)
                 if newScore > score then
                     score = newScore
                 end
-                local EnName = CSV.get(string.sub(enemy.name, 2), "en")
-				if EnName then
+                local flag, EnName = pcall(GetEnName, enemy.name)
+				if flag and EnName then
 					local EnLowerName = EnName:lower()
 					newScore = Cpp.AbsPartialPinyinRatio(EnLowerName, keyword)
                     if newScore > score then
@@ -430,8 +433,8 @@ local function EntPicker(UI)
                 if newScore > score then
                     score = newScore
                 end
-				local EnName = CSV.get(string.sub(perk.ui_name, 2), "en")
-				if EnName then
+				local flag, EnName = pcall(GetEnName, perk.ui_name)
+				if flag and EnName then
 					newScore = Cpp.AbsPartialPinyinRatio(EnName:lower(), keyword)
 					if newScore > score then
 						score = newScore
@@ -449,8 +452,8 @@ local function EntPicker(UI)
                 if newScore > score then
                     score = newScore
                 end
-				local EnName = CSV.get(string.sub(spell.name, 2), "en")
-				if EnName then
+				local flag, EnName = pcall(GetEnName, spell.name)
+				if flag and EnName then
 					newScore = Cpp.AbsPartialPinyinRatio(EnName:lower(), keyword)
 					if newScore > score then
 						score = newScore

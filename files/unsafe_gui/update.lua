@@ -119,6 +119,9 @@ local function RefreshSwitchWand()
 end
 
 UI.MainTickFn["Main"] = function()
+	UI.OnceCallOnExecute(function ()
+		UI.UserData["HasInputBoxHover"] = nil
+	end)
 	if UI.UserData["EditWandEntityToInspectEntity"] == nil then --每帧尝试移除一次
 		local indicator = EntityGetWithName("conjurer_reborn_editwand_indicator")
 		if indicator and indicator ~= 0 then
@@ -206,15 +209,15 @@ UI.MainTickFn["Main"] = function()
 	end
 
 	local shift = InputIsKeyDown(Key_LSHIFT) or InputIsKeyDown(Key_RSHIFT)
-	if shift and InputIsKeyJustDown(Key_1) then --shift+数字键快捷键切换
+	if shift and InputIsKeyJustDown(Key_1) and not UI.UserData["HasInputBoxHover"] then --shift+数字键快捷键切换
 		SwitchActive(MainBtns[1])
 		ActiveImage = MainBtns[1].image
 		ItemSwitch = false
-	elseif shift and InputIsKeyJustDown(Key_2) then
+	elseif shift and InputIsKeyJustDown(Key_2) and not UI.UserData["HasInputBoxHover"] then
 		SwitchActive(MainBtns[2])
 		ActiveImage = MainBtns[2].image
 		ItemSwitch = false
-	elseif shift and InputIsKeyJustDown(Key_3) then
+	elseif shift and InputIsKeyJustDown(Key_3) and not UI.UserData["HasInputBoxHover"] then
 		SwitchActive(MainBtns[3])
 		ActiveImage = MainBtns[3].image
 		ItemSwitch = false

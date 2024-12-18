@@ -1,4 +1,3 @@
-dofile("data/scripts/lib/coroutines.lua")
 dofile("data/scripts/lib/utilities.lua")
 
 --dofile_once("mods/conjurer_reborn/files/scripts/lists/material_categories.lua");

@@ -3,8 +3,6 @@ dofile_once("data/scripts/newgame_plus.lua")
 dofile_once("mods/conjurer_reborn/files/scripts/utilities.lua")
 dofile_once("mods/conjurer_reborn/files/scripts/enums.lua")
 
-dofile_once("mods/conjurer_reborn/files/wands/matwand/toggle_brush.lua")
-
 
 -- Teleport player to spawn locations only when changing between Noita's
 -- and our Conjurer's own worlds, not just different biomes.

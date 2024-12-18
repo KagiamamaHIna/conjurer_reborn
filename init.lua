@@ -54,6 +54,7 @@ end
 
 
 function OnPlayerSpawned(player)
+  GameAddFlagRun("conjurer_reborn_world")
   handle_progression_setting()
 
   -- Make real sure the global GUI container is loaded.

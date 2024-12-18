@@ -127,6 +127,12 @@ mod_settings =
 				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
             }),
 			Setting({
+				id = "click_sound",
+				ui_name = "conjurer_reborn_setting_click_sound",
+				value_default = true,
+				scope = MOD_SETTING_SCOPE_RUNTIME,
+            }),
+			Setting({
 				id = "bottom_pos",
 				ui_name = "conjurer_reborn_setting_bottom_pos",
 				value_default = "bottom_center",
@@ -152,6 +158,34 @@ mod_settings =
 					{ "mouse2", "conjurer_reborn_setting_secondary_button_mouse2" }
 				}),
 				scope = MOD_SETTING_SCOPE_NEW_GAME,
+			})
+		},
+    }),
+	Setting({
+		category_id = "conjurer_other",
+		ui_name = "conjurer_reborn_setting_other",
+        settings = {
+			Setting({
+				id = "get_carrot",
+				ui_name = "",
+				ui_description = "",
+				ui_fn = function(mod_id, gui, in_main_menu, im_id, setting)
+					GuiIdPushString(gui,"conjurer_reborn_get_carrot")
+                    local click = GuiButton(gui, 1, 2, 0, GetTextOrKey("conjurer_reborn_setting_get_carrot"))
+                    local flag, entity = pcall(GameGetWorldStateEntity)
+					local isConjurer = GameHasFlagRun("conjurer_reborn_world")
+					local desc = ""
+					if not flag or entity == 0 then
+						desc = GetTextOrKey("conjurer_reborn_setting_get_carrot_desc_error")
+                    elseif entity ~= 0 and not isConjurer then
+						desc = GetTextOrKey("conjurer_reborn_setting_get_carrot_desc_no_conjurer")
+					end
+                    GuiTooltip(gui, GetTextOrKey("conjurer_reborn_setting_get_carrot_desc"), desc)
+					if click and flag and entity ~= 0 and isConjurer then
+						GlobalsSetValue("conjurer_reborn_get_carrot", "1")
+					end
+					GuiIdPop(gui)
+				end
 			})
 		},
 	}),

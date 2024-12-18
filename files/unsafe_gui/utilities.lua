@@ -2,7 +2,9 @@ dofile_once("mods/conjurer_reborn/files/unsafe/unsafe.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 
 function ClickSound()
-	GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", GameGetCameraPos())
+	if ModSettingGet("conjurer_reborn.click_sound") then
+		GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", GameGetCameraPos())
+	end
 end
 
 function ItemSound()
@@ -208,21 +210,27 @@ function SameWidthSlider(UI, id, Align, x, y, text, value_min, value_max, value_
     else
 		number = math.ceil(UI.GetSliderValue(id) or 0)
 		if number and number < 0 then
-			numberStr = tostring(number - 1)
+            numberStr = tostring(number - 1)
+        elseif number then
+			numberStr = tostring(number)
 		end
 	end
-	if format then
+	if format ~= "" then
 		numberStr = format
 	end
     if hover then
-
         UI.NextOption(GUI_OPTION.Layout_NoLayouting)
         UI.NextZDeep(0)
         UI.Text(tx + textWitdh + width + 6 + Align - textWitdh, ty + 1, numberStr)
+        local TextInfo = UI.WidgetInfoTable()
+        local offset_x = 8
+		if TextInfo.x > UI.ScreenWidth * 0.5 then--大于半屏后的偏移
+            offset_x = offset_x + textWitdh + width + 6 + Align - textWitdh
+		end
 		if tooltip then
 			UI.BetterTooltipsNoCenter(function()--强制绘制悬浮窗
 				UI.Text(0,0,tooltip)
-			end, -3000, 8, nil, nil, nil, true, nil, nil, true)
+			end, -3000, offset_x, nil, nil, nil, true, nil, nil, true)
 		end
 	end
     UI.NextZDeep(0)
@@ -239,6 +247,7 @@ function SameWidthSlider(UI, id, Align, x, y, text, value_min, value_max, value_
 	else
 		result = EasySlider(UI, id, x + Align - textWitdh, y+1, "", value_min, value_max, value_default, width, savedValue)
 	end
+	
 	if tooltip then
 		UI.GuiTooltip(tooltip)
 	end

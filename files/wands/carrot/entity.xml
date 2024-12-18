@@ -1,4 +1,4 @@
-<Entity tags="hittable,teleportable_NOT,item_physics">
+<Entity tags="hittable,teleportable_NOT,item_physics" name="conjurer_reborn_carrot">
 
   <!-- physical presence -->
   <PhysicsBodyComponent
@@ -43,7 +43,7 @@
     is_pickable="1"
     is_equipable_forced="1"
     ui_sprite="mods/conjurer_reborn/files/wands/carrot/ui_gfx.png"
-    preferred_inventory="FULL"
+    preferred_inventory="QUICK"
   ></ItemComponent>
 
   <UIInfoComponent

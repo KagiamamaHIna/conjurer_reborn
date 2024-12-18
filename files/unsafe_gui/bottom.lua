@@ -592,6 +592,7 @@ local function RenderWeatherMenu(UI)
 	UI.NextZDeep(0)
     if UI.ImageButton("RainContBtn", 0, 0, RainContBtnImg) then --材料图标显示
         WorldGlobalSetBool(UI, "GlobalRainCont", not ContStatus)
+		ClickSound()
     end
 	local RainTooltip = ContStatus and "$conjurer_reborn_power_weather_rain_end" or "$conjurer_reborn_power_weather_rain_start"
 	UI.GuiTooltip(RainTooltip)
@@ -930,6 +931,7 @@ local main_menu_items = {
 	},
 }
 
+local LastMode
 ---绘制底部按钮
 ---@param UI Gui
 function BottomBtnDraw(UI)
@@ -941,8 +943,30 @@ function BottomBtnDraw(UI)
 	if GameIsInventoryOpen() then
 		return
 	end
-	if BottomBoxX == nil then
-		BottomBoxX = -UI.ScreenWidth
+    if BottomBoxX == nil then
+        BottomBoxX = -UI.ScreenWidth
+    end
+	local Enable = WorldGlobalGetBool(UI, "BottomBoxEnable", true)
+    UI.NextZDeep(0)
+	if not Enable then
+		UI.NextOption(GUI_OPTION.DrawSemiTransparent)
+	end
+    if UI.ImageButton("BottomBoxSwitch", BottomBoxX - 12, UI.ScreenHeight - 11.5, "mods/conjurer_reborn/files/gfx/BottomSwitch.png") then
+        WorldGlobalSetBool(UI, "BottomBoxEnable", not Enable)
+        ClickSound()
+    end
+    local mode = ModSettingGet("conjurer_reborn.bottom_pos")
+	if mode ~= LastMode then--隐藏布局的情况下重置
+		BottomBoxX = nil
+	end
+	LastMode = mode
+    if not Enable and BottomBoxX ~= nil then
+
+        return
+    end
+	if BottomBoxX == nil and Enable then
+		GuiAnimateBegin(UI.gui)
+        GuiAnimateAlphaFadeIn(UI.gui, UI.NewID("BottomMenuANI"), 0, 0, false)
 	end
 	UI.BeginHorizontal(BottomBoxX, UI.ScreenHeight - 21.5, true)
 	GuiBeginAutoBox(UI.gui) --框住用的自动盒子
@@ -976,7 +1000,10 @@ function BottomBtnDraw(UI)
 	UI.NextZDeep(-99)
 	GuiEndAutoBoxNinePiece(UI.gui, 1, 0, 0, false, 0, SpriteBG, SpriteBG)
 	local info = UI.WidgetInfoTable()
-	local mode = ModSettingGet("conjurer_reborn.bottom_pos")
+    
+	if Enable and BottomBoxX == nil then
+		GuiAnimateEnd(UI.gui)
+	end
     if mode == "bottom_center" then
 		BottomBoxX = UI.ScreenWidth * 0.5 - info.draw_width * 0.5 + 4 --居中
     elseif mode == "bottom_right" then

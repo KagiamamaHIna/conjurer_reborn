@@ -290,8 +290,6 @@ UI.MiscEventFn["WeatherLoop"] = function()
 	end
 	if GetConjurerCheckBoxStatus("WeatherWindCont") then
 		local value_multiplier = 100
-		local world = GameGetWorldStateEntity()
-
 		-- Wind control
         local wind = UI.GetSliderValue("WeatherWindSlider")
 		if wind == nil then
@@ -319,6 +317,17 @@ UI.MiscEventFn["WeatherLoop"] = function()
         clouds = clouds / value_multiplier
         SetWorldValue("rain", clouds)
 		SetWorldValue("rain_target_extra", clouds)
+	end
+end
+
+UI.MiscEventFn["SettingOtherUpdate"] = function ()
+	if GlobalsGetValue("conjurer_reborn_get_carrot") == "1" then
+        local player = GetPlayer()
+		if player then
+            local x, y = EntityGetTransform(player)
+            EntityLoad("mods/conjurer_reborn/files/wands/carrot/entity.xml", x, y)
+			GlobalsSetValue("conjurer_reborn_get_carrot", "0")
+		end
 	end
 end
 

@@ -157,18 +157,21 @@ for _,v in pairs(MatTable) do
     ChildExpansion(v)
 end
 
+local RemoveMatList = {}
 --因为有可能会继承is_just_particle_fx，所以要在解析结束到最后再来判断一次，筛选出来不符合条件的材料并删除
 for _,v in pairs(MatTable) do
     if IsMaterial(v) then
         goto continue
     end
-    table.remove(MatTable, v.attr.name)
-	for k,id in pairs(MatOrderedIdList)do--简单点写法就这样了，数据量应该不会很大
-		if id == v.attr.name then
-			table.remove(MatOrderedIdList, k)
-		end
-	end
+	MatTable[v.attr.name] = nil
+	RemoveMatList[v.attr.name] = true
 	::continue::
+end
+
+for i=#MatOrderedIdList,1,-1 do
+	if RemoveMatList[MatOrderedIdList[i]] then
+		table.remove(MatOrderedIdList, i)
+	end
 end
 
 --将tags分割成表方便以后处理，顺带归类材料和初始化一些材料属性
@@ -217,6 +220,10 @@ for i = 1, #MatOrderedIdList do--通过有序表来获得数据，确保归类�
 
 	if IsNil(v.attr.lifetime) then--存在时间默认是0，代表永久时间
 		v.attr.lifetime = "0"
+	end
+
+	if IsNil(v.attr.platform_type) then--默认0，代表无法站立
+		v.attr.platform_type = "0"
 	end
 
 	if IsNil(v.attr.electrical_conductivity) then

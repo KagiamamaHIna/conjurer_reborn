@@ -81,6 +81,8 @@ function MatTooltipText(UI, id)
 
         local liquid_static = MatTable[id].attr.liquid_static ~= "0"--是否静态
         NewLine("$conjurer_reborn_material_tooltip_static", liquid_static and "$menu_yes" or "$menu_no")
+		local platform_type = MatTable[id].attr.platform_type ~= "0"--是否可穿过
+        NewLine("$conjurer_reborn_material_tooltip_platform_type", platform_type and "$menu_yes" or "$menu_no")
         local electrical_conductivity = MatTable[id].attr.electrical_conductivity ~= "0"--是否导电
         NewLine("$conjurer_reborn_material_tooltip_electrical", electrical_conductivity and "$menu_yes" or "$menu_no")
 		local burnable = MatTable[id].attr.burnable ~= "0"--是否可燃
@@ -100,7 +102,7 @@ function MatTooltipText(UI, id)
         local StainsEffect = nil
 		local HasStains = false
 		local IngestionEffect = nil
-		if MatTable[id].attr.status_effects and MatTable[id].attr.liquid_stains ~= "0" then
+		if MatTable[id].attr.status_effects and MatTable[id].attr.liquid_stains ~= "0" and MatTable[id].attr.status_effects ~= "NONE" then
             StainsEffect = {MatTable[id].attr.status_effects}
 			HasStains = true
 		end
@@ -117,7 +119,7 @@ function MatTooltipText(UI, id)
                         if StainsEffect then                     --判断是否已经有了
                             if HasStains and StainsEffect[1] == effect.attr.type then --沾湿与字段沾湿定义判重
                                 goto continue
-                            else                                 --如果不是重复的或不是提前定义的
+							elseif effect.attr.type ~= "NONE" then--如果不是重复的或不是提前定义的
                                 StainsEffect[#StainsEffect + 1] = effect.attr.type
                             end
                         else --没有的话，那么就新建表增加
@@ -126,7 +128,7 @@ function MatTooltipText(UI, id)
                     elseif EffectElem.name == "Ingestion" then
                         if IngestionEffect then
                             IngestionEffect[#IngestionEffect+1] = { effect.attr.type, effect.attr.amount }
-                        else
+                        elseif effect.attr.type ~= "NONE" then
                             IngestionEffect = {
                                 { effect.attr.type, effect.attr.amount },
 							}
@@ -157,7 +159,13 @@ function MatTooltipText(UI, id)
         end
 		if IngestionEffect then--显示摄取状态
 			NewLine("$conjurer_reborn_material_tooltip_ingest", "",function ()
-				for k,v in ipairs(IngestionEffect)do
+                for k, v in ipairs(IngestionEffect) do
+                    if v[1] == nil then
+                        goto continue
+                    end
+					if StatusTable[v[1]] == nil then
+						goto continue
+					end
                     local effect = StatusTable[v[1]][1]
 					if effect == nil then
 						goto continue
@@ -759,10 +767,10 @@ local function DrawFav(UI)
 				local ctrl = InputIsKeyDown(Key_LCTRL) or InputIsKeyDown(Key_RCTRL)
                 if left and ctrl then
                     ClickSound()
-					if MatTable[id].conjurer_unsafe_type == MatType.Box2d then
+					if MatTable[value.matid].conjurer_unsafe_type == MatType.Box2d then
 						GamePrint("$conjurer_reborn_power_weather_active_rain_mat_error")
                     else
-						WorldGlobalSet(UI, "RainContMat", id)
+						WorldGlobalSet(UI, "RainContMat", value.matid)
 					end
                 elseif left then
 					ClickSound()

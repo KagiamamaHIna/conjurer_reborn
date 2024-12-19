@@ -45,7 +45,7 @@ function OnWorldPostUpdate()
         dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetAllData.lua") --确保数据收集
         dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/MatIconSpawn.lua")
         GuiUpdate = dofile_once("mods/conjurer_reborn/files/unsafe_gui/update.lua")
-        --加载流程
+        --加载流程	
         ClearDofileOnceCache("mods/conjurer_reborn/files/unsafe/DataGenerator/GetDataWak.lua") --清除缓存，将datawak的数据交给lua销毁
     end
 	GuiUpdate()

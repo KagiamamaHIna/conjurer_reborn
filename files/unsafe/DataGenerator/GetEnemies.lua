@@ -192,11 +192,13 @@ end
 --后续需要移除有图片但是没敌人的情况
 for k,_ in pairs(HasEnemiesIcon)do
 	if HasEnemies[k] == nil then--如果不存在此敌人
-		for enemyKey,v in pairs(EnemiesTable)do--简单点写法就这样了，数据量应该不会很大
-			if v == k then
-				table.remove(EnemiesTable, enemyKey)
-			end
-		end
+		EnemiesTable[k] = nil
+	end
+end
+
+for i=#OrderedListId,1,-1 do--如果不存在就移除不存在敌人
+	if not EnemiesTable[OrderedListId[i]] then
+        table.remove(OrderedListId, i)
 	end
 end
 

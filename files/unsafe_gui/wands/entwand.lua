@@ -484,8 +484,13 @@ local function EntPicker(UI)
 			local left, right
             if ALL_ENTITIES[SwitchIndex].Type == EntityType.Enemy then
                 local enemy = GetEnemy(item)
-                left, right = UI.ImageButton("EntIconEnemy" .. enemy.name .. index, 0, 0, enemy.png)
-                EnemyTooltip(UI, item, index)
+				if enemy then
+					left, right = UI.ImageButton("EntIconEnemy" .. enemy.name .. index, 0, 0, enemy.png)
+                    EnemyTooltip(UI, item, index)
+                else
+					print("WTFITEM:", item)
+				end
+
             elseif ALL_ENTITIES[SwitchIndex].Type == EntityType.Perk then
                 local perk = GetPerk(item)
                 left, right = UI.ImageButton("EntIconPerk" .. perk.id .. index, 0, 0, perk.perk_icon)

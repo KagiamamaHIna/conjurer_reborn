@@ -31,11 +31,6 @@ local function DrawActiveFn(UI)
 	end
 end
 
-local NumberStr = "0123456789"
-local NumberTable = {}
-for i=1,#NumberStr do
-	NumberTable[string.byte(NumberStr,i,i)] = true
-end
 ---绘制维度旅行菜单
 ---@param UI Gui
 local function RenderWorldMenu(UI)
@@ -230,7 +225,7 @@ local function RenderTeleportMenu(UI)
 	end
 	UI.LayoutEnd()
 	UI.NextZDeep(-1000)
-	GuiEndAutoBoxNinePiece(UI.gui, -1, 0, 0, false, 0, "mods/conjurer_reborn/files/gfx/9piece_purple.png")
+	GuiEndAutoBoxNinePiece(UI.gui, -1, 0, 0, false, 0, "mods/conjurer_reborn/files/gfx/9piece_purple.png", "mods/conjurer_reborn/files/gfx/9piece_purple.png")
 	local Info = UI.WidgetInfoTable()
 
 	UI.BeginHorizontal(Info.draw_x + Info.draw_width + 4, BottomBoxY - 23, true, 1)
@@ -590,7 +585,7 @@ local function RenderWeatherMenu(UI)
 		RainContBtnImg = icon
 	end
 	UI.NextZDeep(0)
-    if UI.ImageButton("RainContBtn", 0, 0, RainContBtnImg) then --材料图标显示
+    if UI.ImageButton("RainContBtn", 0, 0, RainContBtnImg) then
         WorldGlobalSetBool(UI, "GlobalRainCont", not ContStatus)
 		ClickSound()
     end

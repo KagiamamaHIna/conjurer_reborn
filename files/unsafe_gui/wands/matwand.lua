@@ -106,7 +106,7 @@ function MatTooltipText(UI, id)
             StainsEffect = {MatTable[id].attr.status_effects}
 			HasStains = true
 		end
-        for _, v in pairs(MatTable[id].children) do --为了健壮性的实现索引写的很复杂
+        for _, v in pairs(MatTable[id].children) do --为了健壮性的实现所以写的很复杂
             if v.name ~= "StatusEffects" then
                 goto continue
             end

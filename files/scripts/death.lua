@@ -26,6 +26,6 @@ function damage_received(damage, message, entity_thats_responsible, is_fatal)
 		ComponentSetValue2(dmgComponent, "hp", max_health)
 	end]]
     --
-    GamePrintImportant("You died", "No rest for the wicked")
+    GamePrintImportant("$conjurer_reborn_player_reborn1", "$conjurer_reborn_player_reborn2")
   end
 end

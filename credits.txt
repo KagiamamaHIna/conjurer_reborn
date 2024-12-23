@@ -13,7 +13,9 @@ Testers & Support:
 
 ----------------------------------------------
 
-- Conjurer-Reborn Credits
+- Conjurer-Reborn Credits:
 
 Developer of Conjurer:
-- Mortti, Developed the original version of Conjurer
+- Ryyst (Mortti), Developed the original version of Conjurer
+-- Github: https://github.com/ryyst/conjurer
+-- Steam Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=2319794898

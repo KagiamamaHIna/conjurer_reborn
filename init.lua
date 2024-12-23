@@ -83,7 +83,7 @@ if not ModIsEnabled("conjurer_unsafe") then
     function OnWorldPostUpdate()
 		if count == 0 then
 			GamePrint("$conjurer_reborn_unsafe_no_found1")
-			GamePrint(GameTextGet("$conjurer_reborn_unsafe_no_found2","It's not public yet :("))
+			GamePrint(GameTextGet("$conjurer_reborn_unsafe_no_found2","https://github.com/KagiamamaHIna/conjurer_unsafe"))
         elseif count >= 120 then
 			count = -1
 		end

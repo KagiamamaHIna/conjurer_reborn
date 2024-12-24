@@ -14,7 +14,11 @@ function handle_zoom_setting()
     huge="mods/conjurer_reborn/files/overrides/resolution_huge.xml",
     fullhd="mods/conjurer_reborn/files/overrides/resolution_fullhd.xml",
   }
-
+    local text = ModTextFileGetContent(ZOOM_LEVELS[zoom])
+    if text == "" or nil then
+		print("Zoom Error! file no found:",ZOOM_LEVELS[zoom])
+		return
+	end
   ModMagicNumbersFileAdd(ZOOM_LEVELS[zoom])
 
 

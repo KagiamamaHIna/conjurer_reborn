@@ -1,6 +1,6 @@
 dofile("data/scripts/lib/mod_settings.lua")
 
-local csv = dofile_once("mods/conjurer_reborn/files/lib/csv.lua")
+local csv = dofile_once("mods/conjurer_unsafe/csv.lua")
 
 local currentLang = csv(ModTextFileGetContent("mods/conjurer_reborn/files/lang/lang.csv"))
 local gameLang = csv(ModTextFileGetContent("data/translations/common.csv"))

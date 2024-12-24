@@ -1,0 +1,8 @@
+<Mod  
+   name="Conjurer Reborn"  
+   description=""  
+   tags="gameplay,total conversions,game modes,creatures,alchemy,items,cheats"  
+   dont_upload_folders=".vscode|.git"  
+   dont_upload_files=".editorconfig|workshop_preview_image.png"  
+>  
+</Mod>

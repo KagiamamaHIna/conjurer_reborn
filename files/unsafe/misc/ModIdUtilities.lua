@@ -14,7 +14,7 @@ for _, v in pairs(mod_config.children) do --解析来获取一个id到模组实�
     if v.name ~= "Mod" then
         goto continue
     end
-    if v.attr.workshop_item_id ~= "0" and workshopPath then --创意工坊模组，且要有 有效的workshopPath
+    if v.attr.workshop_item_id and v.attr.workshop_item_id ~= "0" and workshopPath then --创意工坊模组，且要有 有效的workshopPath
         ModIdToPathTable[v.attr.name] = workshopPath .. v.attr.workshop_item_id .. "/"
 		ModWorkshopToId[v.attr.workshop_item_id] = v.attr.name
     else                                   --本地模组，用相对路径即可

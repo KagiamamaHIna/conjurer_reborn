@@ -47,7 +47,10 @@ local function OriAndModDataAppend(path, isSibling)
 		::continue::
     end
 	for _, modid in pairs(ModEnableList) do
-		local ModPath = ModIdToPath(modid)
+        local ModPath = ModIdToPath(modid)
+		if ModPath == nil then
+			goto continue
+		end
         local ModDataPath = ModPath .. path
 		_result[modid] = {}
 		if not Cpp.PathExists(ModDataPath) then--如果路径不存在就下一次循环

@@ -6,6 +6,11 @@ dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 function GetWorkshopPath()
 	local SteamPath = Cpp.RegLMGetValue("SOFTWARE\\WOW6432Node\\Valve\\Steam\\NSIS", "Path")
     if SteamPath then
-		return SteamPath .. "/steamapps/workshop/content/881100/"
+        return SteamPath .. "/steamapps/workshop/content/881100/"
+    else
+        local flag = Cpp.PathExists("../../workshop/content/881100/")
+		if flag then
+			return "../../workshop/content/881100/"
+		end
     end
 end

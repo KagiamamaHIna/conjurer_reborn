@@ -317,3 +317,14 @@ function Cpp.AES128CTR(str, key, iv)end
 ---@param str any
 ---@return string
 function Cpp.FinnishToEnLower(str)end
+
+--[[
+---返回Steam api是否成功初始化
+---@return boolean
+function Cpp.GetSteamAPIInit()end
+
+---输入字符串组成的数字id，返回模组路径
+---@param strid string
+---@return string path
+function Cpp.GetModPath(strid)end
+]]

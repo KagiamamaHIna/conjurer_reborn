@@ -15,7 +15,7 @@ function GetWorkshopPath()
 		end
     end
 end
-]]
+
 ---获得创意工坊的路径，获取失败返回nil
 ---@return string|nil
 function GetWorkshopPath()
@@ -23,4 +23,32 @@ function GetWorkshopPath()
 	if flag then
 		return "../../workshop/content/881100/"
 	end
+end
+]]
+
+local initResult
+---返回是否存在Steam API
+---@return boolean
+function GetSteamAPIInit()
+    if Cpp.PathExists("steam_api.dll") then
+		if initResult == nil then
+			initResult = require("LuaSteamAPI").GetSteamAPIInit()
+		end
+        return initResult
+    end
+	return false
+end
+
+local api
+---返回创意工坊模组路径
+---@param strid string
+---@return string|nil
+function GetWorkShopModPath(strid)
+    if not GetSteamAPIInit() then
+        return
+    end
+	if api == nil then
+		api = require("LuaSteamAPI")
+	end
+	return api.GetModPath(strid)
 end

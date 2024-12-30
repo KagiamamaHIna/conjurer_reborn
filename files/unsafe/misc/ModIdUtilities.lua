@@ -3,7 +3,9 @@ dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/misc/GetSteamWorkshop.lua")
 local Nxml = dofile_once("mods/conjurer_reborn/files/lib/nxml.lua")
 
-local workshopPath = GetWorkshopPath()
+local speChar = string.byte("/")
+
+local SteamAPIInit = GetSteamAPIInit()
 local mod_config_text = ReadFileAll(SavePath .. "save00/mod_config.xml")
 local mod_config = Nxml.parse(mod_config_text)
 
@@ -14,9 +16,15 @@ for _, v in pairs(mod_config.children) do --解析来获取一个id到模组实�
     if v.name ~= "Mod" then
         goto continue
     end
-    if v.attr.workshop_item_id and v.attr.workshop_item_id ~= "0" and workshopPath then --创意工坊模组，且要有 有效的workshopPath
-        ModIdToPathTable[v.attr.name] = workshopPath .. v.attr.workshop_item_id .. "/"
-		ModWorkshopToId[v.attr.workshop_item_id] = v.attr.name
+    if v.attr.workshop_item_id and v.attr.workshop_item_id ~= "0" and SteamAPIInit then --创意工坊模组，且SteamAPI初始化成功
+        local path = GetWorkShopModPath(v.attr.workshop_item_id)--且获取成功
+        if path then--判断是否为空值
+			if path:byte(#path,#path) ~= speChar then
+				path = path .. "/"
+			end
+            ModIdToPathTable[v.attr.name] = path
+			ModWorkshopToId[v.attr.workshop_item_id] = v.attr.name
+		end
     else                                   --本地模组，用相对路径即可
         ModIdToPathTable[v.attr.name] = "mods/" .. v.attr.name .. "/"
     end

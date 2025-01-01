@@ -7,6 +7,7 @@ local WorldGlobalGetNumber = Compose(tonumber, WorldGlobalGet)
 
 local EraserModeAll = "ALL"
 local EraserModeSelected = "SELECTED"
+local EraserModeNotSelected = "NOT_SELECTED"
 local EraserModeSolids = MatType.Solid
 local EraserModeLiquids = MatType.Liquid
 local EraserModePowder = MatType.Powder
@@ -255,8 +256,11 @@ end
 ---@param UI Gui
 function GetActiveEraserImage(UI)
 	local current_eraser = GetEraserMode(UI)
-	if current_eraser == EraserModeSelected then
-		return GetActiveMaterialsImage(UI)
+    if current_eraser == EraserModeSelected then
+        return GetActiveMaterialsImage(UI), "mods/conjurer_reborn/files/gfx/matwand_icons/9piece_selected_mat.png"
+    end
+	if current_eraser == EraserModeNotSelected then
+		return GetActiveMaterialsImage(UI), "mods/conjurer_reborn/files/gfx/matwand_icons/9piece_not_selected_mat.png"
 	end
 	return EraserSprites[current_eraser]
 end

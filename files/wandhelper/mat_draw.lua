@@ -90,6 +90,21 @@ local function erase(UI, material)
 			end
 			toListStr = Cpp.SameElemListStr(#list, #to_material, to_material)
 		end
+		local FromListStr
+        if eraser_mode == "NOT_SELECTED" then
+			local _list = GetMaterialList()
+			local key
+            for i, v in pairs(_list) do
+                if v == material then
+                    key = i
+                    break
+                end
+            end
+			local d = DeepCopy(_list)
+			table.remove(d, key)
+			FromListStr = table.concat(d, ",")
+			toListStr = Cpp.SameElemListStr(#_list - 1, #to_material, to_material)
+		end
 
 		local vars = {
 			radius = 3,
@@ -104,9 +119,13 @@ local function erase(UI, material)
 		if eraser_mode == MatType.Fire then--灭火！
 			vars["extinguish_fire"] = true
 		end
-		if list then
-			vars["from_material_array"] = EraseListCache[eraser_mode]
-			vars["to_material_array"] = toListStr
+        if list then
+            vars["from_material_array"] = EraseListCache[eraser_mode]
+            vars["to_material_array"] = toListStr
+        end
+		if eraser_mode == "NOT_SELECTED" then
+            vars["from_material_array"] = FromListStr
+            vars["to_material_array"] = toListStr
 		end
 		for row = 0, chunk_count - 1, 1 do
 			EraseEntityIdList[row] = {}

@@ -13,6 +13,6 @@ StatsSalakieliIV = { 0x54, 0x68, 0x72, 0x65, 0x65, 0x45, 0x79, 0x65, 0x73, 0x41,
 RequiredUnsafeVer = 3
 UnsafeTrueVer = true
 
-if RequiredUnsafeVer > ConjurerRebornUnsafeVer then
+if ConjurerRebornUnsafeVer and RequiredUnsafeVer > ConjurerRebornUnsafeVer then
 	UnsafeTrueVer = false
 end

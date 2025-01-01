@@ -289,10 +289,24 @@ local function GetEraserCategories(UI)
 				id = "EraserPickerTypeSelected",
 				text = "$conjurer_reborn_material_eraser_options_selected",
 				mode = "SELECTED",
-				image = GetActiveMaterialsImage(UI),
+                image = GetActiveMaterialsImage(UI),
+				bg = "mods/conjurer_reborn/files/gfx/matwand_icons/9piece_selected_mat.png",
                 desc_fn = function()
 					UI.VerticalSpacing(2)
                     UI.Text(0, 0, "$conjurer_reborn_material_eraser_options_selected_desc")
+					UI.VerticalSpacing(2)
+					MatTooltipText(UI, ActiveMaterial)
+				end,
+            },
+			{
+				id = "EraserPickerTypeNotSelected",
+				text = "$conjurer_reborn_material_eraser_options_not_selected",
+				mode = "NOT_SELECTED",
+                image = GetActiveMaterialsImage(UI),
+				bg = "mods/conjurer_reborn/files/gfx/matwand_icons/9piece_not_selected_mat.png",
+                desc_fn = function()
+					UI.VerticalSpacing(2)
+                    UI.Text(0, 0, "$conjurer_reborn_material_eraser_options_not_selected_desc")
 					UI.VerticalSpacing(2)
 					MatTooltipText(UI, ActiveMaterial)
 				end,
@@ -304,9 +318,6 @@ local function GetEraserCategories(UI)
 				text = "$conjurer_reborn_material_type_solid",
 				mode = MatType.Solid,
 				image = GetEraserSprites(MatType.Solid),
-				desc_fn = function ()
-					
-				end
             },
 			{
 				id = "EraserPickerTypeOfPowder",
@@ -427,14 +438,26 @@ local function EraserPicker(UI)
         for i, t in ipairs(eraser_categories) do--渲染那些类型选择格
             UI.BeginHorizontal(0, 0, true)
             for j, v in ipairs(t) do
+                if v.bg then
+                    UI.BeginHorizontal(0, 0, true, 0, 0)
+                    GuiBeginAutoBox(UI.gui)
+                end
 				UI.NextZDeep(0)
-                local left,right = UI.ImageButton(v.id, 0, 0, v.image)
-                UI.BetterTooltipsNoCenter(function ()
+                local left, right = UI.ImageButton(v.id, 0, 0, v.image)
+				UI.BetterTooltipsNoCenter(function ()
 					UI.Text(0,0,GameTextGetTranslatedOrNot(v.text))
 					if v.desc_fn then
 						v.desc_fn()
 					end
-				end,UI.GetZDeep()-100,10)
+                end, UI.GetZDeep() - 100, 10)
+				
+                if v.bg then
+					UI.NextZDeep(1)
+                    GuiEndAutoBoxNinePiece(UI.gui, -1, 0, 0, false, 0, v.bg, v.bg)
+                    UI.LayoutEnd()
+                    UI.HorizontalSpacing(6)
+					UI.Text(0,0,"")
+				end
 				
                 if left then
                     ClickSound()
@@ -715,9 +738,11 @@ local function MatPicker(UI)
 				end
 			end
 			UI.BetterTooltipsNoCenter(function()
-                UI.Text(0, 0, GameTextGet(tooltip,tostring(UI.UserData["MatContainersQuantity"])))
+                UI.Text(0, 0, GameTextGet(tooltip, tostring(UI.UserData["MatContainersQuantity"])))
 				UI.VerticalSpacing(1)
-				UI.Text(0,0,"$conjurer_reborn_matwand_get_desc")
+				UI.Text(0, 0, "$conjurer_reborn_matwand_get_desc2")
+				UI.VerticalSpacing(1)
+                UI.Text(0, 0, "$conjurer_reborn_matwand_get_desc")
 				UI.VerticalSpacing(3)
 				MatTooltipText(UI, ActiveMat)
 			end, UI.GetZDeep() - 1000, 10, 3)
@@ -726,6 +751,19 @@ local function MatPicker(UI)
                 local entity = EntityLoad(entityfile, x, y)
                 RemoveMaterialInventoryMaterial(entity)
                 AddMaterialInventoryMaterial(entity, ActiveMat, (UI.UserData["MatContainersQuantity"] / 100) * size)
+				if InputIsKeyDown(Key_LSHIFT) or InputIsKeyDown(Key_RSHIFT) then
+                    local mcomp = EntityGetFirstComponentIncludingDisabled(entity, "MaterialInventoryComponent")
+                    if mcomp then
+                        ComponentSetValue2(mcomp, "do_reactions", 0)
+                    end
+                    local icomp = EntityGetFirstComponentIncludingDisabled(entity, "ItemComponent")
+					if icomp then
+                        local key = ComponentGetValue2(icomp, "ui_description")
+                        AddSetStorageComp(entity, "conjurer_reborn_src_key", key, "value_string")
+                        AddSetStorageComp(entity, "conjurer_reborn_new_key", "$conjurer_reborn_no_reaction", "value_string")
+						EntityLoadChild(entity,"mods/conjurer_reborn/files/powers/no_reaction_re_name.xml")
+					end
+				end
                 ClickSound()
             end
             if right then
@@ -785,6 +823,11 @@ local function DrawFav(UI)
             if t == nil or value.EraserMode ~= t.mode then
                 NoHasItem = true
             else
+                if t.bg then
+                    UI.BeginHorizontal(0, 0, true, 0, 0)
+                    GuiBeginAutoBox(UI.gui)
+                end
+				UI.NextZDeep(0)
                 left, right = UI.ImageButton(t.id .. tostring(index), 0, 0, t.image)
                 UI.BetterTooltipsNoCenter(function()
                     UI.Text(0, 0, GameTextGetTranslatedOrNot(t.text))
@@ -792,7 +835,13 @@ local function DrawFav(UI)
                         t.desc_fn()
                     end
                 end, UI.GetZDeep() - 100, 10)
-
+                if t.bg then
+					UI.NextZDeep(1)
+                    GuiEndAutoBoxNinePiece(UI.gui, -1, 0, 0, false, 0, t.bg, t.bg)
+                    UI.LayoutEnd()
+					UI.NextZDeep(-1)
+					UI.Image(t.id.."more" .. tostring(index), 0, -16, t.image)
+				end
                 if left then
                     ClickSound()
                     SetEraserMode(UI, t.mode)
@@ -893,17 +942,29 @@ local function MatwandButtons(UI)
     UI.BeginVertical(7, 65, true, 2,2)
 	GuiBeginAutoBox(UI.gui)--框住用的自动盒子
     for _, v in ipairs(MainMatBtns) do
-        UI.NextZDeep(0)
-        local left = UI.ImageButton(v.id, 0, 0, v.image_func(UI))
-        if left then
-			ClickSound()
-            v.action()
+        local image, bg = v.image_func(UI)
+        if bg then
+            UI.BeginHorizontal(0, 0, true, 0, 0)
+            GuiBeginAutoBox(UI.gui)
         end
-        UI.BetterTooltipsNoCenter(function()
+		UI.NextZDeep(0)
+        local left = UI.ImageButton(v.id, 0, 0, image)
+		UI.BetterTooltipsNoCenter(function()
             UI.Text(0, 0, v.name)--文本间隔
 			UI.VerticalSpacing(3)
             v.desc(UI)
         end, UI.GetZDeep() - 1000, 10, 3)
+		if bg then
+			UI.NextZDeep(1)
+			GuiEndAutoBoxNinePiece(UI.gui, -1, 0, 0, false, 0, bg, bg)
+            UI.LayoutEnd()
+			UI.NextZDeep(-1)
+			UI.Image(v.id.."more", 0, -16, image)
+		end
+        if left then
+			ClickSound()
+            v.action()
+        end
     end
 	UI.NextZDeep(-10)
     GuiEndAutoBoxNinePiece(UI.gui, 1, 0, 0, false, 0, MatWandSpriteBG, MatWandSpriteBG)

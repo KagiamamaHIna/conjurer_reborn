@@ -618,3 +618,56 @@ function GetWorldDays()
     end
 	return value + 1
 end
+
+---获得Storage组件和对应值
+---@param entity integer EntityID
+---@param VariableName string
+---@param ValueType string value_string | value_int | value_bool | value_float
+---@return any|nil
+---@return integer|nil
+function GetStorageComp(entity, VariableName, ValueType)
+	local comps = EntityGetComponentIncludingDisabled(entity, "VariableStorageComponent")
+    if comps == nil then
+		return
+	end
+	for _, comp in pairs(comps) do --遍历存储组件表
+		local name = ComponentGetValue2(comp, "name")
+		if name == VariableName then --如果是状态就取值
+			local value = ComponentGetValue2(comp, ValueType)
+			return value, comp
+		end
+	end
+end
+
+---增加并设置Storage
+---@param entity integer
+---@param i_name string
+---@param i_value any
+---@param ValueType string value_string | value_int | value_bool | value_float
+---@return integer|nil
+function AddSetStorageComp(entity, i_name, i_value, ValueType)
+	if entity == nil or not EntityGetIsAlive(entity) then
+		return
+	end
+	return EntityAddComponent(entity, "VariableStorageComponent", { name = i_name, [ValueType] = i_value })
+end
+
+---设置Storage，并返回组件
+---@param entity integer
+---@param VariableName string
+---@param i_value any
+---@param ValueType string value_string | value_int | value_bool | value_float
+---@return integer|nil
+function SetStorageComp(entity, VariableName, i_value, ValueType)
+	local comps = EntityGetComponentIncludingDisabled(entity, "VariableStorageComponent")
+	if comps == nil then
+		return
+	end
+	for _, comp in pairs(comps) do --遍历存储组件表
+		local name = ComponentGetValue2(comp, "name")
+		if name == VariableName then --如果是就取值
+			ComponentSetValue2(comp, ValueType, i_value)
+			return comp
+		end
+	end
+end

@@ -14,6 +14,7 @@
     <VelocityComponent
         _tags="enabled_in_world"
 		gravity_y="0"
+		displace_liquid="0"
     ></VelocityComponent>
 
 	<SpriteComponent 

@@ -881,8 +881,9 @@ end
 ---@param UI Gui
 local function MatText(UI)
     local brush = GetActiveBrush(UI)
-	local brushEntiy = EntityGetWithName("conjurer_reborn_brush_reticle")
-    if brush.name == "$conjurer_reborn_material_tools_eyedropper_tool" and brushEntiy then
+    local brushEntiy = EntityGetWithName("conjurer_reborn_brush_reticle")
+	local flag = ModSettingGet("conjurer_reborn.quick_display_mat") and InputIsMouseButtonDown(Mouse_middle)
+    if (brush.name == "$conjurer_reborn_material_tools_eyedropper_tool" or flag) and brushEntiy then
 		local x, y = EntityGetTransform(brushEntiy)
         local id = GlobalsGetValue("conjurer_reborn.checkmat_material_str_id")
         x, y = UI.GetScreenPosition(x, y)

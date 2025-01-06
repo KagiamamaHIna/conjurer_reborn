@@ -342,6 +342,7 @@ conjurer_reborn_setting_get_carrot,Give a carrot,,,,,,,,给一根胡萝卜,,,,,,
 conjurer_reborn_setting_get_carrot_desc,"Did you lose your carrot?\nIf you still want one, click to get it!",,,,,,,,你的胡萝卜丢了吗？\n如果还想要一个，点击获得！,,,,,,,,,,,,,,,
 conjurer_reborn_setting_get_carrot_desc_error,"But you're not in the run!",,,,,,,,但是你还没进入游戏！,,,,,,,,,,,,,,,
 conjurer_reborn_setting_get_carrot_desc_no_conjurer,"But you're not in the conjurer's world right now!",,,,,,,,但是你现在不在conjurer的世界中！,,,,,,,,,,,,,,,
+conjurer_reborn_setting_quick_mat_display,Display material info when selecting material quickly,,,,,,,,快捷选中材料时显示材料数据,,,,,,,,,,,,,,,
 ]]
 
 dofile("data/scripts/lib/mod_settings.lua")
@@ -487,7 +488,13 @@ mod_settings =
 					{ "bottom_right", "conjurer_reborn_setting_bottom_bottom_right" },
 				}),
 				scope = MOD_SETTING_SCOPE_RUNTIME,
-			})
+            }),
+			Setting({
+				id = "quick_display_mat",
+				ui_name = "conjurer_reborn_setting_quick_mat_display",
+				value_default = true,
+				scope = MOD_SETTING_SCOPE_RUNTIME,
+            }),
 		}
     }),
     Setting({

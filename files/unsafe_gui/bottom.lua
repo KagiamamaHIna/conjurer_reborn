@@ -165,7 +165,9 @@ local function RenderWorldMenu(UI)
         UI.SetInputText("PowerWorldSeedGet", tostring(Random(0, 0x7FFFFFFE)))
         ClickSound()
     end
-    UI.GuiTooltip("$conjurer_reborn_power_world_seed_roll")
+    UI.BetterTooltips(function ()
+        UI.Text(0, 0, "$conjurer_reborn_power_world_seed_roll")
+	end,nil,nil,25)
     if not InputInfo.hovered then
         GlobalsSetValue("conjurer_reborn_power_world_seed", UI.GetInputText("PowerWorldSeedGet") or "")
     end

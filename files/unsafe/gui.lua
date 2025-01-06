@@ -243,7 +243,7 @@ function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, ri
             yOffset = 0
         	y = 10
         end
-		if y + yOffset + OffsetH + 5 > this.public.ScreenHeight then
+		if y + yOffset + OffsetH > this.public.ScreenHeight then
 			y = y + (this.public.ScreenHeight - (y + yOffset + OffsetH))
 		end
 

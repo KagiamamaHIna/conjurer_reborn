@@ -91,7 +91,7 @@ for _, xmlPath in pairs(ModMatXmlList) do
     end
     local xml = Nxml.parse(text)
     for _, v in pairs(xml.children) do
-		MaterialAdd(v, modid)
+        MaterialAdd(v, modid)
     end
     ::continue::
 end

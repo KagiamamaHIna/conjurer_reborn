@@ -21,7 +21,7 @@ function GetAppendedModIdToFile(oriLua, filename)
         for i = 1, #v do
             tempLua[#tempLua + 1] = v[i]
         end
-		result[k] = table.concat(tempLua)
+		result[k] = table.concat(tempLua, '\n')
     end
 	return result
 end

@@ -89,14 +89,15 @@ for matid, mat in pairs(MatTable) do
             else --判断模组写入到了data里的逻辑
                 for _, path in pairs(ModsToDataPath) do
                     local ModDataPath = path .. v.attr.texture_file
-                    if Cpp.PathExists(ModDataPath) then
-                        flag = true
+                    flag = true
+					if Cpp.PathExists(ModDataPath) then
                         if NearestTable[mat.attr.name] then
                             Cpp.PngScaleToFile(ModDataPath, WritePath, IconWidth, IconHeight)
                         else
                             Cpp.PngFlatAndCroppingToFile(ModDataPath, WritePath, IconWidth, IconHeight)
                         end
-                        break --退出这里的循环
+                    else--没有图片:(
+						Cpp.RGBAPng(WritePath, IconWidth, IconHeight, 0, 0, 0, 0)
                     end
                 end
             end
@@ -112,11 +113,15 @@ for matid, mat in pairs(MatTable) do
                 goto continue
             end
             PngPath = ModPath .. string.gsub(PngPath, "mods/" .. modid .. "/", "", 1) --删掉前缀再拼上去真实路径
-            if NearestTable[mat.attr.name] then
-                Cpp.PngScaleToFile(PngPath, WritePath, IconWidth, IconHeight)
-            else
-                Cpp.PngFlatAndCroppingToFile(PngPath, WritePath, IconWidth, IconHeight)
-            end
+			if Cpp.PathExists(PngPath) then
+				if NearestTable[mat.attr.name] then
+					Cpp.PngScaleToFile(PngPath, WritePath, IconWidth, IconHeight)
+				else
+					Cpp.PngFlatAndCroppingToFile(PngPath, WritePath, IconWidth, IconHeight)
+				end
+            else--没有图片:(
+				Cpp.RGBAPng(WritePath, IconWidth, IconHeight, 0, 0, 0, 0)
+			end
             WriteFlag = true
             break
         elseif v.name == "Graphics" and v.attr.color and v.attr.color ~= "" then --判断Graphics纯色

@@ -9,7 +9,7 @@ function GetAppendedModIdToFile(oriLua, filename)
 	local Appends = ModLuaFileGetAppends(filename)
     local AppendsModToFiles = {}
     for _, v in pairs(Appends or {}) do
-        local modid = PathGetModId(v)
+        local modid = PathGetModId(v) or "?"
         if AppendsModToFiles[modid] == nil then
             AppendsModToFiles[modid] = {}
         end

@@ -24,7 +24,7 @@ local Brushes = {
 	},
 	{
 		name = "$conjurer_reborn_material_brushes_5px",
-		offset_x = 3,
+		offset_x = 2,
 		offset_y = 2,
 		reticle_file = "mods/conjurer_reborn/files/wands/matwand/brushes/5_reticle.png",
 		brush_file = "mods/conjurer_reborn/files/wands/matwand/brushes/5_brush.png",

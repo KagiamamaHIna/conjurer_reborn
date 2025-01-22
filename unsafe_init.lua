@@ -12,6 +12,7 @@ if not UnsafeTrueVer then--如果版本检查没通过
 	return
 end
 dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
+dofile_once("mods/conjurer_reborn/files/lib/EntityClass.lua")
 dofile_once("mods/conjurer_unsafe/csv.lua")
 _ModImageMakeEditable = ModImageMakeEditable
 local function ClearDofileOnceCache(filename)

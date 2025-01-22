@@ -135,14 +135,10 @@ UI.MainTickFn["Main"] = function()
 	end
 	if GlobalsGetValue("conjurer_reborn_next_refresh_hp", "0") == "1" then --全局变量通知大法（
 		UI.OnceCallOnExecute(function()--回满血用的
-			local this_player = GetPlayer()
-			if this_player then
-				GlobalsSetValue("conjurer_reborn_next_refresh_hp", "0")
-				local dmgComponent = EntityGetFirstComponentIncludingDisabled(player, "DamageModelComponent")
-				if dmgComponent then
-					local max_health = ComponentGetValue2(dmgComponent, "max_hp")
-					ComponentSetValue2(dmgComponent, "hp", max_health)
-				end
+			local this_player = GetPlayerObj()
+			if this_player and this_player.comp.DamageModelComponent then
+                GlobalsSetValue("conjurer_reborn_next_refresh_hp", "0")
+				this_player.comp.DamageModelComponent[1].attr.hp = this_player.comp.DamageModelComponent[1].attr.max_hp
 			end
 		end)
 	end

@@ -3,7 +3,7 @@ dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/misc/ModIdUtilities.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/SimulateAppend.lua")
 local sandbox = dofile_once("mods/conjurer_reborn/files/lib/SandBox.lua")
----@class DataWak
+---@type DataWak
 local datawak = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetDataWak.lua")
 
 --先加载所有的内容

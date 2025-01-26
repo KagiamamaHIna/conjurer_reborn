@@ -500,7 +500,11 @@ local function EntPicker(UI)
                 end, UI.GetZDeep() - 1000, 10, 3)
             else
                 left, right = UI.ImageButton("EntIconOther" .. item.name .. index, 0, 0, item.image)
-                UI.GuiTooltip(GetNameOrKey(item.name))
+                local tip = GetNameOrKey(item.name)
+				if item.desc then
+					tip = tip .. "\n" .. GetNameOrKey(item.desc)
+				end
+				UI.GuiTooltip(tip)
             end
             if left then
                 local true_index = ALL_ENTITIES[SwitchIndex].conjurer_reborn_index_table[item]

@@ -74,7 +74,7 @@ local function GetEntityName(active_entity)
 		if type then                           --除去后缀名，移除首字母
 			name = Cpp.UTF8StringSub(name, 2, #name - #type - 1)
 		else                                   --如果没有后缀名，就只移除首字母
-			name = Cpp.UTF8StringSub(name, 2)
+			name = Cpp.UTF8StringSub(name, 2, #name)
 		end
 		name = Frist .. name
 	end

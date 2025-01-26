@@ -4,7 +4,7 @@ dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/misc/ModIdUtilities.lua")
 
 dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetAllData.lua")
----@class DataWak
+---@type DataWak
 local datawak = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetDataWak.lua")
 local IconList = Cpp.GetDirectoryPathAll("mods/conjurer_unsafe/cache/MatIcon/")
 local IconTable = {}

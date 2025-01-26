@@ -2,6 +2,7 @@ local GetPerks = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/Ge
 local GetEnemies = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetEnemies.lua")
 local GetMaterials = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetMaterials.lua")
 local GetSpells = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetSpells.lua")
+--local GetPickups = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetPickups.lua")
 StatusTable = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetStatus.lua")
 ---获取法术数据
 ---@param id string

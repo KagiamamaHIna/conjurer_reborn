@@ -17,7 +17,7 @@ SpellTypeBG = {
 }
 ]]
 
----@class DataWak
+---@type DataWak
 local datawak = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetDataWak.lua")
 
 --先加载所有的内容

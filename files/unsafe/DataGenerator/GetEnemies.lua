@@ -9,7 +9,7 @@ for _, v in pairs(IgnoreEnemies) do
 end
 IgnoreEnemies = nil
 
----@class DataWak
+---@type DataWak
 local datawak = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetDataWak.lua")
 local ModEnableList = ModGetActiveModIDs()
 

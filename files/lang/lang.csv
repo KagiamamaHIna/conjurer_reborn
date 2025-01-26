@@ -351,3 +351,4 @@ conjurer_reborn_setting_get_carrot_desc_no_conjurer,"But you're not in the conju
 conjurer_reborn_player_reborn1,You died,,,,,,,,你死了,,,,,,,,,,,,,,,
 conjurer_reborn_player_reborn2,No rest for the wicked,,,,,,,,恶人不得安宁,,,,,,,,,,,,,,,
 conjurer_reborn_no_reaction, (No reaction),,,,,,,, (没有反应),,,,,,,,,,,,,,,
+conjurer_reborn_pickup_danger_tip,Danger: Not removable after picking up,,,,,,,,警告：本模组无法移除此物品,,,,,,,,,,,,,,,

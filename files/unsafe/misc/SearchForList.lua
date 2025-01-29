@@ -12,6 +12,12 @@ local function SearchList(list, keyword, score_min, callback)
     if keyword == "" or keyword == nil then
         return list
     end
+    local SearchItemList
+    if ModSettingGet("conjurer_reborn.split_search_text") then
+		SearchItemList = split(string.lower(keyword), " ")
+    else
+        SearchItemList = { string.lower(keyword) }
+	end
     local ScoreToItem = {}      --分数转列表项
     local ScoreToItemCount = {} --优化用，是计数器
     local ScoreList = {}        --分数列表
@@ -22,7 +28,15 @@ local function SearchList(list, keyword, score_min, callback)
         if ItemToScore[v] then  --排除已搜索过的项目
             goto continue
         end
-        local score = callback(v, keyword)
+		local score
+		for _, ikeyword in ipairs(SearchItemList) do
+            local new_score = callback(v, ikeyword)
+			if score == nil then
+                score = new_score
+            elseif new_score and new_score > score then
+				score = new_score
+			end
+		end
         if score == nil or not (score > score_min) then --返回nil代表这次无效或分数小于需求的时候直接下一次循环
             goto continue
         end

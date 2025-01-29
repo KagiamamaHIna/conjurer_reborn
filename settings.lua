@@ -336,6 +336,8 @@ conjurer_reborn_setting_secondary_button_mouse2,Mouse2,,,,,,,,鼠标右键,,,,,,
 conjurer_reborn_setting_bottom_pos,Bottom button position,,,,,,,,底部按钮位置,,,,,,,,,,,,,,,
 conjurer_reborn_setting_bottom_bottom_center,Bottom Center,,,,,,,,底部中心,,,,,,,,,,,,,,,
 conjurer_reborn_setting_bottom_bottom_right,Bottom Right,,,,,,,,右下角,,,,,,,,,,,,,,,
+conjurer_reborn_setting_bottom_bottom_left,Bottom Left (Not recommended),,,,,,,,左下角(不推荐),,,,,,,,,,,,,,,
+conjurer_reborn_setting_bottom_no_display,No Display,,,,,,,,不显示,,,,,,,,,,,,,,,
 conjurer_reborn_setting_click_sound,Button click sound,,,,,,,,按钮点击音效,,,,,,,,,,,,,,,
 conjurer_reborn_setting_other,Other,,,,,,,,其他,,,,,,,,,,,,,,,
 conjurer_reborn_setting_get_carrot,Give a carrot,,,,,,,,给一根胡萝卜,,,,,,,,,,,,,,,
@@ -343,6 +345,9 @@ conjurer_reborn_setting_get_carrot_desc,"Did you lose your carrot?\nIf you still
 conjurer_reborn_setting_get_carrot_desc_error,"But you're not in the run!",,,,,,,,但是你还没进入游戏！,,,,,,,,,,,,,,,
 conjurer_reborn_setting_get_carrot_desc_no_conjurer,"But you're not in the conjurer's world right now!",,,,,,,,但是你现在不在conjurer的世界中！,,,,,,,,,,,,,,,
 conjurer_reborn_setting_quick_mat_display,Display material info when selecting material quickly,,,,,,,,快捷选中材料时显示材料数据,,,,,,,,,,,,,,,
+conjurer_reborn_split_search_text,Space Split Multi-Item Search,,,,,,,,空格分割多项目搜索,,,,,,,
+conjurer_reborn_split_search_text_tip,Inserting spaces between text allows you to search for more than one thing at once.,,,,,,,,在文本之间插入空格可以同时搜索多个内容,,,,,,,
+conjurer_reborn_mat_img_regen_every_time,Re-generate material image every time,,,,,,,,每次都重新生成材料贴图,,,,,,,
 ]]
 
 dofile("data/scripts/lib/mod_settings.lua")
@@ -485,8 +490,23 @@ mod_settings =
 				value_default = "bottom_center",
 				values = ValueList({
 					{ "bottom_center", "conjurer_reborn_setting_bottom_bottom_center" },
-					{ "bottom_right", "conjurer_reborn_setting_bottom_bottom_right" },
+                    { "bottom_right",  "conjurer_reborn_setting_bottom_bottom_right" },
+                    { "bottom_left",   "conjurer_reborn_setting_bottom_bottom_left" },
+					{ "no_display", "conjurer_reborn_setting_bottom_no_display" },
 				}),
+				scope = MOD_SETTING_SCOPE_RUNTIME,
+            }),
+			Setting({
+				id = "split_search_text",
+                ui_name = "conjurer_reborn_split_search_text",
+				ui_description = "conjurer_reborn_split_search_text_tip",
+				value_default = false,
+				scope = MOD_SETTING_SCOPE_RUNTIME,
+            }),
+			Setting({
+				id = "regen_mat_img_every_time",
+                ui_name = "conjurer_reborn_mat_img_regen_every_time",
+				value_default = false,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),
 			Setting({

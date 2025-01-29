@@ -9,15 +9,22 @@ local datawak = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/Get
 local IconList = Cpp.GetDirectoryPathAll("mods/conjurer_unsafe/cache/MatIcon/")
 local IconTable = {}
 local MatTable = GetMaterialData()
-for _,v in pairs(IconList.File)do--用于判断是否需要生成新图片/删除图片
-    if Cpp.PathGetFileType(v) == "png" then
-		local name = Cpp.PathGetFileName(v)
-        local key = string.sub(name, 1, #name - 4)
-        if MatTable[key] then
-            IconTable[key] = true
-        else--不存在就删除缓存
-            Cpp.Remove(v)
-			Cpp.Remove("mods/conjurer_unsafe/cache/MatWang/"..key..".png")
+if ModSettingGet("conjurer_reborn.regen_mat_img_every_time") then
+	Cpp.RemoveAll("mods/conjurer_unsafe/cache/MatWang/")
+    Cpp.RemoveAll("mods/conjurer_unsafe/cache/MatIcon/")
+    Cpp.CreateDir("mods/conjurer_unsafe/cache/MatWang/")
+	Cpp.CreateDir("mods/conjurer_unsafe/cache/MatIcon/")
+else
+	for _,v in pairs(IconList.File)do--用于判断是否需要生成新图片/删除图片
+		if Cpp.PathGetFileType(v) == "png" then
+			local name = Cpp.PathGetFileName(v)
+			local key = string.sub(name, 1, #name - 4)
+			if MatTable[key] then
+				IconTable[key] = true
+			else--不存在就删除缓存
+				Cpp.Remove(v)
+				Cpp.Remove("mods/conjurer_unsafe/cache/MatWang/"..key..".png")
+			end
 		end
 	end
 end

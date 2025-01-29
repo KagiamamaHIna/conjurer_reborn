@@ -943,6 +943,10 @@ function BottomBtnDraw(UI)
     if BottomBoxX == nil then
         BottomBoxX = -UI.ScreenWidth
     end
+    local mode = ModSettingGet("conjurer_reborn.bottom_pos")
+	if mode == "no_display" then
+		return
+	end
 	local Enable = WorldGlobalGetBool(UI, "BottomBoxEnable", true)
     UI.NextZDeep(0)
 	if not Enable then
@@ -952,7 +956,6 @@ function BottomBtnDraw(UI)
         WorldGlobalSetBool(UI, "BottomBoxEnable", not Enable)
         ClickSound()
     end
-    local mode = ModSettingGet("conjurer_reborn.bottom_pos")
 	if mode ~= LastMode then--隐藏布局的情况下重置
 		BottomBoxX = nil
 	end
@@ -1004,7 +1007,9 @@ function BottomBtnDraw(UI)
     if mode == "bottom_center" then
 		BottomBoxX = UI.ScreenWidth * 0.5 - info.draw_width * 0.5 + 4 --居中
     elseif mode == "bottom_right" then
-		BottomBoxX = UI.ScreenWidth - info.draw_width - 2--靠右
+        BottomBoxX = UI.ScreenWidth - info.draw_width - 2       --靠右
+    elseif mode == "bottom_left" then
+		BottomBoxX = 14
 	end
 	
     BottomBoxY = info.y

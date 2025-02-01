@@ -48,6 +48,15 @@ local function FromIdSearch(keyword, id)
 	return score
 end
 
+local function PassDataPath(str)
+    local findpos = string.find(str, "data/entities/", 1, false)
+	local result = str
+    if findpos == 1 then
+        result = string.gsub(str, "data/entities/", ".../", 1)
+    end
+	return result
+end
+
 ---绘制敌人的悬浮窗文本
 ---@param UI Gui
 ---@param id string
@@ -76,7 +85,7 @@ local function EnemyTooltipText(UI, id, isNoDraw, MainFn)
     UI.VerticalSpacing(3)
     if shift and #enemy.files > 1 then
         for i, v in ipairs(enemy.files) do
-			local file = v:gsub("data/entities/",".../",1)
+			local file = PassDataPath(v)
 			UI.BeginHorizontal(0,0,true,0,0)
             UI.Text(0, 0, file)
             local _, _, hover = UI.WidgetInfo()
@@ -96,7 +105,7 @@ local function EnemyTooltipText(UI, id, isNoDraw, MainFn)
 			UI.VerticalSpacing(1)
         end
     else
-		local file = enemy.files[UI.UserData[FileIKey]]:gsub("data/entities/",".../",1)
+        local file = PassDataPath(enemy.files[UI.UserData[FileIKey]])
         UI.Text(0, 0, GameTextGet("$conjurer_reborn_entwand_enemy_list_active", file))
         local _, _, hover = UI.WidgetInfo()
         HasHover = hover or HasHover

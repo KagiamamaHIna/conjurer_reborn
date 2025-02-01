@@ -2,6 +2,7 @@ dofile_once("mods/conjurer_reborn/files/unsafe/unsafe.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/misc/ModIdUtilities.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/DataInterface/IgnoreEnemies.lua")
+dofile_once("mods/conjurer_reborn/files/unsafe/DataInterface/ExtraEnemiesFile.lua")
 
 local IngoreEntTable = {}
 for _, v in pairs(IgnoreEnemies) do
@@ -208,6 +209,23 @@ end
 local KeyToEnemy = {}
 for i,v in ipairs(OrderedListId)do
 	KeyToEnemy[v] = i
+end
+
+for k,v in pairs(ExtraEnemiesFile)do
+    if EnemiesTable[k] == nil then
+        goto continue
+    end
+	local t = EnemiesTable[k]
+	if v.first then
+		for i=#v.list,1,-1 do
+            table.insert(t.files, 1, v.list[i])
+		end
+	else
+        for i = #v.list, 1, -1 do
+			t.files[#t.files+1] = v.list[i]
+		end
+	end
+	::continue::
 end
 
 return {EnemiesTable, OrderedListId, KeyToEnemy}

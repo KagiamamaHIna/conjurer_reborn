@@ -8,6 +8,6 @@
 
   <UIInfoComponent
     _tags="enabled_in_world"
-    name="Very Technical 10x10 Grid"
+    name="$conjurer_reborn_grid_entity_name"
   ></UIInfoComponent>
 </Entity>

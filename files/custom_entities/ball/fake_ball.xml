@@ -34,7 +34,7 @@
 
   <UIInfoComponent
     _tags="enabled_in_world"
-    name="Ball"
+    name="$conjurer_reborn_ball_name"
   ></UIInfoComponent>
 
   <LuaComponent

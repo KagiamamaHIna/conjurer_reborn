@@ -1,6 +1,6 @@
 <Entity>
   <UIInfoComponent
-    name="Magical Drain"
+    name="$conjurer_reborn_magical_drain_name"
   ></UIInfoComponent>
 
   <SpriteComponent

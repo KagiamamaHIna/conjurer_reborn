@@ -54,17 +54,17 @@
     is_pickable="1"
     is_equipable_forced="1"
     ui_sprite="mods/conjurer_reborn/files/custom_entities/ball/ui_gfx.png"
-    ui_description="A nice round ball."
+    ui_description="$conjurer_reborn_ball"
     preferred_inventory="QUICK"
   ></ItemComponent>
 
   <UIInfoComponent
     _tags="enabled_in_world"
-    name="Ball"
+    name="$conjurer_reborn_ball_name"
   ></UIInfoComponent>
 
   <AbilityComponent
-    ui_name="Ball"
+    ui_name="$conjurer_reborn_ball_name"
     throw_as_item="1"
     mana_max="0"
     >

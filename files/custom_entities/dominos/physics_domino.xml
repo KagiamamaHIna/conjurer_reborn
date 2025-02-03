@@ -26,6 +26,6 @@
 
   <UIInfoComponent
     _tags="enabled_in_world"
-    name="Domino piece"
+    name="$conjurer_reborn_domino_blocks_name"
   ></UIInfoComponent>
 </Entity>

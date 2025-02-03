@@ -45,8 +45,8 @@
 
     <InteractableComponent
       radius="16"
-      ui_text="Press $0 to operate the mounted gun"
-      name="Mounted Gun"
+      ui_text="$conjurer_reborn_mounted_gun"
+      name="$conjurer_reborn_mounted_gun_name"
     ></InteractableComponent>
 
     <LuaComponent

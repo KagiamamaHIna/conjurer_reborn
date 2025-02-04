@@ -65,7 +65,9 @@ function IsValidEntity(UI, entity)
 		entity ~= 0 and
 		name ~= "conjurer_reborn_entwand_cursor" and
 		name ~= "conjurer_reborn_editwand_cursor" and
-		name ~= "conjurer_reborn_grid_overlay" and
+        name ~= "conjurer_reborn_grid_overlay" and
+        name ~= "conjurer_reborn_mat_check" and
+		name ~= "conjurer_reborn_del_all_visual" and
 		-- The reticle shouldn't ever even be detected, but good to have anyway.
 		name ~= "conjurer_reborn_spawner_reticle" and
 		not IsPlayer(entity) and

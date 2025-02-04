@@ -1,5 +1,6 @@
 dofile_once("data/scripts/lib/utilities.lua")
 dofile_once("mods/conjurer_reborn/files/wandhelper/wand_utilities.lua")
+dofile_once("mods/conjurer_reborn/files/wandhelper/ent_helper.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/utilities.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetAllData.lua")
 
@@ -34,20 +35,36 @@ local function ShowCursor(entity, x, y)
 end
 
 local function ScanEntity(UI, x, y)
-	local SCAN_RADIUS = 32
-	local entities = EntityGetInRadius(x, y, SCAN_RADIUS)
+	local entities = EntityGetInRadius(x, y, 32)
 
 	local entity = (#entities > 1) and EntityGetClosest(x, y) or entities[1]
 
-	if entity then
-		local root = EntityGetRootEntity(entity)
-		if IsValidEntity(UI, root) then
-			ShowCursor(root, x, y)
-			return root
-		end
-		-- else: get_next_entity()
+    if entity then
+        local root = EntityGetRootEntity(entity)
+        if IsValidEntity(UI, root) then
+            ShowCursor(root, x, y)
+            return root
+        end
+        -- else: get_next_entity()
+    end
+	-- done:) get_next_entity
+	local Len = 33
+	local id = nil
+    for i, v in ipairs(entities) do
+        local vroot = EntityGetRootEntity(v)
+        if IsValidEntity(UI, vroot) then
+			local ax, ay = EntityGetTransform(v)
+            local alen = math.abs(math.sqrt((x - ax) ^ 2 + (y - ay) ^ 2))
+			if Len > alen then
+                Len = alen
+				id = vroot
+			end
+        end
+    end
+	if id then
+		ShowCursor(id, x, y)
+		return
 	end
-
 	-- Nothing found
 	HideCursor()
 	return nil

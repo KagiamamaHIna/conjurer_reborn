@@ -38,7 +38,9 @@ HERDS = {
 	{ display = "Healer",       name = "healer",     image = icon("scavenger_heal") },
 	{ display = "Player ghost", name = "apparition", image = icon("playerghost") },
 	{ display = "Bat",          name = "bat",        image = icon("bat") },
-	{ display = "Wizard swapper", name = "mage_swapper", image = icon("wizard_swapper") },
+    { display = "Wizard swapper", name = "mage_swapper", image = icon("wizard_swapper") },
+    { display = "Ghost boss",     name = "ghost_boss",   image = icon("boss_ghost_polyp") },
+	{ display = "Target", name = "target", image = "mods/conjurer_reborn/files/gfx/target_herd_icon.png" },
 	-- Used by a single entity we haven't included yet.
 	--{ name="curse", image=icon("") },
 	--

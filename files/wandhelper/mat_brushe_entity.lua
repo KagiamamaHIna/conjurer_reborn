@@ -6,29 +6,37 @@ local function CreateBrush(UI)
     if brush == 0 then
         brush = EntityLoad("mods/conjurer_reborn/files/wands/matwand/brushes/re_brush_reticle.xml", x, y)
         RefreshBrushSprite(UI)
+
 		--材料检查
-		local luacomp = {
-			script_material_area_checker_success = "mods/conjurer_reborn/files/wandhelper/checkmat.lua",
-            remove_after_executed = false,
-			execute_every_n_frame = 1
-		}
-		local vars = {
-            material = nil,
-			update_every_x_frame = 1,
-			look_for_failure = false,
-			always_check_fullness = true,
-			kill_after_message = false,
-		}
-        for _, v in pairs(GetMaterialData()) do
-            local new = EntityCreateNew()
-			EntityAddChild(brush, new)
-            EntityAddComponent2(new, "LuaComponent", luacomp)
-            EntityAddComponent2(new, "InheritTransformComponent", {})
-			local num = CellFactory_GetType(v.attr.name)
-			vars.material = num
-			local comp = EntityAddComponent2(new, "MaterialAreaCheckerComponent", vars)
-            ComponentSetValue2(comp, "area_aabb", 0, 0, 0, 0)
-		end
+        local MatCheck = EntityGetWithName("conjurer_reborn_mat_check")
+        if MatCheck == nil or MatCheck == 0 then
+            MatCheck = EntityCreateNew("conjurer_reborn_mat_check")
+            EntityAddComponent2(MatCheck, "InheritTransformComponent", {})
+			EntityAddComponent2(MatCheck, "StreamingKeepAliveComponent", {})
+            local luacomp = {
+                script_material_area_checker_success = "mods/conjurer_reborn/files/wandhelper/checkmat.lua",
+                remove_after_executed = false,
+                execute_every_n_frame = 1
+            }
+            local vars = {
+                material = nil,
+                update_every_x_frame = 1,
+                look_for_failure = false,
+                always_check_fullness = true,
+                kill_after_message = false,
+            }
+            for _, v in pairs(GetMaterialData()) do
+                local new = EntityCreateNew()
+                EntityAddChild(MatCheck, new)
+                EntityAddComponent2(new, "LuaComponent", luacomp)
+                EntityAddComponent2(new, "InheritTransformComponent", {})
+                local num = CellFactory_GetType(v.attr.name)
+                vars.material = num
+                local comp = EntityAddComponent2(new, "MaterialAreaCheckerComponent", vars)
+                ComponentSetValue2(comp, "area_aabb", 0, 0, 0, 0)
+            end
+        end
+		EntityAddChild(brush, MatCheck)
     end
     local eraser = EntityGetWithName("conjurer_reborn_eraser_reticle")
 	
@@ -47,7 +55,14 @@ function EnabledBrushes(UI, is_enabled)
 	end
 
 	local brush = EntityGetWithName("conjurer_reborn_brush_reticle")
-	if brush ~= 0 then EntityKill(brush) end
+    if brush ~= 0 then
+        local MatCheck = EntityGetWithName("conjurer_reborn_mat_check")
+		local player = GetPlayer()
+		if player and MatCheck ~= nil and MatCheck ~= 0 then
+            EntityRemoveFromParent(MatCheck)
+		end
+        EntityKill(brush)
+	end
 
 	local eraser = EntityGetWithName("conjurer_reborn_eraser_reticle")
 	if eraser ~= 0 then EntityKill(eraser) end

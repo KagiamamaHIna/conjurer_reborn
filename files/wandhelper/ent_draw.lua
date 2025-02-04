@@ -9,7 +9,7 @@ local EnemyTable = GetEnemyData()
 
 local HOVERED_ENTITY = nil
 
----生成光标跟随
+---光标跟随
 ---@param UI Gui
 ---@param x number
 ---@param y number
@@ -19,7 +19,7 @@ local function SpawnerReticleFollowMouse(UI, x, y)
 		local grid_size = GetEntWandGridSize(UI)
 		x = x - x % grid_size
 		y = y - y % grid_size
-		EntitySetTransform(reticle, math.floor(x + RETICLE_OFFSET), math.floor(y + RETICLE_OFFSET))
+		EntitySetTransform(reticle, math.floor(x + GetReticleOffset(UI)), math.floor(y + GetReticleOffset(UI)))
 	end
 end
 
@@ -68,20 +68,38 @@ end
 ---@param x number
 ---@param y number
 local function ScanEntity(UI, x, y)
-	local entities = EntityGetInRadius(x, y, SCAN_RADIUS)
+	local ratio = GetScanRadius(UI)
+	local entities = EntityGetInRadius(x, y, ratio)
 
 	local entity = (#entities > 1) and EntityGetClosest(x, y) or entities[1]
-
-	if entity then
-		local root = EntityGetRootEntity(entity)
-		if IsValidEntity(UI, root) then
-			ShowCursor(root, x, y)
-			HOVERED_ENTITY = root
-			return
-		end
-		-- else: get_next_entity()
+    if entity then
+        local root = EntityGetRootEntity(entity)
+        if IsValidEntity(UI, root) then
+            ShowCursor(root, x, y)
+            HOVERED_ENTITY = root
+            return
+        end
+        -- else: get_next_entity()
+    end
+    -- done:) get_next_entity
+	local Len = ratio + 1
+	local id = nil
+    for i, v in ipairs(entities) do
+        local vroot = EntityGetRootEntity(v)
+        if IsValidEntity(UI, vroot) then
+			local ax, ay = EntityGetTransform(v)
+            local alen = math.abs(math.sqrt((x - ax) ^ 2 + (y - ay) ^ 2))
+			if Len > alen then
+                Len = alen
+				id = vroot
+			end
+        end
+    end
+	if id then
+		ShowCursor(id, x, y)
+		HOVERED_ENTITY = id
+		return
 	end
-
 	-- Nothing found
 	HideCursor()
 	HOVERED_ENTITY = nil
@@ -109,7 +127,7 @@ end
 ---@param x number
 ---@param y number
 local function DeleteAll(UI, x, y)
-	local entities = EntityGetInRadius(x, y, SCAN_RADIUS)
+	local entities = EntityGetInRadius(x, y, GetScanRadius(UI))
 	for i, entity in ipairs(entities) do
 		local root = EntityGetRootEntity(entity)
         if IsValidEntity(UI, root) then
@@ -149,11 +167,11 @@ local function SpawnEntity(UI)
 
 	for row = 0, rows - 1 do
 		local grid_offset_y = reticle_y - row * grid_size
-		local y = math.floor(grid_offset_y - RETICLE_OFFSET + centerize_offset_y)
+		local y = math.floor(grid_offset_y - GetReticleOffset(UI) + centerize_offset_y)
 
 		for col = 0, cols - 1 do
 			local grid_offset_x = reticle_x - col * grid_size
-			local x = math.floor(grid_offset_x - RETICLE_OFFSET + centerize_offset_x)
+			local x = math.floor(grid_offset_x - GetReticleOffset(UI) + centerize_offset_x)
 
 			-- Manual spawn function always overrides simple spawn-by-path
 			local entity = (

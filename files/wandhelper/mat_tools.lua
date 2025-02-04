@@ -1,4 +1,4 @@
-local DRAGGER_NAME = "matwand_dragger_reticle"
+local DRAGGER_NAME = "conjurer_reborn_matwand_dragger_reticle"
 
 --
 -- Filler tool

@@ -619,10 +619,12 @@ function GetWorldDays()
 	return value + 1
 end
 
+---@alias noita_vsc_type "value_string" | "value_int" | "value_bool" | "value_float"
+
 ---获得Storage组件和对应值
 ---@param entity integer EntityID
 ---@param VariableName string
----@param ValueType string value_string | value_int | value_bool | value_float
+---@param ValueType noita_vsc_type
 ---@return any|nil
 ---@return integer|nil
 function GetStorageComp(entity, VariableName, ValueType)
@@ -643,7 +645,7 @@ end
 ---@param entity integer
 ---@param i_name string
 ---@param i_value any
----@param ValueType string value_string | value_int | value_bool | value_float
+---@param ValueType noita_vsc_type
 ---@return integer|nil
 function AddSetStorageComp(entity, i_name, i_value, ValueType)
 	if entity == nil or not EntityGetIsAlive(entity) then
@@ -656,7 +658,7 @@ end
 ---@param entity integer
 ---@param VariableName string
 ---@param i_value any
----@param ValueType string value_string | value_int | value_bool | value_float
+---@param ValueType noita_vsc_type
 ---@return integer|nil
 function SetStorageComp(entity, VariableName, i_value, ValueType)
 	local comps = EntityGetComponentIncludingDisabled(entity, "VariableStorageComponent")

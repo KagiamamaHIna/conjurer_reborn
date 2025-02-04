@@ -395,6 +395,8 @@ local function EntPicker(UI)
 
 		UI.NextZDeep(0)
         GuiEndAutoBoxNinePiece(UI.gui, 0, 0, 0, false, 0, ThisBG)
+        local TapInfo = UI.WidgetInfoTable()
+		InputBlockEasy(UI, "EntWandPageTap阻止框" .. k, TapInfo)
 	end
     UI.LayoutEnd()
 
@@ -591,7 +593,7 @@ local function EntOptions(UI)
         SetEntWandCols(UI, ColValue)
 
 		UI.VerticalSpacing(1)
-		local GridValue = EntSlider(UI, "EntWandGridSlider",0,0,"$conjurer_reborn_entwand_options_grid",1,50,1,100,GetEntWandGridSize(UI))
+		local GridValue = EntSlider(UI, "EntWandGridSlider",0,0,"$conjurer_reborn_entwand_options_grid",1,100,1,100,GetEntWandGridSize(UI))
         SetEntWandGridSize(UI, GridValue)
 
 		UI.VerticalSpacing(6)
@@ -628,6 +630,21 @@ local function EntOptions(UI)
             SetEntWandIgnoreBG(UI, NotDeBGFGFlag)
         end
 
+		UI.VerticalSpacing(2)
+        local ScanPreviewFlag, ScanPreviewClick = ConjurerCheckbox(UI, "EntWandScanPreview", 0, 0, "$conjurer_reborn_entwand_options_entity_scan_preview")
+		UI.GuiTooltip("$conjurer_reborn_entwand_options_entity_scan_preview_desc")
+        if ScanPreviewClick then
+            SetScanPreview(UI, ScanPreviewFlag)
+        end
+
+        UI.VerticalSpacing(2)
+		UI.NextZDeep(0)
+		local ScanRadiusText = GameTextGet("$conjurer_reborn_entwand_options_entity_scan_radius")
+		local value = EasySlider(UI, "EntWandScanRadiusSlider", 0, 0, ScanRadiusText, 8, 128, 32, 100, GetScanRadius(UI),nil,nil,function ()
+			UI.GuiTooltip("$conjurer_reborn_entwand_options_entity_scan_radius_desc")
+		end)
+        SetScanRadius(UI, value)
+		
 		UI.VerticalSpacing(6)
 		UI.NextZDeep(0)
 		UI.NextColor(155, 173, 183, 255)
@@ -642,7 +659,7 @@ local function EntOptions(UI)
         end
     end)
 	
-	UI.DrawScrollContainer("EntOptionsBox", false, true, EntWandSpriteBG)
+	UI.DrawScrollContainer("EntOptionsBox", true, true, EntWandSpriteBG)
 end
 
 local MainEntBtns = {
@@ -733,6 +750,9 @@ local function EntwandButtons(UI)
     end
 	UI.NextZDeep(-10)
     GuiEndAutoBoxNinePiece(UI.gui, 1, 0, 0, false, 0, EntWandSpriteBG, EntWandSpriteBG)
+    local ButtonsBoxInfo = UI.WidgetInfoTable()
+	InputBlockEasy(UI, "EntwandButtons阻止框", ButtonsBoxInfo)
+	
     UI.ImageButton("MatPickerFavIcon", 2.5, 2, "mods/conjurer_reborn/files/gfx/fav_icon.png")
 	UI.GuiTooltip("$conjurer_reborn_entwand_fav")
 	UI.LayoutEnd()

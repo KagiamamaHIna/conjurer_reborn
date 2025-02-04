@@ -59,7 +59,9 @@ local function EditwandButtons(UI)
 
 	UI.NextZDeep(-10)
 	GuiEndAutoBoxNinePiece(UI.gui, 1, 0, 0, false, 0, EditWandSpriteBG, EditWandSpriteBG)
-
+    local ButtonsBoxInfo = UI.WidgetInfoTable()
+	InputBlockEasy(UI, "EditwandButtons阻止框", ButtonsBoxInfo)
+	
 	UI.LayoutEnd()
 end
 
@@ -401,7 +403,7 @@ local function EditwandInspect(UI)
 
 		UI.LayoutEnd()
 	end)
-	UI.DrawScrollContainer("EditWandEntityEdit", false, true)
+	UI.DrawScrollContainer("EditWandEntityEdit", true, true)
 end
 
 ---绘制Entwand的GUI

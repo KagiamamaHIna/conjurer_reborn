@@ -5,12 +5,49 @@ dofile_once("mods/conjurer_reborn/files/wandhelper/ent_list.lua")
 dofile_once("mods/conjurer_reborn/files/overrides/drop_money_fn.lua")
 local WorldGlobalGetNumber = Compose(tonumber, WorldGlobalGet)
 
-SCAN_RADIUS = 32
+---@param UI Gui
+---@return integer
+function GetScanRadius(UI)
+	return WorldGlobalGetNumber(UI, "EntWandScanRadius", "32")
+end
+
+---@param UI Gui
+---@return boolean
+function GetScanPreview(UI)
+	return WorldGlobalGetBool(UI, "EntWandScanPreview", false)
+end
+
+---@param UI Gui
+---@param value boolean
+function SetScanPreview(UI, value)
+	local last = GetScanPreview(UI)
+	if last ~= value then
+    	WorldGlobalSetBool(UI, "EntWandScanPreview", value)
+		ChangeSpawnerReticle(UI)
+	end
+end
+
+---@param UI Gui
+---@param value number
+function SetScanRadius(UI, value)
+    local last = GetScanRadius(UI)
+	if last ~= value then
+		WorldGlobalSet(UI, "EntWandScanRadius", value)
+		if GetScanPreview(UI) then
+			ChangeSpawnerReticle(UI)
+		end
+	end
+end
 
 -- This is a fun little hack to keep the entity scanning still working & efficient.
 -- Simply set the reticle entity outside the scanning range, and offset all sprites
 -- & spawn points accordingly.
-RETICLE_OFFSET = SCAN_RADIUS + 5
+
+---@param UI Gui
+---@return integer
+function GetReticleOffset(UI)
+	return 37
+end
 
 ---判断entwand的准星实体是否生成，如果没生成，根据给定坐标生成，都会返回实体id
 ---@param x number? x = 0
@@ -160,6 +197,46 @@ function ChangeSpawnerReticle(UI)
 	local cols = GetEntWandCols(UI)
 	local grid_size = GetEntWandGridSize(UI)
 	local reticle = GetOrCreateReticle()
+	
+	if GetScanPreview(UI) then
+		local LastVisualEntitys = {}
+		if EntityGetWithName("conjurer_reborn_del_all_visual") ~= 0 then--先试图杀死
+			for _,v in ipairs(EntityGetAllChildren(reticle) or {})do
+				if EntityGetName(v) == "conjurer_reborn_del_all_visual" then
+					LastVisualEntitys[#LastVisualEntitys+1] = v
+				end
+			end
+		end
+		local Circumference = 2 * math.pi * GetScanRadius(UI)
+		local VisualMax = math.floor(Circumference / 6)
+        if VisualMax ~= #LastVisualEntitys then
+            for _, v in ipairs(LastVisualEntitys) do
+                EntityKill(v)
+            end
+            local DefDeg = 360 / VisualMax
+            for i = 1, VisualMax do
+                local VisualEntity = EntityObjCreateNew("conjurer_reborn_del_all_visual")
+                EntityAddChild(reticle, VisualEntity.entity_id)
+                VisualEntity:AddComp("SpriteComponent", {
+                    image_file = "mods/conjurer_reborn/files/gfx/eraser_pixel.png",
+                    additive = true,
+                    emissive = true,
+                    z_index = 80
+                })
+                    :AddComp("LuaComponent", {
+                        execute_every_n_frame = 1,
+                        script_source_file = "mods/conjurer_reborn/files/wands/entwand/del_all_visual_move.lua"
+                    })
+                AddSetStorageComp(VisualEntity.entity_id, "deg", (i - 1) * DefDeg, "value_float")
+            end
+        end
+    elseif EntityGetWithName("conjurer_reborn_del_all_visual") ~= 0 then
+		for _,v in ipairs(EntityGetAllChildren(reticle) or {})do
+			if EntityGetName(v) == "conjurer_reborn_del_all_visual" then
+				EntityKill(v)
+			end
+		end
+	end
 
 	-- Destroy all existing SpriteComponents from the reticle
 	local sprites = EntityGetComponentIncludingDisabled(reticle, "SpriteComponent")
@@ -177,8 +254,8 @@ function ChangeSpawnerReticle(UI)
 
 		return {
 			image_file = "mods/conjurer_reborn/files/gfx/spawner_pixel.png",
-			offset_x = x + RETICLE_OFFSET + sprite_offset - center_x_offset,
-			offset_y = y + RETICLE_OFFSET + sprite_offset - center_y_offset,
+			offset_x = x + GetReticleOffset(UI) + sprite_offset - center_x_offset,
+			offset_y = y + GetReticleOffset(UI) + sprite_offset - center_y_offset,
 			alpha = 0.5,
 			additive = false,
 			emissive = false,

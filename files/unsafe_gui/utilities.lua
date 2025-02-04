@@ -164,17 +164,44 @@ end
 ---@param width number
 ---@param savedValue number?
 ---@param value_formatting string?
+---@param isDecimals boolean? false
+---@param tooltip_fn function?
 ---@return number
-function EasySlider(UI, id, x, y, text, value_min, value_max, value_default, width, savedValue, value_formatting)
-	value_formatting = Default(value_formatting, "")
+function EasySlider(UI, id, x, y, text, value_min, value_max, value_default, width, savedValue, value_formatting, isDecimals, tooltip_fn)
+    value_formatting = Default(value_formatting, "")
+	UI.BeginHorizontal(0, 0, true)
 	local flag = false
 	if UI.GetSliderValue(id) == nil then
 		flag = true
 	end
-	EasyCeilSlider(UI, id, x, y, text, value_min, value_max, value_default, width, value_formatting)
-	if flag and savedValue then
-		UI.SetSliderValue(id, savedValue)
+    EasyCeilSlider(UI, id, x, y, text, value_min, value_max, value_default, width, value_formatting)
+	if tooltip_fn then
+		tooltip_fn()
 	end
+    if flag and savedValue then
+        UI.SetSliderValue(id, savedValue)
+    end
+	local number
+	local numberStr
+	if isDecimals then
+        number = UI.GetSliderValue(id) or 0
+		numberStr = tostring(number)
+    else
+		number = math.ceil(UI.GetSliderValue(id) or 0)
+		if number and number < 0 then
+            numberStr = tostring(number - 1)
+        elseif number then
+			numberStr = tostring(number)
+		end
+	end
+	if value_formatting ~= "" then
+		numberStr = value_formatting
+	end
+	GuiAnimateBegin(UI.gui)--帮助滑条能完整的显示文本
+	GuiAnimateAlphaFadeIn(UI.gui, UI.NewID(id.."ANI"), 0, 0, false)
+    UI.Text(0, 0, numberStr)
+    GuiAnimateEnd(UI.gui)
+    UI.LayoutEnd()
 	return UI.GetSliderValue(id)
 end
 
@@ -245,17 +272,16 @@ function SameWidthSlider(UI, id, Align, x, y, text, value_min, value_max, value_
 			UI.SetSliderValue(id, savedValue)
 		end
 	else
-		result = EasySlider(UI, id, x + Align - textWitdh, y+1, "", value_min, value_max, value_default, width, savedValue)
+		result = EasySlider(UI, id, x + Align - textWitdh, y+1, "", value_min, value_max, value_default, width, savedValue, format, isDecimals
+			, function ()
+			    if tooltip then
+					UI.GuiTooltip(tooltip)
+				end
+			end)
 	end
 	
-	if tooltip then
-		UI.GuiTooltip(tooltip)
-	end
-    GuiAnimateBegin(UI.gui)--帮助滑条能完整的显示文本
-	GuiAnimateAlphaFadeIn(UI.gui, UI.NewID(id.."ANI"), 0, 0, false)
-    UI.Text(0, 0, numberStr)
-    GuiAnimateEnd(UI.gui)
-    UI.LayoutEnd()
+
+	UI.LayoutEnd()
 	return result
 end
 
@@ -497,6 +523,37 @@ function HasClickedMouse2(ignore_guncomponent)
 	end
 
 	return click_frame == GameGetFrameNum()
+end
+
+---输入阻止框
+---@param UI Gui
+---@param id string
+---@param x number
+---@param y number
+---@param w number
+---@param h number
+---@param mw number
+---@param mh number
+function InputBlock(UI, id, x, y, w, h, mw, mh)
+	GuiAnimateBegin(UI.gui)
+    GuiAnimateAlphaFadeIn(UI.gui, UI.NewID(id), 0, 0, false)
+	GuiLayoutBeginLayer(UI.gui)
+	UI.NextZDeep(1)
+	GuiOptionsAddForNextWidget(UI.gui, GUI_OPTION.AlwaysClickable)
+	GuiBeginScrollContainer(UI.gui, UI.NewID(id.."隐形"), x, y, w, h, true, mw, mh)
+	
+	GuiEndScrollContainer(UI.gui)
+
+	GuiLayoutEndLayer(UI.gui)
+	GuiAnimateEnd(UI.gui)
+end
+
+---更简易的版本
+---@param UI Gui
+---@param id string
+---@param info GuiInfo
+function InputBlockEasy(UI, id, info)
+	InputBlock(UI, id, info.x - 2, info.y - 2, info.width, info.height, 2, 2)
 end
 
 ---页面表格框

@@ -498,8 +498,9 @@ local function EraserPicker(UI)
             UI.NextZDeep(0)
 			
 			local GridSliderText = GameTextGet("$conjurer_reborn_material_eraser_grid")
-            local value = EasySlider(UI, "EraserPickerGridSlider", 0, 0, GridSliderText, 1, 100, 1, 100, GetEraserGridSize(UI))
-			UI.GuiTooltip("$conjurer_reborn_material_eraser_grid_desc")
+            local value = EasySlider(UI, "EraserPickerGridSlider", 0, 0, GridSliderText, 1, 100, 1, 100, GetEraserGridSize(UI),nil,nil,function ()
+				UI.GuiTooltip("$conjurer_reborn_material_eraser_grid_desc")
+			end)
 			SetEraserGridSize(UI, value)
 		end
 
@@ -511,7 +512,7 @@ local function EraserPicker(UI)
 		local value = EasySlider(UI, "EraserGridSize", 0, 0, GridSizeText, 1, 20, 2, 60, GetEraserSize(UI), FormatStr)
         SetEraserSize(UI, value)
     end)
-	UI.DrawScrollContainer("EraserPickerBox", false, true, MatWandSpriteBG)
+	UI.DrawScrollContainer("EraserPickerBox", true, true, MatWandSpriteBG)
 end
 
 ---绘制画刷选择器
@@ -564,13 +565,14 @@ local function BrushPicker(UI)
         UI.NextZDeep(0) --最后一个那个滑条
 
 		local BrushSliderText = GameTextGet("$conjurer_reborn_material_brushes_grid")
-		local value = EasySlider(UI, "BrushPickerGridSlider", 0, 0, BrushSliderText, 1, 100, 1, 100, GetBrushGridSize(UI))
-        UI.GuiTooltip(GameTextGet("$conjurer_reborn_material_brushes_grid_desc"))
+		local value = EasySlider(UI, "BrushPickerGridSlider", 0, 0, BrushSliderText, 1, 100, 1, 100, GetBrushGridSize(UI),nil,nil,function ()
+			UI.GuiTooltip(GameTextGet("$conjurer_reborn_material_brushes_grid_desc"))
+		end)
         SetBrushGridSize(UI, value)
 		
     end)
 	UI.NextZDeep(-100)
-	UI.DrawScrollContainer("BrushPickerBox",false, true, MatWandSpriteBG)
+	UI.DrawScrollContainer("BrushPickerBox", true, true, MatWandSpriteBG)
 end
 
 local SpeChar = string.byte('@')
@@ -612,6 +614,8 @@ local function MatPicker(UI)
 
 		UI.NextZDeep(0)
         GuiEndAutoBoxNinePiece(UI.gui, 0, 0, 0, false, 0, ThisBG)
+        local TapInfo = UI.WidgetInfoTable()
+		InputBlockEasy(UI, "MatWandPageTap阻止框" .. k, TapInfo)
 	end
     UI.LayoutEnd()
 
@@ -969,6 +973,10 @@ local function MatwandButtons(UI)
     end
 	UI.NextZDeep(-10)
     GuiEndAutoBoxNinePiece(UI.gui, 1, 0, 0, false, 0, MatWandSpriteBG, MatWandSpriteBG)
+
+    local ButtonsBoxInfo = UI.WidgetInfoTable()
+	InputBlockEasy(UI, "MatwandButtons阻止框", ButtonsBoxInfo)
+
     UI.ImageButton("MatPickerFavIcon", 2.5, 2, "mods/conjurer_reborn/files/gfx/fav_icon.png")
 	UI.GuiTooltip("$conjurer_reborn_material_fav")
 	UI.LayoutEnd()

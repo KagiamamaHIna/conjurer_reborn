@@ -229,6 +229,7 @@ local function RenderTeleportMenu(UI)
 	UI.NextZDeep(-1000)
 	GuiEndAutoBoxNinePiece(UI.gui, -1, 0, 0, false, 0, "mods/conjurer_reborn/files/gfx/9piece_purple.png", "mods/conjurer_reborn/files/gfx/9piece_purple.png")
 	local Info = UI.WidgetInfoTable()
+    InputBlockEasy(UI, "BottomTeleport阻挡框", Info)
 
 	UI.BeginHorizontal(Info.draw_x + Info.draw_width + 4, BottomBoxY - 23, true, 1)
 
@@ -307,7 +308,9 @@ local function RenderHappinessMenu(UI)
 	end
 
 	UI.NextZDeep(-1000)
-	GuiEndAutoBoxNinePiece(UI.gui, 0, 0, 0, false, 0)
+    GuiEndAutoBoxNinePiece(UI.gui, 0, 0, 0, false, 0)
+	local Info = UI.WidgetInfoTable()
+	InputBlockEasy(UI, "BottomHappiness阻挡框", Info)
 	UI.LayoutEnd()
 end
 
@@ -366,6 +369,7 @@ local function RenderHerdMenu(UI, WidgetInfo)
     GuiEndAutoBoxNinePiece(UI.gui, 0, 0, 0, false, 0)
     local info = UI.WidgetInfoTable()
     HerdX = WidgetInfo.x + WidgetInfo.width * 0.5 - info.width * 0.5
+	InputBlockEasy(UI, "BottomHerd阻挡框", info)
 	UI.LayoutEnd()
 end
 
@@ -485,7 +489,8 @@ local function RenderWeatherMenu(UI)
     if WindBoxY + AutoBoxInfo.height > BaseLine + WindMenuOffsetY then
         WindMenuOffsetY = WindBoxY + AutoBoxInfo.height - BaseLine --计算对齐基准线用的偏移量
     end
-	
+    InputBlockEasy(UI, "WindBox阻挡框", AutoBoxInfo)
+
     UI.LayoutEnd()
     ---控制雨
     local RainSlider1 = {
@@ -635,6 +640,7 @@ local function RenderWeatherMenu(UI)
     if RainBoxY + RainAutoBoxInfo.height > RainBaseLine + RainMenuOffsetY then
         RainMenuOffsetY = RainBoxY + RainAutoBoxInfo.height - RainBaseLine --计算对齐基准线用的偏移量
     end
+    InputBlockEasy(UI, "RainBox阻挡框", RainAutoBoxInfo)
 	
 	if ThisNil then
 		GuiAnimateEnd(UI.gui)
@@ -796,9 +802,10 @@ local function RenderTimeMenu(UI)
     GuiEndAutoBoxNinePiece(UI.gui, 5, 95, 0, false, 0)
 	UI.LayoutEnd()
     local TimeBoxInfo = UI.WidgetInfoTable()
-	if TimeBoxY + TimeBoxInfo.height > BaseLine + TimeMenuOffsetY then
+    if TimeBoxY + TimeBoxInfo.height > BaseLine + TimeMenuOffsetY then
         TimeMenuOffsetY = TimeBoxY + TimeBoxInfo.height - BaseLine --计算对齐基准线用的偏移量
     end
+    InputBlockEasy(UI, "BottomTime阻挡框", TimeBoxInfo)
 	if ThisNil then
 		GuiAnimateEnd(UI.gui)
 	end
@@ -1000,7 +1007,8 @@ function BottomBtnDraw(UI)
 	UI.NextZDeep(-99)
 	GuiEndAutoBoxNinePiece(UI.gui, 1, 0, 0, false, 0, SpriteBG, SpriteBG)
 	local info = UI.WidgetInfoTable()
-    
+    InputBlockEasy(UI, "BottomBtns阻挡框", info)
+
 	if Enable and BottomBoxX == nil then
 		GuiAnimateEnd(UI.gui)
 	end

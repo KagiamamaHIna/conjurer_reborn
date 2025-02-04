@@ -1,6 +1,7 @@
 local HasEntwand = EntityGetWithName("conjurer_reborn_spawner_reticle")
 if HasEntwand == 0 or HasEntwand == nil then
     EntityKill(GetUpdatedEntityID())
+	return
 end
 
 dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")

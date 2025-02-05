@@ -54,7 +54,7 @@ local function ScanEntity(UI, x, y)
         local vroot = EntityGetRootEntity(v)
         if IsValidEntity(UI, vroot) then
 			local ax, ay = EntityGetTransform(v)
-            local alen = math.abs(math.sqrt((x - ax) ^ 2 + (y - ay) ^ 2))
+            local alen = math.sqrt((x - ax) ^ 2 + (y - ay) ^ 2)
 			if Len > alen then
                 Len = alen
 				id = vroot

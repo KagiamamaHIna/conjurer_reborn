@@ -200,7 +200,7 @@ function ChangeSpawnerReticle(UI)
 	
 	if GetScanPreview(UI) then
 		local LastVisualEntitys = {}
-		if EntityGetWithName("conjurer_reborn_del_all_visual") ~= 0 then--先试图杀死
+		if EntityGetWithName("conjurer_reborn_del_all_visual") ~= 0 then
 			for _,v in ipairs(EntityGetAllChildren(reticle) or {})do
 				if EntityGetName(v) == "conjurer_reborn_del_all_visual" then
 					LastVisualEntitys[#LastVisualEntitys+1] = v

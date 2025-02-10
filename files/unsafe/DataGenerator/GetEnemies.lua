@@ -3,6 +3,8 @@ dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/misc/ModIdUtilities.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/DataInterface/IgnoreEnemies.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/DataInterface/ExtraEnemiesFile.lua")
+dofile_once("mods/conjurer_reborn/files/unsafe/DataInterface/EnemiesDesc.lua")
+dofile_once("mods/conjurer_reborn/files/unsafe/DataInterface/NewOtherEnemies.lua")
 
 local IngoreEntTable = {}
 for _, v in pairs(IgnoreEnemies) do
@@ -159,7 +161,6 @@ for modid, t in pairs(AnimalList) do --遍历文件，写入数据
 				tags = nil,
                 png = Cpp.ConcatStr("data/ui_gfx/animal_icons/", name, ".png"),
 				files = {v},
-                fileXMLMap = {},
 			}
 		end
 
@@ -167,7 +168,6 @@ for modid, t in pairs(AnimalList) do --遍历文件，写入数据
         if AnimalXml == nil then --解析失败
             goto continue
         end
-		EnemiesTable[name].fileXMLMap[v] = AnimalXml
         if AnimalXml.attr.name and string.byte(AnimalXml.attr.name, 1, 1) == DollarChar then
 			if string.byte(EnemiesTable[name].name,1,1) ~= DollarChar then
 				EnemiesTable[name].name = AnimalXml.attr.name --赋值为有本地化key的名字
@@ -206,6 +206,13 @@ for i=#OrderedListId,1,-1 do--如果不存在就移除不存在敌人
 	end
 end
 
+for _,v in ipairs(NewOtherEnemies)do
+    OrderedListId[#OrderedListId + 1] = v.id
+    EnemiesTable[v.id] = v
+	v.id = nil
+end
+NewOtherEnemies = nil
+
 local KeyToEnemy = {}
 for i,v in ipairs(OrderedListId)do
 	KeyToEnemy[v] = i
@@ -227,5 +234,12 @@ for k,v in pairs(ExtraEnemiesFile)do
 	end
 	::continue::
 end
+
+for k,v in pairs(EnemiesDesc)do
+	if EnemiesTable[k] then
+		EnemiesTable[k].conjurer_reborn_custom_desc = v
+	end
+end
+EnemiesDesc = nil
 
 return {EnemiesTable, OrderedListId, KeyToEnemy}

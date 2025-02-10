@@ -2,6 +2,8 @@
 dofile_once("mods/conjurer_reborn/files/unsafe/unsafe.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/misc/ModIdUtilities.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
+dofile_once("mods/conjurer_reborn/files/unsafe/DataInterface/MaterialsDesc.lua")
+dofile_once("mods/conjurer_reborn/files/unsafe/DataInterface/MatModidSet.lua")
 
 --需要给材料分类：
 ---液体，固体，粉末，box2d，气体，火焰。会标记材料是否静止，始终燃烧等
@@ -257,6 +259,20 @@ for i = 1, #MatOrderedIdList do--通过有序表来获得数据，确保归类�
 		table.insert(MatTypeIdList[MatType.ErrorType], v.attr.name)
 	end
 end
+
+for k,v in pairs(MaterialsDesc) do
+	if MatTable[k] then
+		MatTable[k].conjurer_reborn_custom_desc = v
+	end
+end
+MaterialsDesc = nil
+
+for k,v in pairs(MatModidSet) do
+	if MatTable[k] then
+		MatTable[k].conjurer_unsafe_from_id = v
+	end
+end
+MatModidSet = nil
 
 ---获取wang_color(argb) rgb部分
 ---@param color string

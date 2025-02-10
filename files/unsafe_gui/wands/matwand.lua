@@ -197,6 +197,27 @@ function MatTooltipText(UI, id)
 			NewLine("$conjurer_reborn_material_tooltip_inheritance", Inherited)
 		end
     else
+        if MatTable[id].conjurer_reborn_custom_desc then
+            if MatTable[id].conjurer_reborn_custom_desc.rgba then
+                local r, g, b, a = StrGetRGBANumber(MatTable[id].conjurer_reborn_custom_desc.rgba)
+                if r and g and b and a then
+                    UI.NextColor(r, g, b, a)
+                else
+                    print_error("The color format is incorrect! color:", MatTable[id].conjurer_reborn_custom_desc.rgba)
+                    print_error("material:", id)
+                end
+            elseif MatTable[id].conjurer_reborn_custom_desc.argb then
+                local a, r, g, b = StrGetRGBANumber(MatTable[id].conjurer_reborn_custom_desc.argb)
+                if r and g and b and a then
+                    UI.NextColor(r, g, b, a)
+                else
+                    print_error("The color format is incorrect! color:", MatTable[id].conjurer_reborn_custom_desc.argb)
+                    print_error("material:", id)
+                end
+            end
+            UI.Text(0, 0, MatTable[id].conjurer_reborn_custom_desc.text)
+            UI.VerticalSpacing(1)
+        end
 		UI.Text(0, 0, "$conjurer_reborn_material_tooltip_tip")
 	end
 	

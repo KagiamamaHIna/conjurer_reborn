@@ -105,6 +105,27 @@ local function EnemyTooltipText(UI, id, isNoDraw, MainFn)
 			UI.VerticalSpacing(1)
         end
     else
+        if enemy.conjurer_reborn_custom_desc then
+            if enemy.conjurer_reborn_custom_desc.rgba then
+                local r, g, b, a = StrGetRGBANumber(enemy.conjurer_reborn_custom_desc.rgba)
+                if r and g and b and a then
+                    UI.NextColor(r, g, b, a)
+                else
+                    print_error("The color format is incorrect! color:", enemy.conjurer_reborn_custom_desc.rgba)
+                    print_error("enemy:", enemy.name)
+                end
+            elseif enemy.conjurer_reborn_custom_desc.argb then
+				local a, r, g, b = StrGetRGBANumber(enemy.conjurer_reborn_custom_desc.argb)
+                if r and g and b and a then
+                    UI.NextColor(r, g, b, a)
+                else
+                    print_error("The color format is incorrect! color:", enemy.conjurer_reborn_custom_desc.argb)
+                    print_error("enemy:", enemy.name)
+                end
+			end
+            UI.Text(0, 0, enemy.conjurer_reborn_custom_desc.text)
+			UI.VerticalSpacing(3)
+		end
         local file = PassDataPath(enemy.files[UI.UserData[FileIKey]])
         UI.Text(0, 0, GameTextGet("$conjurer_reborn_entwand_enemy_list_active", file))
         local _, _, hover = UI.WidgetInfo()

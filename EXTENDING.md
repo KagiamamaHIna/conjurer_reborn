@@ -149,7 +149,7 @@ table.insert(NewOtherEnemies,{
   files = {
     "path/to/enemy.xml"
   }
-}
+})
 ```
 
 

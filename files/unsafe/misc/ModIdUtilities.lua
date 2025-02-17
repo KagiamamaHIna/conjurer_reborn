@@ -23,7 +23,9 @@ for _, v in pairs(mod_config.children) do --解析来获取一个id到模组实�
 				path = path .. "/"
 			end
             ModIdToPathTable[v.attr.name] = path
-			ModWorkshopToId[v.attr.workshop_item_id] = v.attr.name
+            ModWorkshopToId[v.attr.workshop_item_id] = v.attr.name
+        else--防止你的steam过于迟缓()
+            goto continue
 		end
     else                                   --本地模组，用相对路径即可
         ModIdToPathTable[v.attr.name] = "mods/" .. v.attr.name .. "/"

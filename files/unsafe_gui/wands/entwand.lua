@@ -344,14 +344,16 @@ local function DrawFav(UI)
 					SpellTooltipText(UI, value.item)
 				end, UI.GetZDeep() - 1000, 10, 3)
 			end
-        else
+        elseif ALL_ENTITIES[value.c_index] and ALL_ENTITIES[value.c_index].entities then
             local item = ALL_ENTITIES[value.c_index].entities[value.item]
-			if item.name ~= value.name then
-				NoHasItem = true
+            if item.name ~= value.name then
+                NoHasItem = true
             else
-				left, right = UI.ImageButton("FavEntIconOther" .. item.name .. index, 0, 0, item.image)
-				UI.GuiTooltip(GetNameOrKey(item.name))
-			end
+                left, right = UI.ImageButton("FavEntIconOther" .. item.name .. index, 0, 0, item.image)
+                UI.GuiTooltip(GetNameOrKey(item.name))
+            end
+        else
+			NoHasItem = true
 		end
         if left then
 			ClickSound()

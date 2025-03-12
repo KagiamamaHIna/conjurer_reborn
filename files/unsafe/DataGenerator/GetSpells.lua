@@ -54,7 +54,7 @@ local AppendsModToFile = GetAppendedModIdToFile(OriSpellLua, "data/scripts/gun/g
 for modid,v in pairs(AppendsModToFile) do
     local fn = loadstring(v)--防止出问题？
 	if fn then
-        fn()
+        pcall(fn)
 		for _, perk in pairs(actions) do
 			if SpellTable[perk.id] and SpellTable[perk.id].conjurer_unsafe_from_id == "?" then--如果存在数据，且为?，那么标记为模组id
 				SpellTable[perk.id].conjurer_unsafe_from_id = modid

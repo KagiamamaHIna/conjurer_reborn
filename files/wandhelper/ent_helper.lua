@@ -162,6 +162,20 @@ function SetEntWandKillInstead(UI, value)
 	WorldGlobalSetBool(UI, "EntWandKillInstead", value)
 end
 
+---获取实体法杖的只杀死模式
+---@param UI Gui
+---@return boolean
+function GetEntWandKillOnly(UI)
+	return WorldGlobalGetBool(UI, "EntWandKillOnly", false)
+end
+
+---设置实体法杖的只杀死模式
+---@param UI Gui
+---@param value boolean
+function SetEntWandKillOnly(UI, value)
+	WorldGlobalSetBool(UI, "EntWandKillOnly", value)
+end
+
 ---返回实体法杖是否删除小部分范围内的所有敌人
 ---@param UI Gui
 ---@return boolean

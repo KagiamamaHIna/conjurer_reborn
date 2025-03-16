@@ -348,6 +348,11 @@ conjurer_reborn_setting_quick_mat_display,Display material info when selecting m
 conjurer_reborn_split_search_text,Space Split Multi-Item Search,,,,,,,,空格分割多项目搜索,,,,,,,
 conjurer_reborn_split_search_text_tip,Inserting spaces between text allows you to search for more than one thing at once.,,,,,,,,在文本之间插入空格可以同时搜索多个内容,,,,,,,
 conjurer_reborn_mat_img_regen_every_time,Re-generate material image every time,,,,,,,,每次都重新生成材料贴图,,,,,,,
+conjurer_reborn_reset_matwand_fav,Reset material favorite,,,,,,,,重置材料收藏,,,,,,,,,,,,,,,
+conjurer_reborn_reset_matwand_fav_desc,Reset the favorite of the Staff of Material Mastery,,,,,,,,重置材料法杖的收藏,,,,,,,,,,,,,,,
+conjurer_reborn_reset_entwand_fav,Reset entity favorite,,,,,,,,重置实体收藏,,,,,,,,,,,,,,,
+conjurer_reborn_reset_entwand_fav_desc,Reset the favorite of the Staff of Illusions,,,,,,,,重置幻象魔杖的收藏,,,,,,,,,,,,,,,
+conjurer_reborn_rest_IKnowWhatImDoing,"This action cannot be undone, click again to confirm",,,,,,,,此操作不可撤销，再点击一次确认,,,,,,,
 ]]
 
 dofile("data/scripts/lib/mod_settings.lua")
@@ -450,6 +455,8 @@ end
 
 
 local mod_id = "conjurer_reborn"
+local conjurer_reborn_reset_matwand_fav_confirm = false
+local conjurer_reborn_reset_entwand_fav_confirm = false
 
 mod_settings_version = 1
 mod_settings =
@@ -557,6 +564,78 @@ mod_settings =
 					if click and flag and entity ~= 0 and isConjurer then
 						GlobalsSetValue("conjurer_reborn_get_carrot", "1")
 					end
+					GuiIdPop(gui)
+				end
+            }),
+			Setting({
+				id = "reset_matwand_fav",
+				ui_name = "",
+				ui_description = "",
+				ui_fn = function(mod_id, gui, in_main_menu, im_id, setting)
+					GuiIdPushString(gui,"conjurer_reborn_reset_matwand_fav")
+                    local click = GuiButton(gui, 1, 2, 0, GetTextOrKey("conjurer_reborn_reset_matwand_fav"))
+                    local _, _, hover = GuiGetPreviousWidgetInfo(gui)
+					--放开悬浮时重置
+                    if not hover and conjurer_reborn_reset_matwand_fav_confirm then
+                        conjurer_reborn_reset_matwand_fav_confirm = false
+                    end
+					
+					local flag, entity = pcall(GameGetWorldStateEntity)
+					local isConjurer = GameHasFlagRun("conjurer_reborn_world")
+
+					--点击检测和确定
+                    if click and not conjurer_reborn_reset_matwand_fav_confirm then
+                        conjurer_reborn_reset_matwand_fav_confirm = true
+                    elseif click and conjurer_reborn_reset_matwand_fav_confirm then
+                        conjurer_reborn_reset_matwand_fav_confirm = false
+                        ModSettingSet("conjurer_unsafeMatPickerFav", "return {}")
+						if flag and entity ~= 0 and isConjurer then--符合条件下全局变量通知刷新
+							GlobalsSetValue("conjurer_reborn_reset_matwand_fav_refresh", "1")
+						end
+                    end
+					
+					if conjurer_reborn_reset_matwand_fav_confirm then
+						GuiTooltip(gui, GetTextOrKey("conjurer_reborn_rest_IKnowWhatImDoing"), "")
+                    else
+						GuiTooltip(gui, GetTextOrKey("conjurer_reborn_reset_matwand_fav_desc"), "")
+					end
+
+					GuiIdPop(gui)
+				end
+            }),
+			Setting({
+				id = "reset_entwand_fav",
+				ui_name = "",
+				ui_description = "",
+				ui_fn = function(mod_id, gui, in_main_menu, im_id, setting)
+					GuiIdPushString(gui,"conjurer_reborn_reset_entwand_fav")
+                    local click = GuiButton(gui, 1, 2, 0, GetTextOrKey("conjurer_reborn_reset_entwand_fav"))
+                    local _, _, hover = GuiGetPreviousWidgetInfo(gui)
+					--放开悬浮时重置
+                    if not hover and conjurer_reborn_reset_entwand_fav_confirm then
+                        conjurer_reborn_reset_entwand_fav_confirm = false
+                    end
+					
+					local flag, entity = pcall(GameGetWorldStateEntity)
+					local isConjurer = GameHasFlagRun("conjurer_reborn_world")
+
+					--点击检测和确定
+                    if click and not conjurer_reborn_reset_entwand_fav_confirm then
+                        conjurer_reborn_reset_entwand_fav_confirm = true
+                    elseif click and conjurer_reborn_reset_entwand_fav_confirm then
+                        conjurer_reborn_reset_entwand_fav_confirm = false
+                        ModSettingSet("conjurer_unsafeEntWandFav", "return {}")
+						if flag and entity ~= 0 and isConjurer then--符合条件下全局变量通知刷新
+							GlobalsSetValue("conjurer_reborn_reset_entwand_fav_refresh", "1")
+						end
+                    end
+					
+					if conjurer_reborn_reset_entwand_fav_confirm then
+						GuiTooltip(gui, GetTextOrKey("conjurer_reborn_rest_IKnowWhatImDoing"), "")
+                    else
+						GuiTooltip(gui, GetTextOrKey("conjurer_reborn_reset_entwand_fav_desc"), "")
+					end
+
 					GuiIdPop(gui)
 				end
 			})

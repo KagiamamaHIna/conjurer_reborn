@@ -813,7 +813,11 @@ end
 ---绘制收藏格
 ---@param UI Gui
 local function DrawFav(UI)
-	local OnceRemove = false
+    local OnceRemove = false
+    if GlobalsGetValue("conjurer_reborn_reset_matwand_fav_refresh", "0") == "1" then
+        GlobalsSetValue("conjurer_reborn_reset_matwand_fav_refresh", "0")
+        favItems = {}
+    end
     VerticalPage(UI, "MatWandFavVerticalPage", favItems, 6, 138, 0, 0, 9, MatWandSpriteBG, function(value, index)
 		UI.NextZDeep(0)
         local right = false

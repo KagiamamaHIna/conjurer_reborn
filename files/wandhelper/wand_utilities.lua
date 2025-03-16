@@ -93,6 +93,7 @@ end
 
 ---杀死或删除实体
 ---@param id integer
+---@param no_delete boolean?
 function EntityTrueKillOrDelete(id, no_delete)
     if id == nil or id == 0 then
         return

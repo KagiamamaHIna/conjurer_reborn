@@ -312,6 +312,10 @@ local function DrawFav(UI)
     local OnceRemove = false
 	local NoHasItem = false
 	local count = -0x7FFFFFFF
+	if GlobalsGetValue("conjurer_reborn_reset_entwand_fav_refresh", "0") == "1" then
+        GlobalsSetValue("conjurer_reborn_reset_entwand_fav_refresh", "0")
+        favItems = {}
+    end
     VerticalPage(UI, "EntWandFavVerticalPage", favItems, 6, 138, 0, 0, 9, EntWandSpriteBG, function(value, index)
 		UI.NextZDeep(0)
         local left
@@ -631,6 +635,16 @@ local function EntOptions(UI)
         if KillClick then
             SetEntWandKillInstead(UI, KillFlag)
         end
+
+        if GetEntWandKillInstead(UI) then
+            UI.VerticalSpacing(2)
+			
+			local ModeFlag, ModeClick = ConjurerCheckbox(UI, "EntWandKillOnly", 8, 0, "$conjurer_reborn_entwand_options_kill_only_mode")
+            UI.GuiTooltip("$conjurer_reborn_entwand_options_kill_only_mode_desc")
+			if ModeClick then
+				SetEntWandKillOnly(UI, ModeFlag)
+			end
+		end
 
 		UI.VerticalSpacing(2)
         local HoldDeleteFlag, HoldDeleteClick = ConjurerCheckbox(UI, "EntWandHoldDelete", 0, 0, "$conjurer_reborn_entwand_options_holding_delete")

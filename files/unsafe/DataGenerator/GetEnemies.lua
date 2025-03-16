@@ -206,6 +206,45 @@ for i=#OrderedListId,1,-1 do--如果不存在就移除不存在敌人
 	end
 end
 
+local slashNum = string.byte('/')
+---获取路径层级
+---@param str string
+---@return number
+local function GetSlashCount(str)
+    local newstr = str:gsub('\\', '/')
+	local result = 0
+	for i=1,#newstr do
+		if newstr:byte(i, i) == slashNum then
+			result = result + 1
+		end
+	end
+	return result
+end
+
+--将路径层级最短的文件设置为第一个
+for _, v in pairs(EnemiesTable) do
+	if #v.files <= 1 then
+		goto continue
+	end
+    local bestFileIndex
+	local bestCount = 0x7FFFFFFF
+    for i, file in ipairs(v.files) do
+        local count = GetSlashCount(file)
+        if bestCount > count then
+            bestCount = count
+            bestFileIndex = i
+        end
+    end
+    --得出最小的层级之后就进行手动插入最前面
+    if bestFileIndex and bestFileIndex ~= 1 then
+        --浅拷贝引用
+        local temp = v.files[bestFileIndex]
+        table.remove(v.files, bestFileIndex)
+        table.insert(v.files, 1, temp) --插入
+    end
+	::continue::
+end
+
 for _,v in ipairs(NewOtherEnemies)do
     OrderedListId[#OrderedListId + 1] = v.id
     EnemiesTable[v.id] = v

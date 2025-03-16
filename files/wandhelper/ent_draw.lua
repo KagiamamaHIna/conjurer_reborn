@@ -113,7 +113,7 @@ local function DeleteEntity(UI)
     end
 	
     if GetEntWandKillInstead(UI) then
-		EntityTrueKillOrDelete(HOVERED_ENTITY)
+		EntityTrueKillOrDelete(HOVERED_ENTITY, GetEntWandKillOnly(UI))
 		HOVERED_ENTITY = nil
 		return
 	end
@@ -132,7 +132,7 @@ local function DeleteAll(UI, x, y)
 		local root = EntityGetRootEntity(entity)
         if IsValidEntity(UI, root) then
             if GetEntWandKillInstead(UI) then
-				EntityTrueKillOrDelete(root)
+				EntityTrueKillOrDelete(root, GetEntWandKillOnly(UI))
 			else
 				EntityKill(root)
 			end

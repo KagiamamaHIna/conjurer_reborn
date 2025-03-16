@@ -195,6 +195,8 @@ conjurer_reborn_entwand_options_col_desc,How many columns to spawn entities\nWar
 conjurer_reborn_entwand_options_grid,Grid,,,,,,,,网格,,,,,,,,,,,,,,,
 conjurer_reborn_entwand_options_grid_desc,Entity spawner grid snapping size,,,,,,,,实体生成器对齐网格尺寸,,,,,,,,,,,,,,,
 conjurer_reborn_entwand_options_kill,Kill instead of deleting,,,,,,,,杀死而不是删除,,,,,,,,,,,,,,,
+conjurer_reborn_entwand_options_kill_only_mode,Kill-only mode,,,,,,,,只杀死模式,,,,,,,,,,,,,,,
+conjurer_reborn_entwand_options_kill_only_mode_desc,Will not perform additional deletion on entities,,,,,,,,不会对实体进行额外的删除操作,,,,,,,,,,,,,,,
 conjurer_reborn_entwand_options_kill_desc,"If the entity has a pulse, it will be killed instead.",,,,,,,,如果实体可以被杀死那么将杀死实体,,,,,,,,,,,,,,,
 conjurer_reborn_entwand_options_holding_delete,Delete when holding,,,,,,,,按住持续删除实体,,,,,,,,,,,,,,,
 conjurer_reborn_entwand_options_holding_delete_desc,Less accurate but more efficient way of removing multiple entities,,,,,,,,虽然这个移除多个实体的方法不太准确，但更高效,,,,,,,,,,,,,,,

@@ -80,6 +80,7 @@ end
 function ChangeActiveBrush(UI, CategoryIndex, Index)
 	WorldGlobalSet(UI, "MatwandBrushCategoryIndex", CategoryIndex)
     WorldGlobalSet(UI, "MatwandBrushIndex", Index)
+	UI.UserData["BrushRotationType"] = 0
 	RefreshBrushSprite(UI)
 end
 
@@ -169,7 +170,8 @@ function GetMatDrawVars(material, brush)
 		image_animation_raytrace_from_center = false,
 		collide_with_gas_and_fire = false,
 		set_magic_creation = true,
-		is_emitting = true
+		is_emitting = true,
+		image_animation_use_entity_rotation = true
 	}
 end
 

@@ -80,7 +80,8 @@ local function RenderWorldMenu(UI)
 		},
 		{
 			name = "$conjurer_reborn_power_dim_ng_plus",
-			image = "mods/conjurer_reborn/files/gfx/power_icons/worlds/noita_ng.png",
+            image = "mods/conjurer_reborn/files/gfx/power_icons/worlds/noita_ng.png",
+			is_ngplus = true,
 			action = CreateDimensionalPortal("noita_ng+", "world_noita", "data/biome_impl/biome_map_newgame_plus.lua",
 				"data/biome/_pixel_scenes_newgame_plus.xml"),
 		},
@@ -112,14 +113,37 @@ local function RenderWorldMenu(UI)
 	for _, v in ipairs(noita_worlds) do
 		GuiBeginAutoBox(UI.gui)
 		UI.NextZDeep(0)
-		if UI.ImageButton(v.name, 0, 0, v.image) then
+        local left = UI.ImageButton(v.name, 0, 0, v.image)
+		local VInfo = UI.WidgetInfoTable()
+		local Margin = -2
+        if left then
             v.action()
-			ClickSound()
+            ClickSound()
+        end
+        local tip = GameTextGetTranslatedOrNot(v.name):gsub([[']], [["]]) --单引号转义成双引号
+        if v.is_ngplus then
+            local level = tonumber(GlobalsGetValue("conjurer_reborn_next_ngplus_level", "0"))--等级数值计算
+            if InputIsMouseButtonDown(Mouse_wheel_up) then
+                level = level + 1
+            elseif InputIsMouseButtonDown(Mouse_wheel_down) then
+                level = level - 1
+            end
+            if level > 27 then--范围限制
+                level = 27
+            elseif level < 0 then
+                level = 0
+            end
+			GlobalsSetValue("conjurer_reborn_next_ngplus_level", tostring(level))
+            tip = tip .. "\n" .. GameTextGet("$conjurer_reborn_power_dim_ng_plus_level", tostring(level + 1))
+			tip = tip .. "\n" .. GameTextGet("$conjurer_reborn_ngplus_level_switch")
+			UI.GuiTooltip(tip)
+            InputBlockEasy(UI, "Yeah!is_ngplus", VInfo)
+            Margin = Margin - 2
+        else
+			UI.GuiTooltip(tip)
 		end
-		local tip = GameTextGetTranslatedOrNot(v.name):gsub([[']], [["]]) --单引号转义成双引号
-		UI.GuiTooltip(tip)
 		UI.NextZDeep(-1000)
-		GuiEndAutoBoxNinePiece(UI.gui, -2, 0, 0, false, 0, "mods/conjurer_reborn/files/gfx/9piece_black.png")
+        GuiEndAutoBoxNinePiece(UI.gui, Margin, 0, 0, false, 0, "mods/conjurer_reborn/files/gfx/9piece_black.png")
 	end
 	UI.LayoutEnd()
 	UI.BeginHorizontal(x, BottomBoxY - 42, true, 1)
@@ -831,7 +855,7 @@ local main_menu_items = {
 		image = "mods/conjurer_reborn/files/gfx/power_icons/weather.png",
 		action = function (UI)
 			ToggleActiveOverlay(RenderWeatherMenu)
-		end,
+        end,
 	},
 	{
 		name = "$conjurer_reborn_power_planetary_controls",

@@ -6,6 +6,35 @@ dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetAllData.lua")
 dofile_once("data/scripts/perks/perk.lua")
 
 local EnemyTable = GetEnemyData()
+local SpellTable = GetSpellData()
+local PerkTable  = GetPerkData()
+local EnemyFileToMeta = {}
+local OtherFileToMeta = {}
+
+for id,v in pairs(EnemyTable)do
+	for i,filename in ipairs(v.files)do
+		EnemyFileToMeta[filename] = {key = i,id = id}
+	end
+end
+
+for c_index,v in ipairs(ALL_ENTITIES)do
+    if v.Type ~= EntityType.Other then
+        goto continue
+    end
+    if v.entities == nil then
+        goto continue
+    end
+	for i,ent in ipairs(v.entities) do
+        if ent.image == nil then
+            goto continue
+        end
+		if ent.path then--不收集spawn_func的数据，因为效果可能大相径庭
+			OtherFileToMeta[ent.path] = {c_index = c_index, key = i, type = EntityType.Other}
+		end
+		::continue::
+	end
+	::continue::
+end
 
 local HOVERED_ENTITY = nil
 
@@ -189,13 +218,119 @@ local function SpawnEntity(UI)
 	end
 end
 
+---选中实体的操作
+---@param UI Gui
+---@param x number
+---@param y number
+local function EyedropperEntity(UI, x, y)
+    if HOVERED_ENTITY == nil or HOVERED_ENTITY == 0 then
+        return
+    end
+	if GameIsInventoryOpen() then
+		return
+	end
+    if not InputIsMouseButtonDown(Mouse_middle) and not InputIsMouseButtonJustUp(Mouse_middle) then
+        return
+    end
+	local entobj = EntityObj(HOVERED_ENTITY)
+	local filename = entobj:GetFilename()
+    local Sprite
+	local desc
+    local MetaData = {}
+	
+    if EnemyFileToMeta[filename] then
+        local id = EnemyFileToMeta[filename].id
+        Sprite = EnemyTable[id].png
+        MetaData.type = EntityType.Enemy
+        MetaData.id = id
+		MetaData.key = EnemyFileToMeta[filename].key
+		desc = EnemyTable[id].name
+    end
+	
+	if Sprite == nil and entobj:HasTag("card_action") then
+        local ItemActions = entobj.comp_all.ItemActionComponent
+		if ItemActions and ItemActions[1] then
+            local spellid = ItemActions[1].attr.action_id
+			if SpellTable[spellid] then
+                Sprite = SpellTable[spellid].sprite
+                MetaData.type = EntityType.Spell
+                MetaData.id = spellid
+				desc = SpellTable[spellid].name
+			end
+		end
+	end
+
+	if Sprite == nil and entobj:HasTag("perk") then
+        local VSCs = entobj.comp_all.VariableStorageComponent
+		for _,c in ipairs(VSCs or {})do
+            if c.attr.name ~= "perk_id" then
+                goto continue
+            end
+			if PerkTable[c.attr.value_string] then
+                Sprite = PerkTable[c.attr.value_string].perk_icon
+				MetaData.type = EntityType.Perk
+				MetaData.id = c.attr.value_string
+				desc = PerkTable[c.attr.value_string].ui_name
+				break
+			end
+			::continue::
+		end
+	end
+
+	if Sprite == nil and OtherFileToMeta[filename] then
+		local metadata = OtherFileToMeta[filename]
+        Sprite = ALL_ENTITIES[metadata.c_index].entities[metadata.key].image
+        desc = ALL_ENTITIES[metadata.c_index].entities[metadata.key].name
+        MetaData = metadata
+	end
+
+	if Sprite == nil then
+		return
+	end
+	local mousex, mousey = UI.GetScreenPosition(x, y)
+    UI.Image("EyedropperEntityImage", mousex + 2, mousey + 2, Sprite)
+	local _, imageHeight = GuiGetImageDimensions(UI.gui, Sprite, 1)
+    UI.Text(mousex + 2, mousey + 2 + imageHeight, desc)
+
+	if InputIsMouseButtonJustUp(Mouse_middle) then
+        local c_index
+        local key
+		if MetaData.type ~= EntityType.Other then
+            for i, v in ipairs(ALL_ENTITIES) do
+				if v.Type ~= MetaData.type then
+					goto continue
+				end
+                if v.Type == EntityType.Enemy then
+                    c_index = i
+                    key = GetEnemyIDToKey(MetaData.id)
+                    local FileIKey = "EntWandEnemyFileIndex" .. MetaData.id
+					UI.UserData[FileIKey] = MetaData.key--切换索引
+                    break
+                elseif v.Type == EntityType.Spell then
+                    c_index = i
+                    key = GetSpellIDToKey(MetaData.id)
+                    break
+                elseif v.Type == EntityType.Perk then
+                    c_index = i
+                    key = GetPerkIDToKey(MetaData.id)
+                    break
+                end
+				::continue::
+			end
+        else
+			c_index = MetaData.c_index
+            key = MetaData.key
+		end
+		SetActiveEntity(UI, c_index, key)
+	end
+end
 ---执行实体法杖的光标操作
 ---@param UI Gui
 function EntEntityUpdate(UI)
 	local x, y = DEBUG_GetMouseWorld()
 	ScanEntity(UI, x, y)
 	SpawnerReticleFollowMouse(UI, x, y)
-
+	EyedropperEntity(UI, x, y)
 
 	local spawn_function = GetEntWandHoldSpawn(UI) and IsHoldingMouse1 or HasClickedMouse1
 	if spawn_function() then

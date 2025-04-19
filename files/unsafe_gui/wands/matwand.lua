@@ -563,6 +563,9 @@ local function BrushPicker(UI)
             if v.desc then --如果有多余的文本需要，那么就附加上去
                 Text = Text .. "\n" .. GameTextGet(v.desc)
             end
+            if v.can_rotation then
+                Text = Text .. "\n" .. GameTextGet("$conjurer_reborn_material_brush_rotation_desc")
+            end
             UI.GuiTooltip(Text)
         end
         UI.LayoutEnd()
@@ -889,6 +892,9 @@ local function DrawFav(UI)
                 local Text = GameTextGet(brush.name)
                 if brush.desc then --如果有多余的文本需要，那么就附加上去
                     Text = Text .. "\n" .. GameTextGet(brush.desc)
+                end
+                if brush.can_rotation then
+                    Text = Text .. "\n" .. GameTextGet("$conjurer_reborn_material_brush_rotation_desc")
                 end
                 UI.GuiTooltip(Text)
             end

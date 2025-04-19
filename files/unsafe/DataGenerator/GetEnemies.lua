@@ -181,13 +181,13 @@ for modid, t in pairs(AnimalList) do --遍历文件，写入数据
 				end
 			end
 		end
-
+		--[[
 		if EnemiesTable[name].tags == nil then--假定多文件情况下tags不变
 			if AnimalXml.attr.tags and AnimalXml.attr.tags ~= "" then
 				EnemiesTable[name].tags = split(AnimalXml.attr.tags, ',')
 			end
 		end
-
+		]]
 		HasEnemies[name] = true--用于记录已写入的敌人数据，后续可以拿来判断需要删除的敌人
         ::continue::
     end

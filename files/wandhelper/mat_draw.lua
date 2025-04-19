@@ -193,7 +193,7 @@ end
 local function DrawNormal(material, brush)
 	local reticle = EntityGetWithName("conjurer_reborn_brush_reticle")
 	local x, y = EntityGetTransform(reticle)
-	local draw_vars = GetMatDrawVars(material, brush)
+    local draw_vars = GetMatDrawVars(material, brush)
 	draw_vars["emitter_lifetime_frames"] = 6
 	EntityAddComponent2(reticle, "ParticleEmitterComponent", draw_vars)
 end
@@ -295,7 +295,34 @@ function MaterialToolEntityUpdate(UI)
 	BrushFollowMouse(UI)
 	EraserFollowMouse(UI)
 
-	local brush = GetActiveBrush(UI)
+    local brush = GetActiveBrush(UI)
+	
+	local brushObj = EntityObj(EntityGetWithName("conjurer_reborn_brush_reticle") or 0)
+    if brushObj.entity_id ~= 0 and brush.can_rotation then
+		if UI.UserData["BrushRotationType"] == nil then
+			UI.UserData["BrushRotationType"] = 0
+		end
+        if InputIsKeyJustDown(Key_q) then
+            if UI.UserData["BrushRotationType"] - 1 < 0 then
+                UI.UserData["BrushRotationType"] = 3
+            else
+                UI.UserData["BrushRotationType"] = UI.UserData["BrushRotationType"] - 1
+            end
+        elseif InputIsKeyJustDown(Key_e) then
+			if UI.UserData["BrushRotationType"] + 1 > 3 then
+                UI.UserData["BrushRotationType"] = 0
+            else
+                UI.UserData["BrushRotationType"] = UI.UserData["BrushRotationType"] + 1
+            end
+        end
+        local newRotation = UI.UserData["BrushRotationType"] * 90
+        if newRotation > 180 then
+            newRotation = newRotation - 360
+        end
+        brushObj.attr.rotation = math.rad(newRotation)
+    elseif brushObj.entity_id ~= 0 and brushObj.attr.rotation ~= 0 then--没有就检查并设置为0
+		brushObj.attr.rotation = 0
+	end
 
 	local holding_m1 = IsHoldingMouse1()
 	local ACTION_HOLD_DRAW = not brush.click_to_use and holding_m1

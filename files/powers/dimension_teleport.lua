@@ -24,7 +24,11 @@ function collision_trigger(entity)
 
     local biome_file = GlobalsGet(BIOME_SELECTION_FILE)
     local scene_file = GlobalsGet(BIOME_SELECTION_SCENE_FILE)
-
+    if destination_biome == "noita_ng+" then
+      SessionNumbersSetValue( "NEW_GAME_PLUS_COUNT", GlobalsGetValue("conjurer_reborn_next_ngplus_level", "0") )
+    else
+      SessionNumbersSetValue( "NEW_GAME_PLUS_COUNT", "0")
+    end
     print("Loading world files:")
     print(biome_file)
     print(scene_file)

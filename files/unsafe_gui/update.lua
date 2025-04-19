@@ -1,4 +1,4 @@
----@class Gui
+---@type Gui
 local UI = dofile("mods/conjurer_reborn/files/unsafe/gui.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/misc/SearchForList.lua")

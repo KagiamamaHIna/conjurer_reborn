@@ -307,11 +307,19 @@ function Cpp.ImageCreate(path)end
 function Cpp.NullImageCreate(Width, Height, channels)end
 
 ---给定路径读取文件用AES128CTR解密/加密文件
----@param str string
+---@param path string
 ---@param key table<integer, 16>
 ---@param iv table<integer, 16>
 ---@return string
-function Cpp.AES128CTR(str, key, iv)end
+function Cpp.AES128CTR(path, key, iv)end
+
+---给定路径读取文件用AES128CTR解密/加密文件然后保存到指定路径
+---@param path string
+---@param toFile string
+---@param key table<integer, 16>
+---@param iv table<integer, 16>
+---@return string
+function Cpp.AES128CTRToFile(path, toFile, key, iv)end
 
 ---给定一个字符串，找到里面的芬兰语字母并将其转换为英文字母
 ---@param str any

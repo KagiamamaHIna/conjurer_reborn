@@ -11,6 +11,87 @@ if not UnsafeTrueVer then--如果版本检查没通过
 	end
 	return
 end
+
+local KeyArray = {
+    Key_a = 4,
+    Key_b = 5,
+    Key_c = 6,
+    Key_d = 7,
+    Key_e = 8,
+    Key_f = 9,
+    Key_g = 10,
+    Key_h = 11,
+    Key_i = 12,
+    Key_j = 13,
+    Key_k = 14,
+    Key_l = 15,
+    Key_m = 16,
+    Key_n = 17,
+    Key_o = 18,
+    Key_p = 19,
+    Key_q = 20,
+    Key_r = 21,
+    Key_s = 22,
+    Key_t = 23,
+    Key_u = 24,
+    Key_v = 25,
+    Key_w = 26,
+    Key_x = 27,
+    Key_y = 28,
+}
+local KeyMap = {}
+for k,v in pairs(KeyArray) do
+    if type(v) == "number" then
+        k = k:gsub("Key_", "")
+		KeyMap[k] = v
+	end
+end
+
+_SecretsPath = "files/secrets_secrets_secrets/"
+_SecretsFileName = "secrets_secrets_secrets%d.bin"
+local InputKeys = {}
+function KeyListeningUpdate()
+	local haspush = false
+    for k, v in pairs(KeyMap) do
+        if InputIsKeyJustDown(v) then
+            InputKeys[#InputKeys + 1] = k
+            if #InputKeys > 16 then
+                InputKeys = {}
+            end
+            haspush = true
+        end
+    end
+    if haspush then
+        local Key = {}
+        for i = 1, #InputKeys do
+            if i % 2 == 1 then
+                Key[#Key + 1] = InputKeys[i]:byte()
+            else
+                if i % 4 == 0 then
+                    Key[#Key + 1] = InputKeys[i]:byte()
+                else
+                    for abc = 1, 3 do
+                        Key[#Key + 1] = (InputKeys[i]:byte() * (0x1BF52 + abc)) % 256
+                    end
+                end
+            end
+        end
+        
+        if #Key == 0x10 then
+            local iv = {}
+            for i, v in ipairs(Key) do
+                iv[#iv + 1] = (i + 1) * v % 256
+            end
+            local code = Cpp.AES128CTR(ModIdToPath("conjurer_reborn") .. _SecretsPath .. string.format(_SecretsFileName, "1"), Key, iv)
+            local fn = loadstring(code)
+            if fn and type(fn) == "function" then
+                fn = fn()
+                pcall(fn, ModIdToPath("conjurer_reborn"), Key, iv)
+            end
+        end
+    end
+end
+
 dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("mods/conjurer_reborn/files/lib/EntityClass.lua")
 dofile_once("mods/conjurer_unsafe/csv.lua")
@@ -34,6 +115,10 @@ if not Cpp.PathExists(MatWangCachePath) then
     Cpp.CreateDir(MatWangCachePath)
 end
 
+if not Cpp.PathExists("mods/conjurer_unsafe/secrets_secrets_secrets") then
+    Cpp.CreateDir("mods/conjurer_unsafe/secrets_secrets_secrets")
+end
+
 function OnPlayerSpawned(player)
     RestoreInput()
 end
@@ -49,5 +134,6 @@ function OnWorldPostUpdate()
         --加载流程
         ClearDofileOnceCache("mods/conjurer_reborn/files/unsafe/DataGenerator/GetDataWak.lua") --清除缓存，将datawak的数据交给lua销毁
     end
-	GuiUpdate()
+    KeyListeningUpdate()
+    GuiUpdate()
 end

@@ -619,6 +619,44 @@ function EntityObj(entity_id)
 		return self
 	end
 
+	---获取所有子实体，或者根据tag筛选
+    ---@param tag string? tag == ""
+	---@return integer[]|nil
+	function Entity:GetAllChild(tag)
+		if tag then
+            return EntityGetAllChildren(self.entity_id, tag)
+        else
+			return EntityGetAllChildren(self.entity_id)
+		end
+	end
+
+	---获取所有子实体的Obj封装，或者根据tag筛选
+    ---@param tag string? tag == ""
+	---@return NoitaEntity[]|nil
+    function Entity:GetAllChildObj(tag)
+        local list = self:GetAllChild(tag)
+		if list == nil then
+			return
+		end
+        local result = {}
+        for i, v in ipairs(list) do
+            result[i] = EntityObj(v)
+        end
+		return result
+	end
+
+	---筛选出一个有指定名字的子实体
+    ---@param name string
+	---@return NoitaEntity|nil
+	function Entity:GetChildWithName(name)
+		local child = self:GetAllChildObj()
+		for _,v in ipairs(child or {}) do
+			if v.attr.name == name then
+				return v
+			end
+		end
+	end
+
 	---载入新实体作为子实体
 	---@param filename string
 	---@return integer
@@ -663,7 +701,7 @@ function EntityObj(entity_id)
 	---@param table_of_component_values table<string, any>? nil
 	---@return NoitaEntity self
 	function Entity:AddComp(type_name, table_of_component_values)
-		EntityAddComponent2(self.entity_id, type_name, table_of_component_values)
+		EntityAddComponent2(self.entity_id, type_name, table_of_component_values or {})
 		return self
 	end
 

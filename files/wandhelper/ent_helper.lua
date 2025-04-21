@@ -237,10 +237,10 @@ function ChangeSpawnerReticle(UI)
                     emissive = true,
                     z_index = 80
                 })
-                    :AddComp("LuaComponent", {
-                        execute_every_n_frame = 1,
-                        script_source_file = "mods/conjurer_reborn/files/wands/entwand/del_all_visual_move.lua"
-                    })
+                :AddComp("LuaComponent", {
+                    execute_every_n_frame = 1,
+                    script_source_file = "mods/conjurer_reborn/files/wands/entwand/del_all_visual_move.lua"
+                })
                 AddSetStorageComp(VisualEntity.entity_id, "deg", (i - 1) * DefDeg, "value_float")
             end
         end

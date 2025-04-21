@@ -1,4 +1,4 @@
-<Entity name="dimension_portal" serialize="1">
+<Entity name="conjurer_reborn_dimension_portal" serialize="1">
   <UIInfoComponent
     name="$conjurer_reborn_power_dim_portal"
   ></UIInfoComponent>

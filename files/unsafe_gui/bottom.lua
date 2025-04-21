@@ -113,11 +113,11 @@ local function RenderWorldMenu(UI)
 	for _, v in ipairs(noita_worlds) do
 		GuiBeginAutoBox(UI.gui)
 		UI.NextZDeep(0)
-        local left = UI.ImageButton(v.name, 0, 0, v.image)
+        local left, right = UI.ImageButton(v.name, 0, 0, v.image)
 		local VInfo = UI.WidgetInfoTable()
 		local Margin = -2
-        if left then
-            v.action()
+        if left or right then
+            v.action(right)
             ClickSound()
         end
         local tip = GameTextGetTranslatedOrNot(v.name):gsub([[']], [["]]) --单引号转义成双引号
@@ -135,11 +135,13 @@ local function RenderWorldMenu(UI)
             end
 			GlobalsSetValue("conjurer_reborn_next_ngplus_level", tostring(level))
             tip = tip .. "\n" .. GameTextGet("$conjurer_reborn_power_dim_ng_plus_level", tostring(level + 1))
-			tip = tip .. "\n" .. GameTextGet("$conjurer_reborn_ngplus_level_switch")
+            tip = tip .. "\n" .. GameTextGet("$conjurer_reborn_ngplus_level_switch")
+			tip = tip .. "\n" .. GameTextGet("$conjurer_reborn_power_tran_dim_desc_right")
 			UI.GuiTooltip(tip)
             InputBlockEasy(UI, "Yeah!is_ngplus", VInfo)
             Margin = Margin - 2
         else
+			tip = tip .. "\n" .. GameTextGet("$conjurer_reborn_power_tran_dim_desc_right")
 			UI.GuiTooltip(tip)
 		end
 		UI.NextZDeep(-1000)
@@ -150,11 +152,12 @@ local function RenderWorldMenu(UI)
 	for _, v in ipairs(conjurer_dimensions) do
 		GuiBeginAutoBox(UI.gui)
 		UI.NextZDeep(0)
-		if UI.ImageButton(v.name, 0, 0, v.image) then
-            v.action()
+		local left,right = UI.ImageButton(v.name, 0, 0, v.image)
+		if left or right then
+            v.action(right)
 			ClickSound()
 		end
-		UI.GuiTooltip(v.name)
+		UI.GuiTooltip(GameTextGet(v.name) .. "\n" .. GameTextGet("$conjurer_reborn_power_tran_dim_desc_right"))
 		UI.NextZDeep(-1000)
 		GuiEndAutoBoxNinePiece(UI.gui, -2, 0, 0, false, 0, "mods/conjurer_reborn/files/gfx/9piece_black.png")
 	end
@@ -254,6 +257,46 @@ local function RenderTeleportMenu(UI)
 	GuiEndAutoBoxNinePiece(UI.gui, -1, 0, 0, false, 0, "mods/conjurer_reborn/files/gfx/9piece_purple.png", "mods/conjurer_reborn/files/gfx/9piece_purple.png")
 	local Info = UI.WidgetInfoTable()
     InputBlockEasy(UI, "BottomTeleport阻挡框", Info)
+
+	local x = BottomBoxX + 1
+	GuiBeginAutoBox(UI.gui)
+    UI.BeginHorizontal(x, BottomBoxY - 23 - 16 - 4, true, 1)
+
+    local biomeWidth = BiomeMapGetSize()
+	local WorldSize = biomeWidth * 512
+	local player = GetPlayerObj()
+	UI.NextZDeep(0)
+    local up_click = UI.ImageButton("Teleport_upworld", 0, 0, "mods/conjurer_reborn/files/gfx/power_icons/up_world.png")
+	UI.GuiTooltip("$conjurer_reborn_power_up_world")
+	if up_click and player then
+		player.attr.x = player.attr.x - WorldSize
+	end
+	UI.NextZDeep(0)
+	local next_click = UI.ImageButton("Teleport_nextworld", 0,0,"mods/conjurer_reborn/files/gfx/power_icons/next_world.png")
+	UI.GuiTooltip("$conjurer_reborn_power_next_world")
+    if next_click and player then
+        player.attr.x = player.attr.x + WorldSize
+    end
+	
+	UI.LayoutEnd()
+	UI.NextZDeep(-1000)
+	GuiEndAutoBoxNinePiece(UI.gui, -1, 0, 0, false, 0, "mods/conjurer_reborn/files/gfx/9piece_purple.png", "mods/conjurer_reborn/files/gfx/9piece_purple.png")
+	local __Info = UI.WidgetInfoTable()
+    InputBlockEasy(UI, "BottomTeleport阻挡框", __Info)
+	if player then
+		local posx = player.attr.x + WorldSize / 2
+		local pos = math.floor(posx / WorldSize)
+		local posStr = tostring(pos)
+		local posWidth,posHeight = UI.TextDimensions(posStr,1,2,"data/fonts/font_pixel.xml")
+		UI.Text(__Info.draw_x + __Info.width / 2 - posWidth / 2 + 3, __Info.draw_y - posHeight, posStr, 1, "data/fonts/font_pixel.xml")
+		if pos == 0 then
+			UI.GuiTooltip(GameTextGet("$conjurer_reborn_power_overworld"))
+        elseif pos > 0 then
+            UI.GuiTooltip(GameTextGet("$conjurer_reborn_power_east", posStr))
+        else
+			UI.GuiTooltip(GameTextGet("$conjurer_reborn_power_west", tostring(-pos)))
+		end
+	end
 
 	UI.BeginHorizontal(Info.draw_x + Info.draw_width + 4, BottomBoxY - 23, true, 1)
 
@@ -926,7 +969,7 @@ local main_menu_items = {
 	{
 		name = "$conjurer_reborn_power_kalma",
 		image = "mods/conjurer_reborn/files/gfx/power_icons/kalma.png",
-		action = ToggleKalma,
+        action = ToggleKalma,
 		update = function(UI)
 			local player = GetPlayer()
 			if player == nil then
@@ -1021,9 +1064,13 @@ function BottomBtnDraw(UI)
 		if v.image_func then --如果有图标函数就调用获取
 			image = v.image_func(UI)
 		end
-		local left = UI.ImageButton(v.name, 0, 0, image)
-		if left then
+		local left, right = UI.ImageButton(v.name, 0, 0, image)
+        if left then
             v.action(UI)
+            ClickSound()
+        end
+		if v.right_action and right then
+            v.right_action(UI)
 			ClickSound()
 		end
 		UI.GuiTooltip(BtnText)

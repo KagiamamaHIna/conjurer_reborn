@@ -174,13 +174,23 @@ function ToggleSpeed()
 end
 
 local WorldCurrent = "world_conjurer"
+local sandbox = dofile_once("mods/conjurer_reborn/files/lib/SandBox.lua")
+local dim_fn, dim_env = sandbox(loadstring(ModTextFileGetContent("mods/conjurer_reborn/files/powers/dimension_teleport.lua")))
+dim_fn()
 
 function CreateDimensionalPortal(biome, world, biome_file, scene_file)
 	local BIOME_SELECTION = "conjurer_reborn_BIOME_SELECTION"
 	local BIOME_SELECTION_SCENE_FILE = "conjurer_reborn_BIOME_SELECTION_FILE"
 	local BIOME_SELECTION_FILE = "conjurer_reborn_BIOME_FILE"
-	local WORLD_SELECTION = "conjurer_reborn_WORLD_SELECTION"
-	return function()
+    local WORLD_SELECTION = "conjurer_reborn_WORLD_SELECTION"
+
+	
+    return function(right)
+		local player = GetPlayer()
+        if player == nil then
+            return
+        end
+
 		-- Never ever let these *not* update when creating a new portal
 		biome_file = biome_file or "mods/conjurer_reborn/files/biomes/biome_map.lua"
 		scene_file = scene_file or "data/biome/_pixel_scenes.xml"
@@ -190,13 +200,17 @@ function CreateDimensionalPortal(biome, world, biome_file, scene_file)
 		GlobalsSetValue(BIOME_SELECTION_SCENE_FILE, scene_file)
 		GlobalsSetValue(BIOME_SELECTION, biome)
 		GlobalsSetValue(WORLD_SELECTION, world)
-		WorldCurrent = world
+        WorldCurrent = world
+		
+		if right then
+            dim_env.collision_trigger(player)
+			return
+		end
 		-- Kill any existing portals
-		local portal = EntityGetWithName("dimension_portal")
+		local portal = EntityGetWithName("conjurer_reborn_dimension_portal")
 		EntityKill(portal)
 
 		-- Spawn the portal
-		local player = GetPlayer()
 		local x, y = EntityGetTransform(player)
 		EntityLoad("mods/conjurer_reborn/files/powers/dimension_portal.xml", x, y - 80)
 	end

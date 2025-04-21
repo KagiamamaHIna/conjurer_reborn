@@ -330,4 +330,88 @@ UI.MiscEventFn["SettingOtherUpdate"] = function ()
 	end
 end
 
+local CessationMessage = false
+UI.MiscEventFn["CESSATION"] = function ()
+    local player_id = EntityGetWithTag("polymorphed_cessation")[1]
+	local player = GetPlayer()
+    if player_id == nil or player then--有玩家的时候也退出
+        CessationMessage = false
+        return
+    end
+	if not CessationMessage then
+		GamePrintImportant("$conjurer_reborn_exit_cessation")
+	end
+    CessationMessage = true
+	if not InputIsKeyDown(Key_q) then
+		return
+	end
+	for _,vid in ipairs(EntityGetWithTag("polymorphed_cessation") or {})do
+		local player = EntityObj(vid)
+		for _,v in ipairs(player:GetAllChildObj() or {})do
+			for _,c in ipairs(v.comp_all.GameEffectComponent or {})do
+				if c.attr.effect == "POLYMORPH_CESSATION" then
+					c.attr.frames = 1
+				end
+			end
+		end
+	end
+end
+
+local PolymorphMessage = false
+UI.MiscEventFn["POLYMORPH"] = function ()
+    local player_id = EntityGetWithTag("polymorphed_player")[1]
+    if player_id == nil then
+        PolymorphMessage = false
+        return
+    end
+    if not PolymorphMessage then
+        local player = EntityObj(player_id)
+        player:AddComp("LuaComponent", {
+			script_damage_received="mods/conjurer_reborn/files/scripts/poly_death.lua",
+        })
+		for _,v in ipairs(player.comp_all.DamageModelComponent)do
+			v.attr.wait_for_kill_flag_on_death = true
+		end
+        GamePrintImportant("$conjurer_reborn_exit_poly")
+    end
+	PolymorphMessage = true
+    if not InputIsKeyDown(Key_q) then
+        return
+    end
+    local player = EntityObj(player_id)
+	for _,v in ipairs(player:GetAllChildObj() or {})do
+        for _, c in ipairs(v.comp_all.GameEffectComponent or {}) do
+			local effect = c.attr.effect
+			if effect == "POLYMORPH" or effect == "POLYMORPH_RANDOM" or effect == "POLYMORPH_UNSTABLE" then
+				c.attr.frames = 1
+			end
+		end
+	end
+end
+
+UI.TickEventFn["PolyDeath"] = function()
+    if GlobalsGetValue("conjurer_reborn_poly_death", "0") == "0" then
+        return
+    end
+    local player = GetPlayerObj()
+    if player == nil then
+        return
+    end
+	
+	player:AddChild(EntityObjCreateNew():AddComp("GameEffectComponent",  {
+        effect="BLINDNESS",
+        frames=120,
+    }))
+	player:AddChild(EntityObjCreateNew():AddComp("GameEffectComponent",  {
+        effect="PROTECTION_POLYMORPH",
+        frames=60,
+    }))
+
+    local x, y = GetSpawnPosition()
+    player.attr.x = x
+    player.attr.y = y
+    GamePrintImportant("$conjurer_reborn_player_reborn1", "$conjurer_reborn_player_reborn2")
+	GlobalsSetValue("conjurer_reborn_poly_death", "0")
+end
+
 return UI.DispatchMessage

@@ -75,7 +75,7 @@ local Brushes = {
 		brush_file = "mods/conjurer_reborn/files/wands/matwand/brushes/40_lh_brush.png",
 		icon_file = "mods/conjurer_reborn/files/wands/matwand/brushes/40_lh_icon.png",
         physics_supported = true,
-		can_rotation = true,
+		can_rotation_horizontal = true,
 	},
 	-- {
 	-- 	name = "$conjurer_reborn_material_brushes_vertical_40px",
@@ -94,7 +94,7 @@ local Brushes = {
 		brush_file = "mods/conjurer_reborn/files/wands/matwand/brushes/40_d1_brush.png",
 		icon_file = "mods/conjurer_reborn/files/wands/matwand/brushes/40_d1_icon.png",
         physics_supported = true,
-		can_rotation = true,
+		can_rotation_horizontal = true,
 	},
 	-- {
 	-- 	name = "$conjurer_reborn_material_brushes_diagonal_40px_2",

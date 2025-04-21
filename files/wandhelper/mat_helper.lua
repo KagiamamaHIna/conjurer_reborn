@@ -88,7 +88,8 @@ end
 ---@param UI Gui
 function RefreshBrushSprite(UI)
 	local brush = GetActiveBrush(UI)
-	local brush_reticle = EntityGetWithName("conjurer_reborn_brush_reticle")
+    local brush_reticle = EntityGetWithName("conjurer_reborn_brush_reticle")
+
 	EntitySetValues(brush_reticle, "SpriteComponent", {
 		image_file = brush.reticle_file,
 		offset_x = brush.offset_x,
@@ -152,7 +153,18 @@ end
 ---@param material string
 ---@param brush table
 ---@return table
-function GetMatDrawVars(material, brush)
+function GetMatDrawVars(material, brush, rotation)
+	rotation = math.floor(rotation)
+	local x_offset = 0
+    local y_offset = 0
+    if rotation == 90 then--角度修正
+        x_offset = x_offset + 1
+	elseif rotation == -180 then
+        x_offset = x_offset + 1
+        y_offset = y_offset + 1
+	elseif rotation == -91 then
+		y_offset = y_offset + 1
+    end
 	return {
 		emitted_material_name = material,
 		image_animation_file = brush.brush_file,
@@ -171,7 +183,11 @@ function GetMatDrawVars(material, brush)
 		collide_with_gas_and_fire = false,
 		set_magic_creation = true,
 		is_emitting = true,
-		image_animation_use_entity_rotation = true
+        image_animation_use_entity_rotation = true,
+        x_pos_offset_min = y_offset,--反着填是nolla的问题！！！
+		y_pos_offset_min = x_offset,
+        x_pos_offset_max = y_offset,
+        y_pos_offset_max = x_offset,
 	}
 end
 

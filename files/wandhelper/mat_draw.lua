@@ -190,10 +190,10 @@ end
 ---绘制普通材料
 ---@param material string
 ---@param brush table
-local function DrawNormal(material, brush)
+local function DrawNormal(material, brush, rotation)
 	local reticle = EntityGetWithName("conjurer_reborn_brush_reticle")
 	local x, y = EntityGetTransform(reticle)
-    local draw_vars = GetMatDrawVars(material, brush)
+    local draw_vars = GetMatDrawVars(material, brush, rotation)
 	draw_vars["emitter_lifetime_frames"] = 6
 	EntityAddComponent2(reticle, "ParticleEmitterComponent", draw_vars)
 end
@@ -203,9 +203,9 @@ end
 ---@param brush table
 ---@param x number
 ---@param y number
-local function DrawGrower(material, brush, x, y)
+local function DrawGrower(material, brush, x, y, rotation)
 	local filler = EntityCreateNew()
-	local draw_vars = GetMatDrawVars(material, brush)
+	local draw_vars = GetMatDrawVars(material, brush, rotation)
 
 	draw_vars["image_animation_raytrace_from_center"] = true
 
@@ -216,9 +216,9 @@ end
 
 ---绘制Box2D
 ---@param brush table
-local function DrawBox2D(brush)
+local function DrawBox2D(brush, rotation)
     local reticle = EntityGetWithName("conjurer_reborn_brush_reticle")
-    local var = GetMatDrawVars("conjurer_reborn_construction_steel", brush)
+    local var = GetMatDrawVars("conjurer_reborn_construction_steel", brush, rotation)
 	var["emitter_lifetime_frames"] = 6
 	EntityAddComponent2(
 		reticle,
@@ -233,7 +233,7 @@ end
 ---@param brush table
 ---@param x number
 ---@param y number
-local function HandleDraw(UI, matid, brush, x, y)
+local function HandleDraw(UI, matid, brush, x, y, rotation)
 	local is_box2d_material = MatTable[matid].conjurer_unsafe_type == MatType.Box2d
 	if is_box2d_material and not brush.physics_supported then
 		return GamePrint("$conjurer_reborn_material_handle_draw_no_box2d")
@@ -244,11 +244,11 @@ local function HandleDraw(UI, matid, brush, x, y)
 	end
 
 	if is_box2d_material then
-		DrawBox2D(brush)
+		DrawBox2D(brush, rotation)
 	elseif brush.raytrace_from_center then
-		DrawGrower(matid, brush, x, y)
+		DrawGrower(matid, brush, x, y, rotation)
 	else
-		DrawNormal(matid, brush)
+		DrawNormal(matid, brush, rotation)
 	end
 end
 
@@ -288,6 +288,10 @@ local function HandleRelease(matid, brush, x, y)
 	end
 end
 
+local horizontal = 1
+local any_rotation = 3
+
+local LastRotation = 0
 local PrevDraw = false
 ---执行材料工具实体的操作
 ---@param UI Gui
@@ -298,18 +302,24 @@ function MaterialToolEntityUpdate(UI)
     local brush = GetActiveBrush(UI)
 	
 	local brushObj = EntityObj(EntityGetWithName("conjurer_reborn_brush_reticle") or 0)
-    if brushObj.entity_id ~= 0 and brush.can_rotation then
+    if brushObj.entity_id ~= 0 and (brush.can_rotation or brush.can_rotation_horizontal) then
+		local rotationMax
+		if brush.can_rotation then
+            rotationMax = any_rotation
+        else
+			rotationMax = horizontal
+		end
 		if UI.UserData["BrushRotationType"] == nil then
 			UI.UserData["BrushRotationType"] = 0
 		end
         if InputIsKeyJustDown(Key_q) then
             if UI.UserData["BrushRotationType"] - 1 < 0 then
-                UI.UserData["BrushRotationType"] = 3
+                UI.UserData["BrushRotationType"] = rotationMax
             else
                 UI.UserData["BrushRotationType"] = UI.UserData["BrushRotationType"] - 1
             end
         elseif InputIsKeyJustDown(Key_e) then
-			if UI.UserData["BrushRotationType"] + 1 > 3 then
+			if UI.UserData["BrushRotationType"] + 1 > rotationMax then
                 UI.UserData["BrushRotationType"] = 0
             else
                 UI.UserData["BrushRotationType"] = UI.UserData["BrushRotationType"] + 1
@@ -319,8 +329,14 @@ function MaterialToolEntityUpdate(UI)
         if newRotation > 180 then
             newRotation = newRotation - 360
         end
-        brushObj.attr.rotation = math.rad(newRotation)
+        if LastRotation ~= newRotation then
+            LastRotation = newRotation
+			RefreshBrushSprite(UI)
+			brushObj.attr.rotation = math.rad(newRotation)
+        end
+		--print(newRotation)
     elseif brushObj.entity_id ~= 0 and brushObj.attr.rotation ~= 0 then--没有就检查并设置为0
+        RefreshBrushSprite(UI)
 		brushObj.attr.rotation = 0
 	end
 
@@ -337,12 +353,8 @@ function MaterialToolEntityUpdate(UI)
 	local bx, by = GridSnap(mx, my, brush_grid_size)
 
 	local material = GetActiveMaterial(UI)
-	if ACTION_HOLD_DRAW then
-		HandleDraw(UI, material, brush, bx, by)
-	end
-
-	if ACTION_CLICK_DRAW then
-		HandleDraw(UI, material, brush, bx, by)
+	if ACTION_HOLD_DRAW or ACTION_CLICK_DRAW then
+		HandleDraw(UI, material, brush, bx, by, math.deg(brushObj.attr.rotation))
 	end
 
 	if ACTION_RELEASE_DRAW then

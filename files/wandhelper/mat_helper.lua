@@ -154,7 +154,7 @@ end
 ---@param brush table
 ---@return table
 function GetMatDrawVars(material, brush, rotation)
-	rotation = math.floor(rotation)
+	rotation = math.floor(rotation or 0)
 	local x_offset = 0
     local y_offset = 0
     if rotation == 90 then--角度修正

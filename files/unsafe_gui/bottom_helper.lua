@@ -268,7 +268,8 @@ for i, animal in ipairs(MnenomisDevices) do
 			name = animal.name,
 			image = animal.image,
 			x = x,
-			y = y,
+            y = y,
+			next = tonumber(GlobalsGetValue("conjurer_reborn_power_memorize_"..animal.name.."_next", "0"))
 		})
 	end
 end
@@ -313,7 +314,8 @@ function SetWaypoint(x, y)
 		name = animal.name,
 		image = animal.image,
 		x = x,
-		y = y,
+        y = y,
+		next = 0
 	})
 
 	-- Add to globals for reloading upon restart

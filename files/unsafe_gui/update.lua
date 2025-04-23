@@ -414,4 +414,56 @@ UI.TickEventFn["PolyDeath"] = function()
 	GlobalsSetValue("conjurer_reborn_poly_death", "0")
 end
 
+local MagrinSize = 10
+local ImageScale = 0.75
+UI.TickEventFn["WaypointInMap"] = function ()
+	local x, y = UI.GetScreenPosition(GameGetCameraPos())
+    for _, v in ipairs(LOCATION_MEMORY) do
+		if v.next ~= 0 then
+			local IW,IH = GuiGetImageDimensions(UI.gui, v.image, ImageScale)
+			local vx, vy = UI.GetScreenPosition(v.x, v.y)
+	
+			local len
+			local player = GetPlayerObj()
+			if player then
+				len = math.sqrt((player.attr.x - v.x) ^ 2 + (player.attr.y - v.y) ^ 2)--相距距离
+			end
+			local hIW = IW / 2
+			local hIH = IH / 2
+			vx = vx - hIW
+			if vx < MagrinSize - hIW then
+				vx = MagrinSize - hIW
+			elseif vx > UI.ScreenWidth - MagrinSize - hIW then
+				vx = UI.ScreenWidth - MagrinSize - hIW
+			end
+			
+			vy = vy - hIH
+			local srcVY = vy
+			if vy < MagrinSize - hIH then
+				vy = MagrinSize - hIH
+			elseif vy > UI.ScreenHeight - MagrinSize - hIH then
+				vy = UI.ScreenHeight - MagrinSize - hIH
+			end
+			UI.NextZDeep(-10000)
+			UI.Image("OnScreen" .. v.name, vx, vy, v.image, 0.75, ImageScale)
+			local Info = UI.WidgetInfoTable()
+			if len then
+				local lenStr = string.format("%0.f", len)
+				local TextW, TextH = UI.TextDimensions(lenStr, ImageScale, 2, "data/fonts/font_pixel.xml")
+				local LenY = Info.y + IH
+                if srcVY > UI.ScreenHeight - MagrinSize - hIH - TextH then
+                    LenY = Info.y - IH / 2
+                end
+				local TextXOffset = 0
+                if Info.x + TextW > UI.ScreenWidth then
+					TextXOffset = UI.ScreenWidth - (Info.x + TextW)
+                end
+				local finalX = Info.x + TextXOffset
+				UI.NextZDeep(-10000)
+				UI.Text(finalX, LenY, lenStr, ImageScale, "data/fonts/font_pixel.xml")
+			end
+		end
+	end
+end
+
 return UI.DispatchMessage

@@ -310,9 +310,18 @@ local function RenderTeleportMenu(UI)
 		local left, right = UI.ImageButton("TeleportMemory" .. v.name, 0, 0, v.image)
         if left then
 			ClickSound()
-			local player = GetPlayer()
-			if player then
-				EntitySetTransform(player, v.x, v.y)
+			if InputIsKeyDown(Key_LCTRL) or InputIsKeyDown(Key_RCTRL) then
+				if v.next == 0 then
+					v.next = 1
+                else
+					v.next = 0
+				end
+				GlobalsSetValue("conjurer_reborn_power_memorize_"..v.name.."_next", tostring(v.next))
+            else
+				local player = GetPlayer()
+				if player then
+					EntitySetTransform(player, v.x, v.y)
+				end
 			end
 		end
 		if right then
@@ -320,7 +329,11 @@ local function RenderTeleportMenu(UI)
 		end
 		local tip = GameTextGet("$conjurer_reborn_power_memorize_tip", GameTextGet(v.name), string.format("%.2f", v.x),
 			string.format("%.2f", v.y))
-
+		if v.next == 0 then
+			tip = tip .. "\n" .. GameTextGet("$conjurer_reborn_power_memorize_tip_open")
+        else
+			tip = tip .. "\n" .. GameTextGet("$conjurer_reborn_power_memorize_tip_close")
+		end
 		UI.GuiTooltip(tip)
 		UI.NextZDeep(-1000)
 		GuiEndAutoBoxNinePiece(UI.gui, -2, 0, 0, false, 0, "mods/conjurer_reborn/files/gfx/9piece_purple.png")

@@ -589,7 +589,7 @@ end
 
 local TimeSize = 60 * 24
 
----返回当前世界的世界
+---返回当前世界的时间
 ---@return integer hour
 ---@return integer minute
 function GetWorldTimeStr()

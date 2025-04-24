@@ -69,6 +69,15 @@ function PopValueOnList(t)
 	return result
 end
 
+---Clamp
+---@param value number
+---@param min number
+---@param max number
+---@return number
+function Clamp(value, min, max)
+    return math.min(math.max(value, min), max)
+end
+
 ---深拷贝函数，主要是拷贝表，因为只能深拷贝这个（
 ---@param original any
 ---@return any
@@ -592,7 +601,7 @@ local TimeSize = 60 * 24
 ---返回当前世界的时间
 ---@return integer hour
 ---@return integer minute
-function GetWorldTimeStr()
+function GetWorldTimePair()
 	--0是12:00
     --0.5是24:00
 	--1就是下一轮
@@ -608,11 +617,40 @@ function GetWorldTimeStr()
 	return resultHour, minute
 end
 
+---返回总分钟数
+---@return integer
+function GetWorldTimeMinute()
+    local h, m = GetWorldTimePair()
+	return h * 60 + m
+end
+
+---设置世界时间，用分钟来确定
+---@param minute number
+function SetWorldTimeMinute(minute)
+    local hour = math.floor(minute / 60)
+    minute = math.floor(minute % 60)
+	SetWorldTime(hour, minute)
+end
+
+---设置世界时间
+---@param hour number
+---@param minute number
+function SetWorldTime(hour, minute)
+    hour = Clamp(hour, 0, 24)
+    hour = hour + 12
+	if hour >= 24 then
+		hour = hour - 24
+	end
+	minute = Clamp(minute, 0, 60)
+    minute = math.min(hour * 60 + minute, TimeSize)
+	SetWorldValue("time", minute / TimeSize)
+end
+
 ---返回当前世界天数，从1开始记
 ---@return integer
 function GetWorldDays()
     local value = GetWorldValue("day_count")
-    local h = GetWorldTimeStr()
+    local h = GetWorldTimePair()
     if h < 12 then
         value = value + 1
     end

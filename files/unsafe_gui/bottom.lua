@@ -738,7 +738,7 @@ local function RenderTimeMenu(UI)
 			name = "$conjurer_reborn_power_planetary_controls_dawn",
 			image = "mods/conjurer_reborn/files/gfx/power_icons/dawn.png",
 			action = function()
-				SetWorldValue("time", 0.73)
+                SetWorldTime(5, 30)
 			end
 		},
         {
@@ -754,7 +754,7 @@ local function RenderTimeMenu(UI)
 			name = "$conjurer_reborn_power_planetary_controls_dusk",
 			image = "mods/conjurer_reborn/files/gfx/power_icons/dusk.png",
 			action = function()
-				SetWorldValue("time", 0.47)
+				SetWorldTime(23, 00)
 			end
 		},
 		{
@@ -762,7 +762,7 @@ local function RenderTimeMenu(UI)
 			name = "$conjurer_reborn_power_planetary_controls_midnight",
 			image = "mods/conjurer_reborn/files/gfx/power_icons/midnight.png",
 			action = function()
-				SetWorldValue("time", 0.6)
+				SetWorldTime(2, 0)
 			end
 		},
     }
@@ -770,13 +770,32 @@ local function RenderTimeMenu(UI)
         if val <= 0.1 then return 0 end
         return math.max(10 ^ val / 10)
     end
-	local function to_slider_log_value(val)
-		return math.max(math.log10(val*10), 0)
-	end
+    local function to_slider_log_value(val)
+        return math.max(math.log10(val * 10), 0)
+    end
+    local TimeSize = 60 * 24
+	local CurrentMinute = GetWorldTimeMinute()
+	
     local time_dt = to_slider_log_value(GetWorldValue("time_dt"))
     local gradient_sky_alpha_target = GetWorldValue("gradient_sky_alpha_target") * 100
 	local sky_sunset_alpha_target = GetWorldValue("sky_sunset_alpha_target") * 100
     local TimeSlider = {
+		{
+            id = "WorldTimeTimeStamp",
+            name = "$conjurer_reborn_power_planetary_controls_time",
+            desc = "$conjurer_reborn_power_planetary_controls_time_desc",
+            isDecimals = false,
+            min = 0,
+            max = TimeSize,
+            value = CurrentMinute,
+			default = CurrentMinute,
+            formatting = string.format("%d", CurrentMinute),
+            action = function(value)
+				if CurrentMinute and CurrentMinute ~= value then
+					SetWorldTimeMinute(value)
+				end
+			end
+        },
         {
             id = "WorldTimeTorque",
             name = "$conjurer_reborn_power_planetary_controls_torque",
@@ -845,7 +864,7 @@ local function RenderTimeMenu(UI)
 
 	local Days = GameTextGet("$conjurer_reborn_power_planetary_controls_day",tostring(GetWorldDays()))
 	UI.NextZDeep(0)
-    UI.Text(0, 0, string.format("%02d:%02d ", GetWorldTimeStr()) .. Days)
+    UI.Text(0, 0, string.format("%02d:%02d ", GetWorldTimePair()) .. Days)
 	
     UI.VerticalSpacing(1)
 	
@@ -871,11 +890,12 @@ local function RenderTimeMenu(UI)
 	end
 
     for _, v in ipairs(TimeSlider) do
-		if v.value then
-			UI.SetSliderValue(v.id, v.value)
-		end
+        if v.value then
+            UI.SetSliderValue(v.id, v.value)
+        end
+		local SrcValue = UI.GetSliderValue(v.id)
         local value = SameWidthSlider(UI, v.id, Algin, 0, 0, v.name, v.min, v.max, v.default, 50, v.desc, nil, v.isDecimals, v.formatting)
-		v.action(value)
+		v.action(value, SrcValue)
 	end
 
 	UI.NextZDeep(-1000)

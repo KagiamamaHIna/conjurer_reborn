@@ -240,7 +240,7 @@ local function HandleDraw(UI, matid, brush, x, y, rotation)
 	end
 
 	if brush.action then
-		return brush.action(matid, brush, x, y)
+		return brush.action(matid, brush, x, y, rotation)
 	end
 
 	if is_box2d_material then
@@ -272,14 +272,14 @@ end
 ---@param brush table
 ---@param x number
 ---@param y number
-local function HandleRelease(matid, brush, x, y)
+local function HandleRelease(matid, brush, x, y, rotation)
 	local is_box2d_material = MatTable[matid].conjurer_unsafe_type == MatType.Box2d
 	if is_box2d_material and not brush.physics_supported then
 		return -- Do nothing, warning has already been given upon clicking.
 	end
 
 	if brush.release_action then
-		return brush.release_action(matid, brush, x, y)
+		return brush.release_action(matid, brush, x, y, rotation)
 	end
 
 	-- No other default release actions yet needed.
@@ -358,7 +358,7 @@ function MaterialToolEntityUpdate(UI)
 	end
 
 	if ACTION_RELEASE_DRAW then
-		HandleRelease(material, brush, bx, by)
+		HandleRelease(material, brush, bx, by, math.deg(brushObj.attr.rotation))
 	end
 
 	if ACTION_HOLD_ERASE then

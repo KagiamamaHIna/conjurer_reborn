@@ -353,6 +353,8 @@ conjurer_reborn_reset_matwand_fav_desc,Reset the favorite of the Staff of Materi
 conjurer_reborn_reset_entwand_fav,Reset entity favorite,,,,,,,,重置实体收藏,,,,,,,,,,,,,,,
 conjurer_reborn_reset_entwand_fav_desc,Reset the favorite of the Staff of Illusions,,,,,,,,重置幻象魔杖的收藏,,,,,,,,,,,,,,,
 conjurer_reborn_rest_IKnowWhatImDoing,"This action cannot be undone, click again to confirm",,,,,,,,此操作不可撤销，再点击一次确认,,,,,,,
+conjurer_reborn_inf_chaos_poly,Potential Permanent Chaotic Polymorphine,,,,,,,,潜在的永久混沌变形,,,,,,,
+conjurer_reborn_inf_chaos_poly_desc,Note: This cannot salvage player affected by Permanent Chaotic Polymorphine.,,,,,,,,注意：这无法挽回已经被永久混沌变形的玩家,,,,,,,
 ]]
 
 dofile("data/scripts/lib/mod_settings.lua")
@@ -520,6 +522,13 @@ mod_settings =
 				id = "quick_display_mat",
 				ui_name = "conjurer_reborn_setting_quick_mat_display",
 				value_default = true,
+				scope = MOD_SETTING_SCOPE_RUNTIME,
+            }),
+			Setting({
+				id = "disable_inf_chaos_poly",
+				ui_name = "conjurer_reborn_inf_chaos_poly",
+				ui_description = "conjurer_reborn_inf_chaos_poly_desc",
+				value_default = false,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),
 		}

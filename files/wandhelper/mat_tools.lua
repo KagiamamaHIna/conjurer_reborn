@@ -86,7 +86,7 @@ function dragger_release_action(material, brush, x, y)
 	EntityKill(line)
 end
 
-function corner_aligned_polygon_action(material, brush, x, y)
+function corner_aligned_polygon_action(material, brush, x, y, rotation)
 	local rect = EntityGetWithName(DRAGGER_NAME)
 	local SPRITE_SIZE = brush.brush_sprite_size
 

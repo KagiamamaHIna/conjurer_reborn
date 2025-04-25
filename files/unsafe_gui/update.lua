@@ -358,7 +358,10 @@ UI.MiscEventFn["CESSATION"] = function ()
 end
 
 local PolymorphMessage = false
-UI.MiscEventFn["POLYMORPH"] = function ()
+UI.MiscEventFn["POLYMORPH"] = function()
+	if not ModSettingGet("conjurer_reborn.disable_inf_chaos_poly") then
+		SetWorldValue("player_polymorph_random_count", 0)
+	end
     local player_id = EntityGetWithTag("polymorphed_player")[1]
     if player_id == nil then
         PolymorphMessage = false

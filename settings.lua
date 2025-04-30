@@ -355,6 +355,7 @@ conjurer_reborn_reset_entwand_fav_desc,Reset the favorite of the Staff of Illusi
 conjurer_reborn_rest_IKnowWhatImDoing,"This action cannot be undone, click again to confirm",,,,,,,,此操作不可撤销，再点击一次确认,,,,,,,
 conjurer_reborn_inf_chaos_poly,Potential Permanent Chaotic Polymorphine,,,,,,,,潜在的永久混沌变形,,,,,,,
 conjurer_reborn_inf_chaos_poly_desc,Note: This cannot salvage player affected by Permanent Chaotic Polymorphine.,,,,,,,,注意：这无法挽回已经被永久混沌变形的玩家,,,,,,,
+conjurer_reborn_rebirth_blinded,Blinded effect after rebirth,,,,,,,,重生后的致盲效果,,,,,,,
 ]]
 
 dofile("data/scripts/lib/mod_settings.lua")
@@ -529,6 +530,12 @@ mod_settings =
 				ui_name = "conjurer_reborn_inf_chaos_poly",
 				ui_description = "conjurer_reborn_inf_chaos_poly_desc",
 				value_default = false,
+				scope = MOD_SETTING_SCOPE_RUNTIME,
+            }),
+			Setting({
+				id = "rebirth_blinded",
+				ui_name = "conjurer_reborn_rebirth_blinded",
+				value_default = true,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),
 		}

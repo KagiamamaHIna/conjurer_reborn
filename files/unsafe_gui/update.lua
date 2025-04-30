@@ -11,6 +11,7 @@ CSV = ParseCSV(ModTextFileGetContent("data/translations/common.csv"))
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/matwand.lua")  --材料法杖
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/entwand.lua")  --实体法杖
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/editwand.lua") --编辑法杖
+dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/tunewand.lua") --编辑法杖
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/bottom.lua")         --底部按钮
 
 ---@type table|nil
@@ -98,6 +99,19 @@ local MainBtns = {
 			end
 		end,
 		index = 3
+    },
+	{
+		name = "$conjurer_reborn_wand_tunewand",
+		desc = "$conjurer_reborn_wand_tunewand_desc",
+		id = "TuneWandBtn",
+		image = "mods/conjurer_reborn/files/wands/tunewand/tunewand.png",
+		action = DrawTuneWandGui,
+		active = function()
+
+		end,
+		release = function()
+		end,
+		index = 4
 	}
 }
 
@@ -216,6 +230,10 @@ UI.MainTickFn["Main"] = function()
 	elseif shift and InputIsKeyJustDown(Key_3) and not UI.UserData["HasInputBoxHover"] then
 		SwitchActive(MainBtns[3])
 		ActiveImage = MainBtns[3].image
+        ItemSwitch = false
+	elseif shift and InputIsKeyJustDown(Key_4) and not UI.UserData["HasInputBoxHover"] then
+		SwitchActive(MainBtns[4])
+		ActiveImage = MainBtns[4].image
 		ItemSwitch = false
 	end
 
@@ -228,14 +246,14 @@ UI.MainTickFn["Main"] = function()
 		if InputIsMouseButtonJustDown(Mouse_wheel_up) then
 			local index = item_index - 1
 			if index < 1 then
-				index = 3
+				index = 4
 			end
 			SwitchActive(MainBtns[index])
 			ActiveImage = MainBtns[index].image
 			ItemSwitch = false
 		elseif InputIsMouseButtonJustDown(Mouse_wheel_down) then
 			local index = item_index + 1
-			if index > 3 then
+			if index > 4 then
 				index = 1
 			end
 			SwitchActive(MainBtns[index])
@@ -319,13 +337,23 @@ UI.MiscEventFn["WeatherLoop"] = function()
 	end
 end
 
+local Int64Max = 2^63-1
 UI.MiscEventFn["SettingOtherUpdate"] = function ()
-	if GlobalsGetValue("conjurer_reborn_get_carrot") == "1" then
-        local player = GetPlayer()
-		if player then
-            local x, y = EntityGetTransform(player)
-            EntityLoad("mods/conjurer_reborn/files/wands/carrot/entity.xml", x, y)
-			GlobalsSetValue("conjurer_reborn_get_carrot", "0")
+    local player = GetPlayerObj()
+    if GlobalsGetValue("conjurer_reborn_get_carrot") == "1" and player then
+        local x, y = player:GetTransform()
+        EntityLoad("mods/conjurer_reborn/files/wands/carrot/entity.xml", x, y)
+        GlobalsSetValue("conjurer_reborn_get_carrot", "0")
+    end
+	
+    if GetConjurerCheckBoxStatus("SetIngestCheckbox") and player and player.comp_all.IngestionComponent then
+		local IngestNumStr = WorldGlobalGet(UI, "GlobalSetIngestSizeInput", "0")
+        local IngestNum = tonumber(IngestNumStr) or 0
+        IngestNum = IngestNum / 100
+		IngestNum = math.min(IngestNum, Int64Max)
+        for _, v in ipairs(player.comp_all.IngestionComponent or {}) do
+			local IngestMax = v.attr.ingestion_capacity
+			v.attr.ingestion_size = IngestNum * IngestMax
 		end
 	end
 end
@@ -401,10 +429,13 @@ UI.TickEventFn["PolyDeath"] = function()
         return
     end
 	
-	player:AddChild(EntityObjCreateNew():AddComp("GameEffectComponent",  {
-        effect="BLINDNESS",
-        frames=120,
-    }))
+	if ModSettingGet("conjurer_reborn.rebirth_blinded") then
+		player:AddChild(EntityObjCreateNew():AddComp("GameEffectComponent",  {
+			effect="BLINDNESS",
+			frames=120,
+		}))
+	end
+
 	player:AddChild(EntityObjCreateNew():AddComp("GameEffectComponent",  {
         effect="PROTECTION_POLYMORPH",
         frames=60,

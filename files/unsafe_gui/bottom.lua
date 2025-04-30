@@ -1051,9 +1051,10 @@ function BottomBtnDraw(UI)
         BottomBoxX = -UI.ScreenWidth
     end
     local mode = ModSettingGet("conjurer_reborn.bottom_pos")
-	if mode == "no_display" then
-		return
-	end
+    if mode == "no_display" then
+        return
+    end
+
 	local Enable = WorldGlobalGetBool(UI, "BottomBoxEnable", true)
     UI.NextZDeep(0)
 	if not Enable then
@@ -1068,9 +1069,11 @@ function BottomBtnDraw(UI)
 	end
 	LastMode = mode
     if not Enable and BottomBoxX ~= nil then
-
         return
     end
+	UI.IterDeepStart()
+    UI.SetZDeep(UI.GetZDeep() + 200)
+
 	if BottomBoxX == nil and Enable then
 		GuiAnimateBegin(UI.gui)
         GuiAnimateAlphaFadeIn(UI.gui, UI.NewID("BottomMenuANI"), 0, 0, false)
@@ -1126,5 +1129,7 @@ function BottomBtnDraw(UI)
 	
     BottomBoxY = info.y
 	UI.LayoutEnd()
-	DrawActiveFn(UI)
+    DrawActiveFn(UI)
+	
+	UI.IterDeepEnd()
 end

@@ -146,6 +146,7 @@ for matid, mat in pairs(MatTable) do
         local r, g, b, a = StrGetRGBANumber(MatWangRGBA(mat.attr.wang_color, true, true))
         if r == nil then
             print_error("conjurer_unsafe:? ", matid, "'s wang_color is:", mat.attr.wang_color, ".Is this wrong?")
+            Cpp.RGBAPng(WritePath, IconWidth, IconHeight, 0, 0, 0, 0)
         else
             Cpp.RGBAPng(WritePath, IconWidth, IconHeight, r, g, b, 255)
         end

@@ -225,7 +225,7 @@ function MatTooltipText(UI, id)
 	UI.NextColor(72, 209, 204, 255)
 	local modName
 	if MatTable[id].conjurer_unsafe_from_id ~= "Noita" then
-		modName = ModIdToName(MatTable[id].conjurer_unsafe_from_id) or "?"
+        modName = ModIdToName(MatTable[id].conjurer_unsafe_from_id) or "?"
 	else
 		modName = "Noita"
 	end

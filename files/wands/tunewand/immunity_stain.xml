@@ -1,0 +1,7 @@
+<Entity name="conjurer_reborn_immunity_stain">
+    <LuaComponent 
+    script_source_file="mods/conjurer_reborn/files/wands/tunewand/immunity_stain.lua"
+    execute_every_n_frame="1"
+    >
+</LuaComponent>
+</Entity>

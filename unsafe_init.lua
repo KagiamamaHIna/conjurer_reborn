@@ -123,6 +123,9 @@ function OnPlayerSpawned(player)
     RestoreInput()
 end
 
+VisualFileSet = ModTextFileSetContent
+SrcModMaterialsFileAdd = ModMaterialsFileAdd
+SrcModImageMakeEditable = ModImageMakeEditable
 local initFlag = false
 GuiUpdate = nil
 function OnWorldPostUpdate()
@@ -136,4 +139,8 @@ function OnWorldPostUpdate()
     end
     KeyListeningUpdate()
     GuiUpdate()
+end
+
+function OnModPreInit()--模组init执行完成之后首先调用的
+    dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/TechStatusMat.lua")--优先生成
 end

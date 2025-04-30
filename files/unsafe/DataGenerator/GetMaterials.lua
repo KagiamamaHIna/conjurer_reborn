@@ -51,6 +51,12 @@ end
 ---@param v table
 ---@return boolean
 local function IsMaterial(v)
+    if v.attr.conjurer_reborn_tech_mat == "1" then --技术性材料标记特判
+        return false
+    end
+	if v.attr.name == nil then--筛掉没有id的
+		return false
+	end
     if (v.name == "CellData" or v.name == "CellDataChild") and v.attr.is_just_particle_fx ~= "1" then
         return true
     end
@@ -159,22 +165,22 @@ for _,v in pairs(MatTable) do
     ChildExpansion(v)
 end
 
-local RemoveMatList = {}
---因为有可能会继承is_just_particle_fx，所以要在解析结束到最后再来判断一次，筛选出来不符合条件的材料并删除
-for _,v in pairs(MatTable) do
-    if IsMaterial(v) then
-        goto continue
-    end
-	MatTable[v.attr.name] = nil
-	RemoveMatList[v.attr.name] = true
-	::continue::
-end
+-- local RemoveMatList = {}
+-- --因为有可能会继承is_just_particle_fx，所以要在解析结束到最后再来判断一次，筛选出来不符合条件的材料并删除
+-- for _,v in pairs(MatTable) do
+--     if IsMaterial(v) then
+--         goto continue
+--     end
+-- 	MatTable[v.attr.name] = nil
+-- 	RemoveMatList[v.attr.name] = true
+-- 	::continue::
+-- end
 
-for i=#MatOrderedIdList,1,-1 do
-	if RemoveMatList[MatOrderedIdList[i]] then
-		table.remove(MatOrderedIdList, i)
-	end
-end
+-- for i=#MatOrderedIdList,1,-1 do
+-- 	if RemoveMatList[MatOrderedIdList[i]] then
+-- 		table.remove(MatOrderedIdList, i)
+-- 	end
+-- end
 
 --将tags分割成表方便以后处理，顺带归类材料和初始化一些材料属性
 for i = 1, #MatOrderedIdList do--通过有序表来获得数据，确保归类材料出来的表也是有序的

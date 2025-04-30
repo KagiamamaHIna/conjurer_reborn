@@ -67,6 +67,14 @@ end
 ---@param modid string
 ---@return string|nil
 function ModIdToName(modid)
+    if modid == "Noita" then
+        return modid
+    end
+    local result = ModIdToNameTable[modid]
+    if result == nil and modid ~= nil and modid ~= "" and modid ~= "?" then--多重判重
+        print_error("conjurer_reborn:modid:", modid, " not found name!")
+        return modid
+    end
 	return ModIdToNameTable[modid]
 end
 

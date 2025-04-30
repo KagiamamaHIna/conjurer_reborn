@@ -334,15 +334,31 @@ function GetActiveEntity(UI)
 	local Index
 	if type == EntityType.Enemy then
 		local temp = WorldGlobalGet(UI, "EntwandEntityIndex", "sheep")
-		Index = GetEnemyIDToKey(temp)
+        Index = GetEnemyIDToKey(temp)
+		if Index == nil then
+            Index = GetEnemyIDToKey("sheep")
+			WorldGlobalSet(UI, "EntwandEntityIndex", "sheep")
+		end
 	elseif type == EntityType.Spell then
 		local temp = WorldGlobalGet(UI, "EntwandEntityIndex", "BOMB")
-		Index = GetSpellIDToKey(temp)
+        Index = GetSpellIDToKey(temp)
+		if Index == nil then
+			Index = GetSpellIDToKey("BOMB")
+			WorldGlobalSet(UI, "EntwandEntityIndex", "BOMB")
+		end
 	elseif type == EntityType.Perk then
 		local temp = WorldGlobalGet(UI, "EntwandEntityIndex", "CRITICAL_HIT")
-		Index = GetPerkIDToKey(temp)
+        Index = GetPerkIDToKey(temp)
+		if Index == nil then
+            Index = GetPerkIDToKey("CRITICAL_HIT")
+			WorldGlobalSet(UI, "EntwandEntityIndex", "CRITICAL_HIT")
+		end
 	else --都不符合
-		Index = WorldGlobalGetNumber(UI, "EntwandEntityIndex", "1")
+        Index = WorldGlobalGetNumber(UI, "EntwandEntityIndex", "1")
+		if ALL_ENTITIES[CategoryIndex].entities[Index] == nil then
+			Index = 1
+			WorldGlobalSet(UI, "EntwandEntityIndex", "1")
+		end
 	end
 	return GetEntityForKey(CategoryIndex, Index), CategoryIndex, Index
 end

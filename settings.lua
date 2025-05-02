@@ -352,7 +352,7 @@ conjurer_reborn_reset_matwand_fav,Reset material favorite,,,,,,,,重置材料收
 conjurer_reborn_reset_matwand_fav_desc,Reset the favorite of the Staff of Material Mastery,,,,,,,,重置材料法杖的收藏,,,,,,,,,,,,,,,
 conjurer_reborn_reset_entwand_fav,Reset entity favorite,,,,,,,,重置实体收藏,,,,,,,,,,,,,,,
 conjurer_reborn_reset_entwand_fav_desc,Reset the favorite of the Staff of Illusions,,,,,,,,重置幻象魔杖的收藏,,,,,,,,,,,,,,,
-conjurer_reborn_rest_IKnowWhatImDoing,"This action cannot be undone, click again to confirm",,,,,,,,此操作不可撤销，再点击一次确认,,,,,,,
+conjurer_reborn_reset_IKnowWhatImDoing,"This action cannot be undone, click again to confirm",,,,,,,,此操作不可撤销，再点击一次确认,,,,,,,
 conjurer_reborn_inf_chaos_poly,Potential Permanent Chaotic Polymorphine,,,,,,,,潜在的永久混沌变形,,,,,,,
 conjurer_reborn_inf_chaos_poly_desc,Note: This cannot salvage player affected by Permanent Chaotic Polymorphine.,,,,,,,,注意：这无法挽回已经被永久混沌变形的玩家,,,,,,,
 conjurer_reborn_rebirth_blinded,Blinded effect after rebirth,,,,,,,,重生后的致盲效果,,,,,,,
@@ -611,7 +611,7 @@ mod_settings =
                     end
 					
 					if conjurer_reborn_reset_matwand_fav_confirm then
-						GuiTooltip(gui, GetTextOrKey("conjurer_reborn_rest_IKnowWhatImDoing"), "")
+						GuiTooltip(gui, GetTextOrKey("conjurer_reborn_reset_IKnowWhatImDoing"), "")
                     else
 						GuiTooltip(gui, GetTextOrKey("conjurer_reborn_reset_matwand_fav_desc"), "")
 					end
@@ -647,7 +647,7 @@ mod_settings =
                     end
 					
 					if conjurer_reborn_reset_entwand_fav_confirm then
-						GuiTooltip(gui, GetTextOrKey("conjurer_reborn_rest_IKnowWhatImDoing"), "")
+						GuiTooltip(gui, GetTextOrKey("conjurer_reborn_reset_IKnowWhatImDoing"), "")
                     else
 						GuiTooltip(gui, GetTextOrKey("conjurer_reborn_reset_entwand_fav_desc"), "")
 					end

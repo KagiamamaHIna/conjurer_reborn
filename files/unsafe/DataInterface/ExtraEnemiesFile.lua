@@ -8,13 +8,13 @@ ExtraEnemiesFile = {
   playerghost = {
     first = true,
     list = {
-      "mods/conjurer_reborn/files/custom_entities/playerghost_with_player_wand.xml"
+      "mods/conjurer_reborn/files/custom_entities/extra_enemies/playerghost_with_player_wand.xml"
     }
   },
   boss_centipede = {
     first = true,
     list = {
-      "mods/conjurer_reborn/files/custom_entities/boss_centipede_reference.xml"
+      "mods/conjurer_reborn/files/custom_entities/extra_enemies/boss_centipede_reference.xml"
     }
   },
   mimic_potion = {
@@ -25,7 +25,7 @@ ExtraEnemiesFile = {
   boss_dragon = {
     first = true,
     list = {
-      "mods/conjurer_reborn/files/custom_entities/dragon_with_drops.xml"
+      "mods/conjurer_reborn/files/custom_entities/extra_enemies/dragon_with_drops.xml"
     }
   }
 }

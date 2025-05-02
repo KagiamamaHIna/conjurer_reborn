@@ -90,3 +90,141 @@ function RemoveAllStain(entity)
         end
     end
 end
+
+---@param orbID integer
+---@return integer
+function ToWestOrbID(orbID)
+    return 128 + orbID
+end
+
+---@param orbID integer
+---@return integer
+function ToEastOrbID(orbID)
+    return 256 + orbID
+end
+
+---返回当前魔球列表
+---@return table<integer, true>
+function GetCurrentOrbTable()
+    local World = EntityObj(GameGetWorldStateEntity())
+    local WorldComp = World.comp_all.WorldStateComponent[1]
+    local FoundOrb = {}
+    for i = 0, WorldComp:GetVecSize("orbs_found_thisrun", "int")-1 do
+        local id = WorldComp:GetVecValue("orbs_found_thisrun", "int", i)
+        FoundOrb[id] = true
+    end
+    return FoundOrb
+end
+
+---增加魔球通过列表
+---@param list table<integer>
+function AddOrbFromList(list)
+    local player = GetPlayerObj()
+    if player == nil then
+        return
+    end
+    local FoundOrb = GetCurrentOrbTable()
+    local orbs = EntityObjCreateNew()
+    orbs:AddComp("ItemComponent", {
+        item_name="$item_orb",
+        play_spinning_animation=false,
+        auto_pickup=false,
+        play_pick_sound=false,
+        enable_orb_hacks=true,
+    })
+    for _, v in ipairs(list) do
+        if FoundOrb[v] == nil then
+            orbs:AddComp("OrbComponent", {
+                orb_id = v
+            })
+        end
+    end
+    player:PickUpItem(orbs.entity_id)
+    orbs:Kill()
+end
+
+---移除指定魔球id
+---@param orbID integer
+function RemoveOrb(orbID)
+    local player = GetPlayerObj()
+    if player == nil then
+        return
+    end
+    local FoundOrb = GetCurrentOrbTable()
+    if FoundOrb[orbID] == nil then --移除的不包含的话，就不执行下一步操作了
+        return
+    end
+    GameClearOrbsFoundThisRun()
+    FoundOrb[orbID] = nil--去除标记，剩下的重新新增
+    local orbs = EntityObjCreateNew()
+    orbs:AddComp("ItemComponent", {
+        item_name="$item_orb",
+        play_spinning_animation=false,
+        auto_pickup=false,
+        play_pick_sound=false,
+        enable_orb_hacks=true,
+    })
+    for id, _ in pairs(FoundOrb) do
+        orbs:AddComp("OrbComponent", {
+            orb_id = id
+        })
+    end
+
+    player:PickUpItem(orbs.entity_id)
+    orbs:Kill()
+end
+
+---移除指定魔球id
+---@param orbIDs table<integer>
+function RemoveOrbFromList(orbIDs)
+    local player = GetPlayerObj()
+    if player == nil then
+        return
+    end
+    local FoundOrb = GetCurrentOrbTable()
+    GameClearOrbsFoundThisRun()
+    for _,orbID in ipairs(orbIDs) do
+        FoundOrb[orbID] = nil--去除标记，剩下的重新新增
+    end
+    local orbs = EntityObjCreateNew()
+    orbs:AddComp("ItemComponent", {
+        item_name="$item_orb",
+        play_spinning_animation=false,
+        auto_pickup=false,
+        play_pick_sound=false,
+        enable_orb_hacks=true,
+    })
+    for id, _ in pairs(FoundOrb) do
+        orbs:AddComp("OrbComponent", {
+            orb_id = id
+        })
+    end
+
+    player:PickUpItem(orbs.entity_id)
+    orbs:Kill()
+end
+
+--增加魔球
+function AddOrb(orbID)
+    local player = GetPlayerObj()
+    if player == nil then
+        return
+    end
+    local FoundOrb = GetCurrentOrbTable()
+    if FoundOrb[orbID] then
+        return
+    end
+    local orbs = EntityObjCreateNew()
+    orbs:AddComp("ItemComponent", {
+        item_name="$item_orb",
+        play_spinning_animation=false,
+        auto_pickup=false,
+        play_pick_sound=false,
+        enable_orb_hacks=true,
+    })
+    orbs:AddComp("OrbComponent", {
+        orb_id = orbID
+    })
+    player:PickUpItem(orbs.entity_id)
+    orbs:Kill()
+end

@@ -300,6 +300,11 @@ PICKUPS = {
 		name = "Heart fullhp temple",
 		path = "data/entities/items/pickup/heart_fullhp_temple.xml",
 		image = "mods/conjurer_reborn/files/gfx/pickup_icons/heart.png",
+    },
+	{
+		name = "Perk reroll",
+		path = "data/entities/items/pickup/perk_reroll.xml",
+		image = "mods/conjurer_reborn/files/gfx/pickup_icons/perk_reroll.png",
 	},
 	{
 		name = "Jar",

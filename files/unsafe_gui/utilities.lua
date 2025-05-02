@@ -11,6 +11,12 @@ function ItemSound()
 	GamePlaySound("data/audio/Desktop/ui.bank", "ui/item_switch_places", GameGetCameraPos())
 end
 
+function OrbSound()
+	if ModSettingGet("conjurer_reborn.click_sound") then
+		GamePlaySound("data/audio/Desktop/event_cues.bank", "event_cues/orb/create", GameGetCameraPos())
+	end
+end
+
 ---@param key string
 ---@return string
 function GetNameOrKey(key)

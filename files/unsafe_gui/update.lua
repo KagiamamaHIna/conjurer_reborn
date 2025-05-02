@@ -337,7 +337,6 @@ UI.MiscEventFn["WeatherLoop"] = function()
 	end
 end
 
-local Int64Max = 2^63-1
 UI.MiscEventFn["SettingOtherUpdate"] = function ()
     local player = GetPlayerObj()
     if GlobalsGetValue("conjurer_reborn_get_carrot") == "1" and player then

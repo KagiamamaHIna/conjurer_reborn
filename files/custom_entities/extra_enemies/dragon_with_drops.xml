@@ -3,7 +3,7 @@
         execute_every_n_frame="-1"
         remove_after_executed="1"
         execute_on_added="1"
-        script_source_file="mods/conjurer_reborn/files/custom_entities/dragon_with_drops.lua">
+        script_source_file="mods/conjurer_reborn/files/custom_entities/extra_enemies/dragon_with_drops.lua">
     </LuaComponent>
     <LifetimeComponent
         lifetime="2">

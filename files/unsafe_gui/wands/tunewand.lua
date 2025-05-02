@@ -28,11 +28,11 @@ local LastKeyword
 ---@param UI Gui
 local function StatusPicker(UI)
     local X = 30
-    local Y = 62
+    local Y = 64
 
     UI.NextZDeep(0)
     local _, textH = UI.TextDimensions("$conjurer_reborn_tunewand_status_effect")
-    UI.Text(X + 2, Y - textH - 4,"$conjurer_reborn_tunewand_status_effect")
+    UI.Text(X + 2, Y - textH - 4 - 2,"$conjurer_reborn_tunewand_status_effect")
 
 	UI.NextZDeep(0)
     local list, return_keyword = SearchInputBox(UI, "TunewandSearch", HasStatusEntityList, X + 30, Y + 205, 102.5, 0, false,
@@ -259,7 +259,7 @@ local function StatusPicker(UI)
 
     UI.NextZDeep(0)
     local _, textH = UI.TextDimensions("$conjurer_reborn_tunewand_status_effect_options")
-    UI.Text(X + 175, Y - textH - 4,"$conjurer_reborn_tunewand_status_effect_options")
+    UI.Text(X + 175, Y - textH - 4 - 2,"$conjurer_reborn_tunewand_status_effect_options")
 
     UI.BeginVertical(X + 173, Y - 1, true, 2,2)
     GuiBeginAutoBox(UI.gui) --框住用的自动盒子
@@ -342,7 +342,288 @@ local function StatusPicker(UI)
 	UI.NextZDeep(-10)
     GuiEndAutoBoxNinePiece(UI.gui, 1, 90, 0, false, 0, TuneWandSpriteBG, TuneWandSpriteBG)
     local ButtonsBoxInfo = UI.WidgetInfoTable()
-    InputBlockEasy(UI, "TunewandButtons阻止框", ButtonsBoxInfo)
+    InputBlockEasy(UI, "TunewandStatusButtons阻止框", ButtonsBoxInfo)
+
+    UI.LayoutEnd()
+end
+
+local OrbList = {}
+for i=0,11 do
+    OrbList[#OrbList+1] = i
+end
+OrbList[#OrbList + 1] = 13
+
+---玩家编辑器
+---@param UI Gui
+local function PlayerEditer(UI)
+    local X = 30
+    local Y = 64
+    local player = GetPlayerObj()
+    UI.NextZDeep(0)
+    local _, textH = UI.TextDimensions("$conjurer_reborn_tunewand_player_edit")
+    UI.Text(X + 2, Y - textH - 4 - 2,"$conjurer_reborn_tunewand_player_edit")
+
+    UI.BeginVertical(X + 1, Y - 1, true, 2,2)
+    GuiBeginAutoBox(UI.gui) --框住用的自动盒子
+
+    if player.comp.DamageModelComponent then
+        local DamageModelComp = player.comp.DamageModelComponent[1]
+        local PlayerHPInputBox = {
+            {
+                text = "$conjurer_reborn_tunewand_hp",
+                id = "PlayerHPEditor",
+                w = 140,
+                l = -1,
+                thisNum = tostring(DamageModelComp.attr.hp * 25),
+                defNum = tostring(DamageModelComp.attr.max_hp * 25),
+                allowed_characters = "0123456789e.+-",
+                action = function (input_num)
+                    DamageModelComp.attr.hp = input_num / 25
+                end
+            },
+            {
+                text = "$conjurer_reborn_tunewand_max_hp",
+                id = "PlayerMaxHPEditor",
+                w = 140,
+                l = -1,
+                thisNum = tostring(DamageModelComp.attr.max_hp * 25),
+                defNum = "100",
+                allowed_characters = "0123456789e.+-",
+                action = function (input_num)
+                    DamageModelComp.attr.max_hp = input_num / 25
+                end
+            }
+        }
+        local PlayerHPTextOffset = 0
+        for _,v in ipairs(PlayerHPInputBox) do--布局偏移计算
+            local width = UI.TextDimensions(v.text)
+            if width > PlayerHPTextOffset then
+                PlayerHPTextOffset = width
+            end
+        end
+        PlayerHPTextOffset = PlayerHPTextOffset + 2
+        for _, v in ipairs(PlayerHPInputBox) do
+            UI.BeginHorizontal(0, 0, true)
+            UI.NextZDeep(0)
+            UI.Text(0, 0, v.text)
+            UI.HorizontalSpacing(2)
+            UI.NextZDeep(0)
+            local LastHoverKey = "Last" .. v.id .. "Hover"
+            local ThisInitKey = v.id .. "Init"
+            local defStr = "100"
+            if not UI.UserData[ThisInitKey] then--初始化，防止重置玩家血量
+                defStr = v.thisNum
+                UI.UserData[ThisInitKey] = true
+            else
+                if not UI.UserData[LastHoverKey] then
+                    UI.SetInputText(v.id, v.thisNum)
+                end
+            end
+            local thisTextWidth = UI.TextDimensions(v.text)
+            UI.TextInput(v.id, PlayerHPTextOffset - thisTextWidth, 0, v.w, v.l, defStr, v.allowed_characters)
+            local thisInfo = UI.WidgetInfoTable()
+            UI.UserData[LastHoverKey] = thisInfo.hovered
+            if thisInfo.right_clicked then
+                UI.SetInputText(v.id, v.defNum)
+            end
+            local NewStr = UI.GetInputText(v.id)
+            local NewNum = tonumber(NewStr)
+            if NewStr == "" then--如果什么输入都没有，重置成0
+                NewNum = 0
+            end
+            if NewNum then
+                v.action(NewNum)
+            elseif NewNum == nil and not thisInfo.hovered then
+                UI.SetInputText(v.id, v.defNum)
+            end
+            UI.LayoutEnd()
+        end
+    else
+        UI.BeginHorizontal(0, 0, true)
+        UI.NextZDeep(0)
+        UI.Text(0, 0, "$conjurer_reborn_tunewand_hp")
+        UI.HorizontalSpacing(2)
+        UI.NextZDeep(0)
+        UI.NextColor(127, 127, 127, 255)
+        UI.Text(0,0,"$conjurer_reborn_tunewand_n_a")
+        UI.LayoutEnd()
+    end
+
+    UI.BeginHorizontal(0, 0, true)
+    UI.NextZDeep(0)
+    UI.Text(0, 0, "$conjurer_reborn_tunewand_gold")
+
+    UI.HorizontalSpacing(2)
+    if player.comp.WalletComponent then
+        UI.NextZDeep(0)
+        local money = player.comp.WalletComponent[1].attr.money
+        local GoldInitKey = "GoldInputInit"
+        local defGold = "0"
+        if UI.UserData[GoldInitKey] == nil then
+            defGold = tostring(money)
+            UI.UserData[GoldInitKey] = true
+        end
+        if not UI.UserData["LastGoldInputHover"] and UI.UserData[GoldInitKey] then
+            UI.SetInputText("PlayerGoldEditorInput", tostring(money))
+        end
+        local moneyStr = UI.TextInput("PlayerGoldEditorInput", 0, 0, 85, -1, defGold, "0123456789")
+
+        local GoldInputInfo = UI.WidgetInfoTable()
+        if GoldInputInfo.right_clicked then
+            UI.SetInputText("PlayerGoldEditorInput", defGold)
+            moneyStr = "0"
+        end
+        UI.UserData["LastGoldInputHover"] = GoldInputInfo.hovered
+        local newMoney = tonumber(moneyStr) or 0 --设置或重置为0
+        newMoney = math.min(newMoney, Int32Max)--上界检查
+        player.comp.WalletComponent[1].attr.money = newMoney
+        if player.comp.InventoryGuiComponent then
+            player.comp.InventoryGuiComponent[1].attr.wallet_money_target = newMoney
+            if newMoney < Int32Max then--上界检查，如果试图改成更小的自动关闭无限钱
+                player.comp.WalletComponent[1].attr.mHasReachedInf = false
+            end
+        end
+        
+        UI.LayoutEnd()
+        UI.UserData["InfGoldEditerStatus"] = player.comp.WalletComponent[1].attr.mHasReachedInf
+        local enable,click = ConjurerCheckboxNoSave(UI, "InfGoldEditer", 0, 0, "$conjurer_reborn_tunewand_inf_gold",nil,false)
+        if click then
+            player.comp.WalletComponent[1].attr.mHasReachedInf = enable
+        end
+    else
+        UI.NextZDeep(0)
+        UI.NextColor(127, 127, 127, 255)
+        UI.Text(0,0,"$conjurer_reborn_tunewand_n_a")
+        UI.LayoutEnd()
+    end
+
+    if player.comp.CharacterDataComponent then--无限飞行
+        UI.VerticalSpacing(2)
+        local CharacterDataComponent = player.comp.CharacterDataComponent[1]
+        UI.UserData["InfFlyEditerStatus"] = not CharacterDataComponent.attr.flying_needs_recharge
+        local enable,click = ConjurerCheckboxNoSave(UI, "InfFlyEditer", 0, 0, "$conjurer_reborn_tunewand_inf_fly",nil,true)
+        if click then
+            CharacterDataComponent.attr.flying_needs_recharge = not enable
+        end
+    end
+
+    UI.VerticalSpacing(2)
+    UI.NextZDeep(0)
+    local RemovePerkClick = UI.TextBtn("IMPLRemovePerks",0,0,"$conjurer_reborn_tunewand_remove_all_perks")
+    local RemovePerkInfo = UI.WidgetInfoTable()
+    if not RemovePerkInfo.hovered then--经典的确认实现（
+        UI.UserData["RemovePerkConfirm"] = false
+    end
+    local RemovePerkTooltip = "$conjurer_reborn_tunewand_remove_all_perks_desc"
+    if UI.UserData["RemovePerkConfirm"] then
+        RemovePerkTooltip = "$conjurer_reborn_reset_IKnowWhatImDoing"
+    end
+    if RemovePerkClick then
+        if UI.UserData["RemovePerkConfirm"] then
+            UI.UserData["RemovePerkConfirm"] = false
+            IMPL_remove_all_perks(player.entity_id)
+        else
+            UI.UserData["RemovePerkConfirm"] = true
+        end
+    end
+    UI.GuiTooltip(RemovePerkTooltip)
+
+    UI.VerticalSpacing(2)
+    UI.NextZDeep(0)
+    UI.Text(0, 0, "$conjurer_reborn_tunewand_orb")
+
+    UI.BeginHorizontal(0, 0, true)
+    local WorldModes = {
+        {
+            id = "WestOrbMode",
+            text = "$conjurer_reborn_tunewand_west",
+            key = "west"
+        },
+        {
+            id = "OverworldOrbMode",
+            text = "$conjurer_reborn_tunewand_overworld",
+            key = "over"
+        },
+        {
+            id = "EastOrbMode",
+            text = "$conjurer_reborn_tunewand_east",
+            key = "east"
+        }
+    }
+
+    local OrbMode = UI.UserData["OrbWorldMode"]
+    if OrbMode == nil then
+        OrbMode = "over"
+        UI.UserData["OrbWorldMode"] = OrbMode
+    end
+
+    for _,v in ipairs(WorldModes) do
+        UI.NextZDeep(0)
+        UI.HorizontalSpacing(1)
+        if OrbMode == v.key then
+            UI.NextColor(127, 127, 255, 255)
+        end
+        if UI.TextBtn(v.id, 0,0,v.text) then
+            UI.UserData["OrbWorldMode"] = v.key
+        end
+    end
+    UI.LayoutEnd()
+
+    UI.BeginHorizontal(0,0,true)
+    local toOrbId
+    if OrbMode == "west" then
+        toOrbId = ToWestOrbID
+    elseif OrbMode == "east" then
+        toOrbId = ToEastOrbID
+    else
+        toOrbId = function(...)
+            return ...
+        end
+    end
+    local ThisGUIOrbs = {}
+    local FoundOrbTable = GetCurrentOrbTable()
+    for IdIndex, i in ipairs(OrbList) do
+        if IdIndex == 7 then
+            UI.LayoutEnd()
+            UI.BeginHorizontal(0,0,true)
+        end
+        local Orbid = toOrbId(i)
+        ThisGUIOrbs[#ThisGUIOrbs+1] = Orbid
+        UI.NextZDeep(0)
+        if FoundOrbTable[Orbid] then
+            UI.NextColor(127, 127, 255, 255)
+        end
+        local left, right = UI.TextBtn(("OrbPicker%d"):format(Orbid), 0, 0, ("[%.2d]"):format(Orbid))
+        UI.GuiTooltip("$conjurer_reborn_tunewand_orb_choose_desc")
+        if FoundOrbTable[Orbid] == nil and left then
+            AddOrb(Orbid)
+            OrbSound()
+        end
+        if right then
+            RemoveOrb(Orbid)
+            ClickSound()
+        end
+    end
+    UI.LayoutEnd()
+    UI.BeginHorizontal(0, 0, true)
+    UI.NextZDeep(0)
+    if UI.TextBtn("OrbSelectAll", 0, 0, "$conjurer_reborn_tunewand_select_all") then
+        AddOrbFromList(ThisGUIOrbs)
+        OrbSound()
+    end
+    UI.HorizontalSpacing(1)
+    UI.NextZDeep(0)
+    if UI.TextBtn("OrbSelectNone",0,0, "$conjurer_reborn_tunewand_select_none") then
+        RemoveOrbFromList(ThisGUIOrbs)
+    end
+
+    UI.LayoutEnd()
+
+
+    UI.NextZDeep(-10)
+    GuiEndAutoBoxNinePiece(UI.gui, 1, 110, 0, false, 0, TuneWandSpriteBG, TuneWandSpriteBG)
+    local ButtonsBoxInfo = UI.WidgetInfoTable()
+    InputBlockEasy(UI, "TunewandEditorButtons阻止框", ButtonsBoxInfo)
 
     UI.LayoutEnd()
 end
@@ -357,17 +638,13 @@ local MainTuneBtns = {
         end,
     },
     {
-        id = "tune_test2_options",
-        name = "$conjurer_reborn_material_eraser_options",
+        id = "tune_player_edit_options",
+        name = "$conjurer_reborn_tunewand_player_edit",
         image = "mods/conjurer_reborn/files/gfx/tunewand_icons/player_edit.png",
-        action = function(UI)
-            local player = GetPlayerObj()
-            if player == nil then
-                return
-            end
-            player:RemoveStainEffect("WET")
+        action = function()
+            ToggleActiveOverlay(PlayerEditer)
         end,
-    }
+    },
 }
 
 ---绘制左边的主按钮

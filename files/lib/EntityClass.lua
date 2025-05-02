@@ -1,4 +1,4 @@
----v1.0.1
+---v1.0.2?
 
 ---如果为空则返回v（默认值），不为空返回本身的函数
 ---@param arg any
@@ -1094,6 +1094,19 @@ function EntityObj(entity_id)
 	---@return boolean
 	function Entity:IsInvisible()
 		return IsInvisible(self.entity_id)
+	end
+
+	---GamePickUpInventoryItem
+	---@param item_entity_id number
+	---@param do_pick_up_effects boolean? do_pick_up_effects = true
+	function Entity:PickUpItem(item_entity_id, do_pick_up_effects)
+		do_pick_up_effects = Default(do_pick_up_effects, true)
+		return GamePickUpInventoryItem(self.entity_id, item_entity_id, do_pick_up_effects)
+	end
+
+	---GameDropAllItems
+	function Entity:DropAllItems()
+		return GameDropAllItems(self.entity_id)
 	end
 
 	return Entity

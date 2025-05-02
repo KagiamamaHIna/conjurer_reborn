@@ -98,5 +98,10 @@ CUSTOM_ENTITIES = {
 		name = "$conjurer_reborn_custom_entities_domino_blocks",
 		path = "mods/conjurer_reborn/files/custom_entities/dominos/physics_domino.xml",
 		image = "mods/conjurer_reborn/files/custom_entities/dominos/gfx/icon.png",
+    },
+	{
+		name = "$conjurer_reborn_free_perk_reroll",
+		path = "mods/conjurer_reborn/files/custom_entities/free_perk_reroll/free_perk_reroll.xml",
+		image = "mods/conjurer_reborn/files/gfx/pickup_icons/perk_reroll.png",
 	},
 }

@@ -65,10 +65,10 @@ local function EditwandButtons(UI)
 	UI.LayoutEnd()
 end
 
-local function GetEntityName(active_entity)
+local function GetEntityName(active_entity, isFileName)
 	local filename = EntityGetFilename(active_entity)
 	local name = GetNameOrKey(EntityGetName(active_entity))
-	if name == "" or name == "unknown" then
+	if name == "" or name == "unknown" or isFileName then
 		name = Cpp.PathGetFileName(filename)
 		name = name:gsub("_", " ")             --将_替换为空格
 		local type = Cpp.PathGetFileType(name) --获取后缀名
@@ -401,7 +401,46 @@ local function EditwandInspect(UI)
 		end
 		UI.GuiTooltip(GameTextGet("$conjurer_reborn_editwand_clone_entity").."\n"..GameTextGet("$conjurer_reborn_editwand_clone_entity_desc"))
 
-		UI.LayoutEnd()
+        if DebugGetIsDevBuild() then
+            UI.NextZDeep(0)
+            if UI.ImageButton("editwand_save_entity", 0, 1, "mods/conjurer_reborn/files/gfx/editwand_icons/icon_sav.png") then
+                local basename = GetEntityName(entity, true)
+                local save_file = "debug/conjurer_" .. basename .. ".xml"
+                EntitySave(entity, save_file)
+                GamePrint(GameTextGet("$conjurer_reborn_editwand_save_entity_game_print", save_file))
+                ClickSound()
+            end
+            UI.GuiTooltip("$conjurer_reborn_editwand_save_entity_desc")
+        end
+        UI.LayoutEnd()
+        local entityObj = EntityObj(entity)
+        if entityObj.comp.HitboxComponent then
+            UI.VerticalSpacing(2)
+            local sprites = entityObj:GetCompID("SpriteComponent", "conjurer_reborn_hitbox_display")
+            local updater = entityObj:GetFristCompID("LuaComponent", "conjurer_reborn_hitbox_updater")
+            if sprites then
+                UI.UserData["editwand_show_hitboxesStatus"] = true
+            else
+                UI.UserData["editwand_show_hitboxesStatus"] = false
+            end
+            local enable, click = ConjurerCheckboxNoSave(UI, "editwand_show_hitboxes", 0, 0, "$conjurer_reborn_editwand_show_hitboxes")
+            if click then
+                if sprites then
+                    EntityRemoveComponent(entity, updater)
+    
+                    for i, comp in ipairs(sprites) do
+                      EntityRemoveComponent(entity, comp)
+                    end
+                    return
+                  end
+                  EntityAddComponent2(entity, "LuaComponent", {
+                    _tags="conjurer_reborn_hitbox_updater",
+                    script_source_file="mods/conjurer_reborn/files/scripts/update_hitbox_sprites.lua",
+                    execute_on_added=true,
+                    execute_every_n_frame=1,
+                  })
+            end
+        end
 	end)
 	UI.DrawScrollContainer("EditWandEntityEdit", true, true)
 end

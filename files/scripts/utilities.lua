@@ -249,9 +249,12 @@ end
 -- Shorthands for a really common actions
 function EntityGetValue(entity, component_name, attr_name)
   if entity == nil or entity == 0 then return nil end
-
+  local comp = EntityGetFirstComponentIncludingDisabled(entity, component_name)
+  if comp == 0 or comp == nil then
+    return
+  end
   return ComponentGetValue2(
-    EntityGetFirstComponentIncludingDisabled(entity, component_name), attr_name
+    comp, attr_name
   )
 end
 

@@ -1,4 +1,4 @@
-local t = dofile_once("mods/conjurer_reborn/visual_ingore_mats.lua")
+local t = dofile_once("mods/conjurer_reborn/visual_ignore_mats.lua")
 function material_area_checker_success()
     local entity = GetUpdatedEntityID()
     local AreaComp = EntityGetFirstComponentIncludingDisabled(entity, "MaterialAreaCheckerComponent")

@@ -6,9 +6,9 @@ dofile_once("mods/conjurer_reborn/files/wandhelper/mat_draw.lua")
 
 local Brushes = GetBrushesTable()
 
-local IngoreMatTable = {}
+local IgnoreMatTable = {}
 for _,v in pairs(IgnoreMaterials)do
-	IngoreMatTable[v] = true
+	IgnoreMatTable[v] = true
 end
 IgnoreMaterials = nil
 
@@ -286,7 +286,7 @@ local SwtichType = {
 
 for _, t in pairs(SwtichType) do--移除掉被指定需要被忽略的材料
 	for k=#t.items,1,-1 do
-		if IngoreMatTable[t.items[k]] then
+		if IgnoreMatTable[t.items[k]] then
             table.remove(t.items, k)
         end
 	end
@@ -1025,7 +1025,7 @@ function DrawMatWandGui(UI)
     if EyedropperEnable or InputIsMouseButtonJustUp(Mouse_middle) then--判断吸管工具触发
         EyedropperEnable = false
         local id = GlobalsGetValue("conjurer_reborn.checkmat_material_str_id")
-        if IngoreMatTable[id] == nil and id then
+        if IgnoreMatTable[id] == nil and id then
             SetActiveMaterial(UI, id)
         end
     end

@@ -67,5 +67,5 @@ for i, v in ipairs(status_effects) do
     ::continue::
 end
 VisualFileSet("mods/conjurer_reborn/visual_materials.xml", tostring(TechMat))
-VisualFileSet("mods/conjurer_reborn/visual_ingore_mats.lua", "return {"..SerializeTable(IgnoreTechTable).."}")
+VisualFileSet("mods/conjurer_reborn/visual_ignore_mats.lua", "return {"..SerializeTable(IgnoreTechTable).."}")
 SrcModMaterialsFileAdd("mods/conjurer_reborn/visual_materials.xml")

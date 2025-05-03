@@ -3,7 +3,7 @@ local Nxml = dofile_once("mods/conjurer_reborn/files/lib/nxml.lua")
 local TechMat = Nxml.new_element("Materials")
 
 StatusIconTable = {}
-local IngoreTechTable = {}
+local IgnoreTechTable = {}
 local HasStatus = {}
 for i, v in ipairs(status_effects) do
     if v.effect_entity == nil then
@@ -39,7 +39,7 @@ for i, v in ipairs(status_effects) do
     HasStatus[v.id] = true
     local matXml = Nxml.new_element("CellData")
     matXml.attr.name = "conjurer_reborn_tech_" .. v.id
-    IngoreTechTable[matXml.attr.name] = true
+    IgnoreTechTable[matXml.attr.name] = true
 
     matXml.attr.ui_name = v.ui_name
     matXml.attr.wang_color = tostring(-i)
@@ -67,5 +67,5 @@ for i, v in ipairs(status_effects) do
     ::continue::
 end
 VisualFileSet("mods/conjurer_reborn/visual_materials.xml", tostring(TechMat))
-VisualFileSet("mods/conjurer_reborn/visual_ingore_mats.lua", "return {"..SerializeTable(IngoreTechTable).."}")
+VisualFileSet("mods/conjurer_reborn/visual_ingore_mats.lua", "return {"..SerializeTable(IgnoreTechTable).."}")
 SrcModMaterialsFileAdd("mods/conjurer_reborn/visual_materials.xml")

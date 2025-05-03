@@ -14,7 +14,7 @@ local result = {}
 local TempStatusData = {}
 HasStatusEntityList = {}
 StatusNumIDToTables = {}
-local conut = 1
+local count = 1
 for i,v in ipairs(status_effects)do
     if result[v.id] == nil then
         if v.effect_entity then
@@ -22,10 +22,10 @@ for i,v in ipairs(status_effects)do
         end
         result[v.id] = {}
         TempStatusData[v.id] = {}
-        TempStatusData[v.id].conjurer_reborn_status_num_id = conut
+        TempStatusData[v.id].conjurer_reborn_status_num_id = count
         TempStatusData[v.id].conjurer_unsafe_from_id = "?" --提前标记为?，方便后续处理，因为不能检测set文件的
-        StatusNumIDToTables[conut] = result[v.id]
-        conut = conut + 1
+        StatusNumIDToTables[count] = result[v.id]
+        count = count + 1
     end
     result[v.id][#result[v.id] + 1] = v
     v.conjurer_reborn_status_num_id = TempStatusData[v.id].conjurer_reborn_status_num_id

@@ -26,8 +26,8 @@ function ParseCSV(str)
         cellDatas = cellDatas,
         cellArrangement = cellArrangement,
         ---获取key对应值
-        ---@param row string
-        ---@param column string
+        ---@param row string key
+        ---@param column string lang
         ---@return string|nil
         get = function(row, column)
             -- 尝试转为数字索引

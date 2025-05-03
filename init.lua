@@ -1,5 +1,5 @@
 local SrcCsv = ModTextFileGetContent("data/translations/common.csv")--设置新语言文件
-local AddCsv = ModTextFileGetContent("mods/conjurer_reborn/files/lang/lang.csv")
+local AddCsv = dofile_once("mods/conjurer_reborn/files/lang/tocsv.lua")
 ModTextFileSetContent("data/translations/common.csv", SrcCsv .. AddCsv)
 
 ModMaterialsFileAdd("mods/conjurer_reborn/files/overrides/materials.xml")

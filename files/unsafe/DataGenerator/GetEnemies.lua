@@ -6,9 +6,9 @@ dofile_once("mods/conjurer_reborn/files/unsafe/DataInterface/ExtraEnemiesFile.lu
 dofile_once("mods/conjurer_reborn/files/unsafe/DataInterface/EnemiesDesc.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/DataInterface/NewOtherEnemies.lua")
 
-local IngoreEntTable = {}
+local IgnoreEntTable = {}
 for _, v in pairs(IgnoreEnemies) do
-    IngoreEntTable[v] = true
+    IgnoreEntTable[v] = true
 end
 IgnoreEnemies = nil
 
@@ -96,7 +96,7 @@ if OrderedListText ~= nil and OrderedListText ~= "" then
 			--移除可能的多余换行符，因为ModTextFileGetContent会在每行插入多余换行(\13)
             key = string.gsub(key, '\n', "")
 			key = string.gsub(key, '\13',"")
-			if key ~= "" and not IngoreEntTable[key] then
+			if key ~= "" and not IgnoreEntTable[key] then
 				OrderedListId[#OrderedListId + 1] = key
 				OrderedIdToKey[key] = #OrderedListId
 			end
@@ -116,7 +116,7 @@ for _,t in pairs(AnimalIconList) do
 	
 		local name = Cpp.PathGetFileName(v)
         name = string.sub(name, 1, #name - 4) --减去不需要的后缀名
-		if IngoreEntTable[name] then--被标记要被忽视的跳过
+		if IgnoreEntTable[name] then--被标记要被忽视的跳过
 			goto continue
 		end
 		HasEnemiesIcon[name] = true
@@ -140,7 +140,7 @@ for modid, t in pairs(AnimalList) do --遍历文件，写入数据
 
         local name = Cpp.PathGetFileName(v)
         name = string.sub(name, 1, #name - 4) --减去不需要的后缀名
-        if HasEnemiesIcon[name] == nil or IngoreEntTable[name] then --如果不是有icon的，或者是被标记要被忽视的
+        if HasEnemiesIcon[name] == nil or IgnoreEntTable[name] then --如果不是有icon的，或者是被标记要被忽视的
             goto continue
         end
         --有，那么就要开始处理了

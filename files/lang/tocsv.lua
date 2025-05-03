@@ -69,7 +69,9 @@ end
 
 for _,t in ipairs(HasLangFiles) do
     for k,v in pairs(t.datas) do--读取数据并重写对应字段
-        LangToData[k][LangHeadToNumID[t.lang]] = '"' .. v .. '"'--都加双引号，更加安全且自动化
+        if v ~= "" then
+            LangToData[k][LangHeadToNumID[t.lang]] = '"' .. v .. '"'--都加双引号，更加安全且自动化
+        end
     end
 end
 

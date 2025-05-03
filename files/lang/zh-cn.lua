@@ -71,7 +71,11 @@ conjurer_reborn_custom_entities_bg160 = "160像素背景"
 conjurer_reborn_custom_entities_mounted_gun = "重机枪"
 conjurer_reborn_custom_entities_domino_blocks = "多米诺骨牌"
 conjurer_reborn_tp_carrot = "胡萝卜"
-conjurer_reborn_tp_carrot_desc = "有魔法的陈年胡萝卜\n使用它可瞬间移动持有者，还有不要吃掉了\n---\n左键单击传送一次，右键按下持续传送"
+conjurer_reborn_tp_carrot_desc =
+[[有魔法的陈年胡萝卜
+使用它可瞬间移动持有者，还有不要吃掉了
+---
+左键单击传送一次，右键按下持续传送]]
 
 --conjurer的材料
 conjurer_reborn_new_material_construction_steel = "建筑钢"
@@ -143,7 +147,7 @@ conjurer_reborn_material_eraser_options_eraser_wash_desc = "移除地形上的�
 conjurer_reborn_material_eraser_options_eraser_use_brush_grid = "使用画刷网格对齐"
 conjurer_reborn_material_eraser_options_eraser_use_brush_grid_desc = "使用和画刷一样的网格对齐参数"
 conjurer_reborn_material_eraser_options_size = "大小"
-conjurer_reborn_material_brushes_radial_warning = "---\n警告：使用前请先用相同的材料测试！\n-不小心的话很容易出事\n-对性能有很高的要求\n-当你掌握技巧后，使用起来很有趣！"
+conjurer_reborn_material_brushes_radial_warning = "---\n警告：使用前先测试！\n-会穿过相同的材料\n-不小心的话很容易出事\n-对性能有很高的要求\n-当你熟练后使用起来会非常有趣！"
 conjurer_reborn_material_brushes_type_basic = "画刷"
 conjurer_reborn_material_brushes_type_basic_desc = "用于绘制材料的基础画刷"
 conjurer_reborn_material_brushes_type_growing = "扩张画刷"
@@ -235,9 +239,9 @@ conjurer_reborn_entwand_options_other = "其他设置"
 conjurer_reborn_entwand_options_holding = "按住持续生成"
 conjurer_reborn_entwand_options_holding_desc = "快速生成大量实体的方法"
 conjurer_reborn_entwand_options_row = "行"
-conjurer_reborn_entwand_options_row_desc = "一次要生成多少行实体\n警告：数字越大，情况越糟糕"
+conjurer_reborn_entwand_options_row_desc = "一次要生成多少行实体\n警告：数字越大越可能导致严重后果"
 conjurer_reborn_entwand_options_col = "列"
-conjurer_reborn_entwand_options_col_desc = "一次要生成多少列实体\n警告：数字越大，情况越糟糕"
+conjurer_reborn_entwand_options_col_desc = "一次要生成多少列实体\n警告：数字越大越可能导致严重后果"
 conjurer_reborn_entwand_options_grid = "网格"
 conjurer_reborn_entwand_options_grid_desc = "实体生成器对齐网格尺寸"
 conjurer_reborn_entwand_options_kill = "杀死而不是删除"

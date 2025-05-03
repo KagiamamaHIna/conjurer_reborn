@@ -205,7 +205,11 @@ conjurer_reborn_custom_entities_bg160 = "Background 160px"
 conjurer_reborn_custom_entities_mounted_gun = "Mounted Gun"
 conjurer_reborn_custom_entities_domino_blocks = "Domino Blocks"
 conjurer_reborn_tp_carrot = "Porgand"
-conjurer_reborn_tp_carrot_desc = "Enchanted old carrot.\nPoint and squeeze to instantly relocate the wielder. Do not eat.\n---\nLeft-click to blink, right-click to hold."
+conjurer_reborn_tp_carrot_desc =
+[[Enchanted old carrot.
+Point and squeeze to instantly relocate the wielder. Do not eat.
+---
+Left-click to blink, right-click to hold.]]
 
 --conjurer's mat
 conjurer_reborn_new_material_construction_steel = "Construction Steel"

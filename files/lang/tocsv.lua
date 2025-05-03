@@ -38,7 +38,7 @@ for _, v in ipairs(langIds) do
             setfenv(f, env)()
             local ThisLangResult = {}
             for key,value in pairs(env)do--筛选出字符串
-                if type(value) == "string" then
+                if type(value) == "string" and value ~= "" then--筛掉不符合的
                     ThisLangResult[key] = value
                     if LangToData[key] == nil then--初始化数据
                         LangToData[key] = {key}
@@ -69,9 +69,7 @@ end
 
 for _,t in ipairs(HasLangFiles) do
     for k,v in pairs(t.datas) do--读取数据并重写对应字段
-        if v ~= "" then
-            LangToData[k][LangHeadToNumID[t.lang]] = '"' .. v .. '"'--都加双引号，更加安全且自动化
-        end
+        LangToData[k][LangHeadToNumID[t.lang]] = '"' .. v .. '"'--都加双引号，更加安全且自动化
     end
 end
 

@@ -14,10 +14,13 @@ dofile_once("mods/conjurer_reborn/files/scripts/world_handlers.lua")
 handle_zoom_setting()
 
 -- World overrides
-replace_biome_map()
-append_custom_biomes()
-replace_pixel_scenes()
-
+function OnModPreInit()
+  if not (ModSettingGet("conjurer_reborn.force_open") and ModIsEnabled("conjurer_unsafe")) then
+    replace_biome_map()
+    append_custom_biomes()
+    replace_pixel_scenes()
+  end
+end
 
 function handle_inventory(player)
   local ITEMS_QUICK = {

@@ -11,6 +11,22 @@ if not UnsafeTrueVer then--如果版本检查没通过
 	end
 	return
 end
+--检查是否被强制启动
+local Nxml = dofile_once("mods/conjurer_reborn/files/lib/nxml.lua")
+local ModConfigPath
+if DebugGetIsDevBuild() then
+    ModConfigPath = "save00/mod_config.xml"
+else
+    ModConfigPath = SavePath .. "save00/mod_config.xml"
+end
+local mod_config_text = ReadFileAll(ModConfigPath)
+local mod_config = Nxml.parse(mod_config_text)
+for _,v in pairs(mod_config.children) do
+    if v.name == "Mod" and v.attr.name == "conjurer_reborn" then
+        ModSettingSet("conjurer_reborn.force_open", v.attr.enabled == "1")
+        break
+    end
+end
 
 local KeyArray = {
     Key_a = 4,
@@ -130,6 +146,9 @@ local initFlag = false
 GuiUpdate = nil
 function OnWorldPostUpdate()
     if not initFlag then
+        if ModSettingGet("conjurer_reborn.force_open") then
+            GamePrint("$conjurer_reborn_force_open_message")
+        end
         initFlag = true
         dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetAllData.lua") --确保数据收集
         dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/MatIconSpawn.lua")

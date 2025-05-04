@@ -151,13 +151,24 @@ local function RenderWorldMenu(UI)
 	UI.BeginHorizontal(x, BottomBoxY - 42, true, 1)
 	for _, v in ipairs(conjurer_dimensions) do
 		GuiBeginAutoBox(UI.gui)
-		UI.NextZDeep(0)
-		local left,right = UI.ImageButton(v.name, 0, 0, v.image)
-		if left or right then
-            v.action(right)
-			ClickSound()
+        UI.NextZDeep(0)
+        local imagePath = v.image
+		local ForceOpen = ModSettingGet("conjurer_reborn.force_open")
+		if ForceOpen then
+			imagePath = imagePath:gsub(".png", "_close.png")
 		end
-		UI.GuiTooltip(GameTextGet(v.name) .. "\n" .. GameTextGet("$conjurer_reborn_power_tran_dim_desc_right"))
+        local left, right = UI.ImageButton(v.name, 0, 0, imagePath)
+        if not ForceOpen then
+            if left or right then
+                v.action(right)
+                ClickSound()
+            end
+        end
+		if ForceOpen then
+			UI.GuiTooltip(GameTextGet(v.name), "$option_disabled")
+        else
+			UI.GuiTooltip(GameTextGet(v.name) .. "\n" .. GameTextGet("$conjurer_reborn_power_tran_dim_desc_right"))
+		end
 		UI.NextZDeep(-1000)
 		GuiEndAutoBoxNinePiece(UI.gui, -2, 0, 0, false, 0, "mods/conjurer_reborn/files/gfx/9piece_black.png")
 	end

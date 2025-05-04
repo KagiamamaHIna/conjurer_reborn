@@ -1,4 +1,6 @@
 # The Conjurer-Reborn Extension System
+## Other language
+### [中文-EXTENDING.md](EXTENDING-zh-cn.md)
 
 Conjurer Reborn provides a series of interfaces to control certain aspects of the game. Some of these interfaces require only minor modifications to adapt Conjurer's implementation to Conjurer Reborn's implementation.
 

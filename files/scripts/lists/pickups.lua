@@ -179,6 +179,11 @@ PICKUPS = {
 		name = "Chest dark",
 		path = "data/entities/buildings/chest_dark.xml",
 		image = "mods/conjurer_reborn/files/gfx/pickup_icons/chest_dark.png",
+    },
+	{
+		name = "Chest light",
+		path = "data/entities/buildings/chest_light.xml",
+		image = "mods/conjurer_reborn/files/gfx/pickup_icons/chest_light.png",
 	},
 	{
 		name = "Utility box",

@@ -125,18 +125,18 @@ function AddOrbFromList(list)
     end
     local FoundOrb = GetCurrentOrbTable()
     local orbs = EntityObjCreateNew()
-    orbs:AddComp("ItemComponent", {
+    orbs.NewComp.ItemComponent {
         item_name="$item_orb",
         play_spinning_animation=false,
         auto_pickup=false,
         play_pick_sound=false,
         enable_orb_hacks=true,
-    })
+    }
     for _, v in ipairs(list) do
         if FoundOrb[v] == nil then
-            orbs:AddComp("OrbComponent", {
+            orbs.NewComp.OrbComponent {
                 orb_id = v
-            })
+            }
         end
     end
     player:PickUpItem(orbs.entity_id)
@@ -157,17 +157,17 @@ function RemoveOrb(orbID)
     GameClearOrbsFoundThisRun()
     FoundOrb[orbID] = nil--去除标记，剩下的重新新增
     local orbs = EntityObjCreateNew()
-    orbs:AddComp("ItemComponent", {
+    orbs.NewComp.ItemComponent {
         item_name="$item_orb",
         play_spinning_animation=false,
         auto_pickup=false,
         play_pick_sound=false,
         enable_orb_hacks=true,
-    })
+    }
     for id, _ in pairs(FoundOrb) do
-        orbs:AddComp("OrbComponent", {
+        orbs.NewComp.OrbComponent {
             orb_id = id
-        })
+        }
     end
 
     player:PickUpItem(orbs.entity_id)
@@ -187,17 +187,17 @@ function RemoveOrbFromList(orbIDs)
         FoundOrb[orbID] = nil--去除标记，剩下的重新新增
     end
     local orbs = EntityObjCreateNew()
-    orbs:AddComp("ItemComponent", {
+    orbs.NewComp.ItemComponent {
         item_name="$item_orb",
         play_spinning_animation=false,
         auto_pickup=false,
         play_pick_sound=false,
         enable_orb_hacks=true,
-    })
+    }
     for id, _ in pairs(FoundOrb) do
-        orbs:AddComp("OrbComponent", {
+        orbs.NewComp.OrbComponent {
             orb_id = id
-        })
+        }
     end
 
     player:PickUpItem(orbs.entity_id)
@@ -215,16 +215,17 @@ function AddOrb(orbID)
         return
     end
     local orbs = EntityObjCreateNew()
-    orbs:AddComp("ItemComponent", {
+    orbs.NewComp.ItemComponent {
         item_name="$item_orb",
         play_spinning_animation=false,
         auto_pickup=false,
         play_pick_sound=false,
         enable_orb_hacks=true,
-    })
-    orbs:AddComp("OrbComponent", {
+    }
+    orbs.NewComp.OrbComponent {
         orb_id = orbID
-    })
+    }
+    
     player:PickUpItem(orbs.entity_id)
     orbs:Kill()
 end

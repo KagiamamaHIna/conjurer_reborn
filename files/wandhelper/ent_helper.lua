@@ -231,16 +231,16 @@ function ChangeSpawnerReticle(UI)
             for i = 1, VisualMax do
                 local VisualEntity = EntityObjCreateNew("conjurer_reborn_del_all_visual")
                 EntityAddChild(reticle, VisualEntity.entity_id)
-                VisualEntity:AddComp("SpriteComponent", {
+                VisualEntity.NewComp.SpriteComponent {
                     image_file = "mods/conjurer_reborn/files/gfx/eraser_pixel.png",
                     additive = true,
                     emissive = true,
                     z_index = 80
-                })
-                :AddComp("LuaComponent", {
+                }
+                .NewComp.LuaComponent {
                     execute_every_n_frame = 1,
                     script_source_file = "mods/conjurer_reborn/files/wands/entwand/del_all_visual_move.lua"
-                })
+                }
                 AddSetStorageComp(VisualEntity.entity_id, "deg", (i - 1) * DefDeg, "value_float")
             end
         end

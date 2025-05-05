@@ -417,7 +417,7 @@ local function EditwandInspect(UI)
         if entityObj.comp.HitboxComponent then
             UI.VerticalSpacing(2)
             local sprites = entityObj:GetCompID("SpriteComponent", "conjurer_reborn_hitbox_display")
-            local updater = entityObj:GetFristCompID("LuaComponent", "conjurer_reborn_hitbox_updater")
+            local updater = entityObj:GetFirstCompID("LuaComponent", "conjurer_reborn_hitbox_updater")
             if sprites then
                 UI.UserData["editwand_show_hitboxesStatus"] = true
             else

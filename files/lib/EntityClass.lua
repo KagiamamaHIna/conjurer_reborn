@@ -1,4 +1,4 @@
----v1.0.2?
+---v1.0.6
 
 ---如果为空则返回v（默认值），不为空返回本身的函数
 ---@param arg any
@@ -282,7 +282,9 @@ function EntityObj(entity_id)
 		---@type NoitaCompTo|table<string, EntityComponent[]>
 		comp = {}, --不包括被关闭的组件
 		---@type NoitaCompTo|table<string, EntityComponent[]>
-		comp_all = {}, --包括被关闭的组件
+        comp_all = {}, --包括被关闭的组件
+        ---@type NewCompObj
+		NewComp = {},
 		attr = {
 			---@type number
 			x = nil,
@@ -337,6 +339,17 @@ function EntityObj(entity_id)
 		end,
 		__index = function(t, k)
 			return Entity:GetComp(k, nil, true)
+		end
+    })
+    setmetatable(Entity.NewComp, {
+		__newindex = function(t, k, v)
+			rawset(t, k, nil)
+			print_error("EntityObjError:New Component attributes cannot be overridden")
+		end,
+		__index = function(t, k)
+			return function (inputs)
+				return Entity:AddComp(k, inputs)
+			end
 		end
 	})
 	--其他属性
@@ -619,6 +632,16 @@ function EntityObj(entity_id)
 		return self
 	end
 
+    ---新建子实体
+	---@param name string?
+	---@return NoitaEntity child
+	function Entity:NewChild(name)
+        name = Default(name, "")
+		local returnChild = EntityObjCreateNew(name)
+		Entity:AddChild(returnChild)
+		return returnChild
+	end
+
 	---获取所有子实体，或者根据tag筛选
     ---@param tag string? tag == ""
 	---@return integer[]|nil
@@ -718,7 +741,7 @@ function EntityObj(entity_id)
 	---@param tag string? tag = ""
 	---@param including_disabled boolean? including_disabled = false
 	---@return integer|nil
-	function Entity:GetFristCompID(type_name, tag, including_disabled)
+	function Entity:GetFirstCompID(type_name, tag, including_disabled)
 		tag = Default(tag, "")
 		including_disabled = Default(including_disabled, false)
 		if including_disabled then
@@ -771,7 +794,7 @@ function EntityObj(entity_id)
 	---@param including_disabled boolean? including_disabled = false
 	---@return EntityComponent|nil
 	function Entity:GetFirstComp(type_name, tag, including_disabled)
-		local comp_id = Entity:GetFristCompID(type_name, tag, including_disabled)
+		local comp_id = Entity:GetFirstCompID(type_name, tag, including_disabled)
 		if comp_id == nil then
 			return
 		end
@@ -1173,7 +1196,7 @@ end
 
 
 -----------------------------------------------------
----@alias noita_effect_enum  "NONE" | "ELECTROCUTION" | "FROZEN" | "ON_FIRE" | "POISON" | "BERSERK" | "CHARM" | "POLYMORPH" | "POLYMORPH_RANDOM" | "BLINDNESS" | "TELEPATHY" | "TELEPORTATION" | "REGENERATION" | "LEVITATION" | "MOVEMENT_SLOWER" | "FARTS" | "DRUNK" | "BREATH_UNDERWATER" | "RADIOACTIVE" | "WET" | "OILED" | "BLOODY" | "SLIMY" | "CRITICAL_HIT_BOOST" | "CONFUSION" | "MELEE_COUNTER" | "WORM_ATTRACTOR" | "WORM_DETRACTOR" | "FOOD_POISONING" | "FRIEND_THUNDERMAGE" | "FRIEND_FIREMAGE" | "INTERNAL_FIRE" | "INTERNAL_ICE" | "JARATE" | "KNOCKBACK" | "KNOCKBACK_IMMUNITY" | "MOVEMENT_SLOWER_2X" | "MOVEMENT_FASTER" | "STAINS_DROP_FASTER" | "SAVING_GRACE" | "DAMAGE_MULTIPLIER" | "HEALING_BLOOD" | "RESPAWN" | "PROTECTION_FIRE" | "PROTECTION_RADIOACTIVITY" | "PROTECTION_EXPLOSION" | "PROTECTION_MELEE" | "PROTECTION_ELECTRICITY" | "TELEPORTITIS" | "STAINLESS_ARMOUR" | "GLOBAL_GORE" | "EDIT_WANDS_EVERYWHERE" | "EXPLODING_CORPSE_SHOTS" | "EXPLODING_CORPSE" | "EXTRA_MONEY" | "EXTRA_MONEY_TRICK_KILL" | "HOVER_BOOST" | "PROJECTILE_HOMING" | "ABILITY_ACTIONS_MATERIALIZED" | "NO_DAMAGE_FLASH" | "NO_SLIME_SLOWDOWN" | "MOVEMENT_FASTER_2X" | "NO_WAND_EDITING" | "LOW_HP_DAMAGE_BOOST" | "FASTER_LEVITATION" | "STUN_PROTECTION_ELECTRICITY" | "STUN_PROTECTION_FREEZE" | "IRON_STOMACH" | "PROTECTION_ALL" | "INVISIBILITY" | "REMOVE_FOG_OF_WAR" | "MANA_REGENERATION" | "PROTECTION_DURING_TELEPORT" | "PROTECTION_POLYMORPH" | "PROTECTION_FREEZE" | "FROZEN_SPEED_UP" | "UNSTABLE_TELEPORTATION" | "POLYMORPH_UNSTABLE" | "CUSTOM" | "ALLERGY_RADIOACTIVE" | "RAINBOW_FARTS"
+---@alias noita_effect_enum  "NONE" | "ELECTROCUTION" | "FROZEN" | "ON_FIRE" | "POISON" | "BERSERK" | "CHARM" | "POLYMORPH" | "POLYMORPH_RANDOM" | "BLINDNESS" | "TELEPATHY" | "TELEPORTATION" | "REGENERATION" | "LEVITATION" | "MOVEMENT_SLOWER" | "FARTS" | "DRUNK" | "BREATH_UNDERWATER" | "RADIOACTIVE" | "WET" | "OILED" | "BLOODY" | "SLIMY" | "CRITICAL_HIT_BOOST" | "CONFUSION" | "MELEE_COUNTER" | "WORM_ATTRACTOR" | "WORM_DETRACTOR" | "FOOD_POISONING" | "FRIEND_THUNDERMAGE" | "FRIEND_FIREMAGE" | "INTERNAL_FIRE" | "INTERNAL_ICE" | "JARATE" | "KNOCKBACK" | "KNOCKBACK_IMMUNITY" | "MOVEMENT_SLOWER_2X" | "MOVEMENT_FASTER" | "STAINS_DROP_FASTER" | "SAVING_GRACE" | "DAMAGE_MULTIPLIER" | "HEALING_BLOOD" | "RESPAWN" | "PROTECTION_FIRE" | "PROTECTION_RADIOACTIVITY" | "PROTECTION_EXPLOSION" | "PROTECTION_MELEE" | "PROTECTION_ELECTRICITY" | "TELEPORTITIS" | "STAINLESS_ARMOUR" | "GLOBAL_GORE" | "EDIT_WANDS_EVERYWHERE" | "EXPLODING_CORPSE_SHOTS" | "EXPLODING_CORPSE" | "EXTRA_MONEY" | "EXTRA_MONEY_TRICK_KILL" | "HOVER_BOOST" | "PROJECTILE_HOMING" | "ABILITY_ACTIONS_MATERIALIZED" | "NO_DAMAGE_FLASH" | "NO_SLIME_SLOWDOWN" | "MOVEMENT_FASTER_2X" | "NO_WAND_EDITING" | "LOW_HP_DAMAGE_BOOST" | "FASTER_LEVITATION" | "STUN_PROTECTION_ELECTRICITY" | "STUN_PROTECTION_FREEZE" | "IRON_STOMACH" | "PROTECTION_ALL" | "INVISIBILITY" | "REMOVE_FOG_OF_WAR" | "MANA_REGENERATION" | "PROTECTION_DURING_TELEPORT" | "PROTECTION_POLYMORPH" | "PROTECTION_FREEZE" | "FROZEN_SPEED_UP" | "UNSTABLE_TELEPORTATION" | "POLYMORPH_UNSTABLE" | "CUSTOM" | "ALLERGY_RADIOACTIVE" | "RAINBOW_FARTS" | "POLYMORPH_CESSATION"
 
 ---@alias type_stored_in_vector "int" | "float" | "string"
 

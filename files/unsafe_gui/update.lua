@@ -396,9 +396,10 @@ UI.MiscEventFn["POLYMORPH"] = function()
     end
     if not PolymorphMessage then
         local player = EntityObj(player_id)
-        player:AddComp("LuaComponent", {
-			script_damage_received="mods/conjurer_reborn/files/scripts/poly_death.lua",
-        })
+        player.NewComp.LuaComponent {
+			script_damage_received="mods/conjurer_reborn/files/scripts/poly_death.lua"
+        }
+		
 		for _,v in ipairs(player.comp_all.DamageModelComponent)do
 			v.attr.wait_for_kill_flag_on_death = true
 		end
@@ -429,16 +430,16 @@ UI.TickEventFn["PolyDeath"] = function()
     end
 	
 	if ModSettingGet("conjurer_reborn.rebirth_blinded") then
-		player:AddChild(EntityObjCreateNew():AddComp("GameEffectComponent",  {
+		player:NewChild().NewComp.GameEffectComponent {
 			effect="BLINDNESS",
 			frames=120,
-		}))
+		}
 	end
 
-	player:AddChild(EntityObjCreateNew():AddComp("GameEffectComponent",  {
-        effect="PROTECTION_POLYMORPH",
-        frames=60,
-    }))
+	player:NewChild().NewComp.GameEffectComponent {
+		effect="PROTECTION_POLYMORPH",
+		frames=60,
+	}
 
     local x, y = GetSpawnPosition()
     player.attr.x = x

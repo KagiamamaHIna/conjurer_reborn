@@ -2059,11 +2059,20 @@ end
 ---@param font_is_pixel_font boolean? true
 ---@return number width, number height
 function UI.TextDimensions(text, scale, line_spacing, font, font_is_pixel_font)
-	scale = Default(scale, 1)
+    scale = Default(scale, 1)
     line_spacing = Default(line_spacing, 2)
     font = Default(font, "")
-	font_is_pixel_font = Default(font_is_pixel_font, true)
-	return GuiGetTextDimensions(this.public.gui, text, scale, line_spacing, font, font_is_pixel_font)
+    font_is_pixel_font = Default(font_is_pixel_font, true)
+    return GuiGetTextDimensions(this.public.gui, text, scale, line_spacing, font, font_is_pixel_font)
+end
+
+---GuiGetImageDimensions
+---@param image_filename string
+---@param scale number? 1
+---@return number width, number height
+function UI.ImgDimension(image_filename, scale)
+    scale = Default(scale, 1)
+    return GuiGetImageDimensions(this.public.gui, image_filename, scale)
 end
 
 ---从给定的世界坐标转换成屏幕坐标

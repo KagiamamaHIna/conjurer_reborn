@@ -10,6 +10,20 @@ else
     fastConcatStr = Cpp.ConcatStr
 end
 
+function TryCatch(try, catch)
+    catch = catch or function (...)
+        return ...
+    end
+    return function (...)
+        local result = {pcall(try, ...)}
+        if result[1] then
+            table.remove(result,1)
+            return unpack(result)
+        else
+            return catch(unpack(result))
+        end
+    end
+end
 
 local noita_print = print
 

@@ -1,20 +1,21 @@
 dofile_once("mods/conjurer_reborn/files/lib/EntityClass.lua")
 
 function damage_received(damage, message, entity_thats_responsible, is_fatal)--检测变形后玩家是否死亡
-    if is_fatal then
-        local player = EntityObj(GetUpdatedEntityID())
-        for _, v in ipairs(player:GetAllChildObj() or {}) do
-            for _, c in ipairs(v.comp_all.GameEffectComponent or {}) do
-                local effect = c.attr.effect
-                if effect == "POLYMORPH" or effect == "POLYMORPH_RANDOM" or effect == "POLYMORPH_UNSTABLE" then
-                    c.attr.frames = 1
-                end
+    if not is_fatal then
+        return
+    end
+    local player = EntityObj(GetUpdatedEntityID())
+    for _, v in ipairs(player:GetAllChildObj() or {}) do
+        for _, c in ipairs(v.comp_all.GameEffectComponent or {}) do
+            local effect = c.attr.effect
+            if effect == "POLYMORPH" or effect == "POLYMORPH_RANDOM" or effect == "POLYMORPH_UNSTABLE" then
+                c.attr.frames = 1
             end
         end
-        for _,v in ipairs(player.comp_all.DamageModelComponent)do--回满血并关闭
-            v.attr.hp = v.attr.max_hp
-            v.enable = false
-        end
-        GlobalsSetValue("conjurer_reborn_poly_death", "1")
     end
+    for _,v in ipairs(player.comp_all.DamageModelComponent)do--回满血并关闭
+        v.attr.hp = v.attr.max_hp
+        v.enable = false
+    end
+    GlobalsSetValue("conjurer_reborn_poly_death", "1")
 end

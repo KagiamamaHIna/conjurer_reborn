@@ -56,11 +56,14 @@ end
 
 -- Glass Eye
 function ToggleCameraControls(UI)
-	local player = GetPlayer()
+	local player = GetPlayerObj()
 	if player == nil then
 		return
 	end
-
+    if player.comp.PlatformShooterPlayerComponent == nil then
+        return
+    end
+	local pspComp = player.comp.PlatformShooterPlayerComponent[1]
 	-- Make sure binoculars are turned off
 	if GetBinocularsActive(UI) then
 		-- TODO:
@@ -69,10 +72,9 @@ function ToggleCameraControls(UI)
 		-- no matter how we tried to set it manually.
 		ToggleBinoculars(UI)
 	end
-
-	EntityToggleValue(player, "PlatformShooterPlayerComponent", "center_camera_on_this_entity")
-
-	local is_active = not EntityGetValue(player, "PlatformShooterPlayerComponent", "center_camera_on_this_entity")
+    pspComp.attr.center_camera_on_this_entity = not pspComp.attr.center_camera_on_this_entity
+	
+	local is_active = not pspComp.attr.center_camera_on_this_entity
 
 	local text = is_active and "$conjurer_reborn_power_glass_eye_on" or "$conjurer_reborn_power_glass_eye_off"
 	GamePrint(text)
@@ -351,8 +353,7 @@ end
 ---改变世界关系
 ---@param value integer
 function ChangeHappiness(value)
-	local entity = GameGetWorldStateEntity()
-	EntitySetValue(entity, "WorldStateComponent", "global_genome_relations_modifier", value)
+	SetWorldValue("global_genome_relations_modifier", value)
 end
 
 ---返回世界关系

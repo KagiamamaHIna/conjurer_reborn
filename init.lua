@@ -1,4 +1,4 @@
-local SrcCsv = ModTextFileGetContent("data/translations/common.csv")--设置新语言文件
+local SrcCsv = ModTextFileGetContent("data/translations/common.csv") --设置新语言文件
 local AddCsv = dofile_once("mods/conjurer_reborn/files/lang/tocsv.lua")
 ModTextFileSetContent("data/translations/common.csv", SrcCsv .. AddCsv)
 
@@ -15,79 +15,76 @@ handle_zoom_setting()
 
 -- World overrides
 function OnModPreInit()
-  if not (ModSettingGet("conjurer_reborn.force_open") and ModIsEnabled("conjurer_unsafe")) then
-    replace_biome_map()
-    append_custom_biomes()
-    replace_pixel_scenes()
-  end
+	if not (ModSettingGet("conjurer_reborn.force_open") and ModIsEnabled("conjurer_unsafe")) then
+		replace_biome_map()
+		append_custom_biomes()
+		replace_pixel_scenes()
+	end
 end
 
 function handle_inventory(player)
-  local ITEMS_QUICK = {
-    "data/entities/items/starting_wand_rng.xml",
-    "data/entities/items/starting_bomb_wand_rng.xml",
-    "mods/conjurer_reborn/files/wands/carrot/entity.xml",
-  }
-  local ITEMS_FULL = {
-  }
+	local ITEMS_QUICK = {
+		"data/entities/items/starting_wand_rng.xml",
+		"data/entities/items/starting_bomb_wand_rng.xml",
+		"mods/conjurer_reborn/files/wands/carrot/entity.xml",
+	}
+	local ITEMS_FULL = {
+	}
 
-  local inv_quick = EntityGetWithName("inventory_quick")
-  local inv_full = EntityGetWithName("inventory_full")
+	local inv_quick = EntityGetWithName("inventory_quick")
+	local inv_full = EntityGetWithName("inventory_full")
 
-  clear_player_inventory(player, inv_quick)
-  give_player_items(inv_quick, ITEMS_QUICK)
-  give_player_items(inv_full, ITEMS_FULL)
+	clear_player_inventory(player, inv_quick)
+	give_player_items(inv_quick, ITEMS_QUICK)
+	give_player_items(inv_full, ITEMS_FULL)
 end
-
 
 function player_overrides(player)
-  -- Camera follow sucks hard when building stuff
-  EntitySetValue(player, "PlatformShooterPlayerComponent", "move_camera_with_aim", false)
+	-- Camera follow sucks hard when building stuff
+	EntitySetValue(player, "PlatformShooterPlayerComponent", "move_camera_with_aim", false)
 
-  -- Endless flight
-  EntitySetValue(player, "CharacterDataComponent", "flying_needs_recharge", false)
+	-- Endless flight
+	EntitySetValue(player, "CharacterDataComponent", "flying_needs_recharge", false)
 
-  -- Never die
-  EntitySetValue(player, "DamageModelComponent", "wait_for_kill_flag_on_death", true)
-  EntityAddComponent(player, "LuaComponent", {
-    script_damage_received="mods/conjurer_reborn/files/scripts/death.lua",
-  })
+	-- Never die
+	EntitySetValue(player, "DamageModelComponent", "wait_for_kill_flag_on_death", true)
+	EntityAddComponent(player, "LuaComponent", {
+		script_damage_received = "mods/conjurer_reborn/files/scripts/death.lua",
+	})
 end
-
 
 function OnPlayerSpawned(player)
-  GameAddFlagRun("conjurer_reborn_world")
-  handle_progression_setting()
+	GameAddFlagRun("conjurer_reborn_world")
+	handle_progression_setting()
 
-  if not GlobalsGetBool(FIRST_LOAD_DONE) or GlobalsGetBool(PLAYER_HAS_DIED) then
-    handle_inventory(player)
-    player_overrides(player)
+	if not GlobalsGetBool(FIRST_LOAD_DONE) or GlobalsGetBool(PLAYER_HAS_DIED) then
+		handle_inventory(player)
+		player_overrides(player)
 
-    -- Always start on noon
-    set_time_of_day(NOON)
+		-- Always start on noon
+		set_time_of_day(NOON)
 
-    GlobalsSetValue(FIRST_LOAD_DONE, "1")
-    GlobalsSetValue(PLAYER_HAS_DIED, "0")
-  end
+		GlobalsSetValue(FIRST_LOAD_DONE, "1")
+		GlobalsSetValue(PLAYER_HAS_DIED, "0")
+	end
 end
 
-
 function OnPlayerDied(player)
-  GlobalsToggleBool(PLAYER_HAS_DIED)
-  GlobalsSetValue("conjurer_unsafePowerKalmaActive", "0")--让游戏给玩家在下次开启时添加无敌和防变形
-  GamePrintImportant(
-    "$conjurer_reborn_player_died1",
-    "$conjurer_reborn_player_died2"
-  )
+	GlobalsToggleBool(PLAYER_HAS_DIED)
+	GlobalsSetValue("conjurer_unsafePowerKalmaActive", "0") --让游戏给玩家在下次开启时添加无敌和防变形
+	GamePrintImportant(
+		"$conjurer_reborn_player_died1",
+		"$conjurer_reborn_player_died2"
+	)
 end
 
 if not ModIsEnabled("conjurer_unsafe") then
 	local count = 0
-    function OnWorldPostUpdate()
+	function OnWorldPostUpdate()
 		if count == 0 then
 			GamePrint("$conjurer_reborn_unsafe_no_found1")
-			GamePrint(GameTextGet("$conjurer_reborn_unsafe_no_found2","https://github.com/KagiamamaHIna/conjurer_unsafe"))
-        elseif count >= 120 then
+			GamePrint(GameTextGet("$conjurer_reborn_unsafe_no_found2", "https://github.com/KagiamamaHIna/conjurer_unsafe"))
+		elseif count >= 120 then
 			count = -1
 		end
 		count = count + 1

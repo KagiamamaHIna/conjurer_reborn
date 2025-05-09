@@ -303,6 +303,7 @@ conjurer_reborn_editwand_clone_entity_desc = "仅生成纯粹的副本，不保�
 conjurer_reborn_editwand_save_entity = "保存实体"
 conjurer_reborn_editwand_save_entity_game_print = "实体被保存在了 Noita根目录/debug/$0"
 conjurer_reborn_editwand_save_entity_desc = "将实体序列化为xml文件并保存在Noita debug目录"
+conjurer_reborn_editwand_save_entity_desc_normal = "注：和Noita Dev版本的序列化的略有不同"
 conjurer_reborn_editwand_show_hitboxes = "受击碰撞箱"
 
 --底部按钮列表相关

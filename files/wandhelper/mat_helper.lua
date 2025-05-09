@@ -88,15 +88,15 @@ end
 ---@param UI Gui
 function RefreshBrushSprite(UI)
 	local brush = GetActiveBrush(UI)
-    local brush_reticle = EntityGetWithName("conjurer_reborn_brush_reticle")
+    local brush_reticle = EntityObj(EntityGetWithName("conjurer_reborn_brush_reticle"))
 
-	EntitySetValues(brush_reticle, "SpriteComponent", {
-		image_file = brush.reticle_file,
-		offset_x = brush.offset_x,
-		offset_y = brush.offset_y,
-	})
-
-	EntityRefreshSprite(brush_reticle, EntityFirstComponent(brush_reticle, "SpriteComponent"))
+    for _, v in ipairs(brush_reticle.comp.SpriteComponent or {}) do
+        v.attr.image_file = brush.reticle_file
+        v.attr.offset_x = brush.offset_x
+        v.attr.offset_y = brush.offset_y
+        brush_reticle:RefreshSprite(v)
+    end
+	
 end
 
 ---返回画刷的GridSize

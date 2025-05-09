@@ -580,4 +580,53 @@ function nxml.tostring(elem, packed, indent_char, cur_indent)
     return s
 end
 
+function nxml.unofficial_tostring(elem, packed, indent_char, cur_indent)
+    indent_char = indent_char or "\t"
+    cur_indent = cur_indent or ""
+    local s = "<" .. elem.name
+    local self_closing = #elem.children == 0 and (not elem.content or #elem.content == 0)
+    local deeper_indent = cur_indent .. indent_char
+    local hasNext = next(elem.attr)
+    if hasNext then
+        s = s .. "\n"
+    end
+    for k, v in pairs(elem.attr) do
+        if not packed then
+            s = s .. deeper_indent
+        else
+            s = s .. " "
+        end
+        s = s .. k .. "=\"" .. attr_value_to_str(v) .. "\"\n"
+    end
+    
+    if self_closing then
+        if not packed then s = s .. deeper_indent end
+        s = s .. "/>"
+        return s
+    end
+    if hasNext then
+        if not packed then s = s .. deeper_indent end
+    end
+    s = s .. ">"
+
+
+    if elem.content and #elem.content ~= 0 then
+        if not packed then s = s .. "\n" .. deeper_indent end
+        s = s .. elem:text()
+    end
+
+    if not packed then s = s .. "\n" end
+
+    for i, v in ipairs(elem.children) do
+        if not packed then s = s .. deeper_indent end
+        s = s .. nxml.unofficial_tostring(v, packed, indent_char, deeper_indent)
+        if not packed then s = s .. "\n" end
+    end
+
+    s = s .. cur_indent .. "</" .. elem.name .. ">"
+
+    return s
+end
+
+
 return nxml

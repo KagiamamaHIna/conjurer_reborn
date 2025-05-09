@@ -437,6 +437,7 @@ conjurer_reborn_editwand_clone_entity_desc = "Only a pure copy is made, no modif
 conjurer_reborn_editwand_save_entity = "Save entity"
 conjurer_reborn_editwand_save_entity_game_print = "Entity saved as $0 in the Noita folder"
 conjurer_reborn_editwand_save_entity_desc = "Dumps the whole entity XML into your Noita debug directory"
+conjurer_reborn_editwand_save_entity_desc_normal = "Note: Differs slightly from the Noita Dev version dump"
 conjurer_reborn_editwand_show_hitboxes = "Show hitboxes"
 
 --power(bottom btns)

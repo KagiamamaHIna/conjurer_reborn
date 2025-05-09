@@ -110,6 +110,7 @@ end
 
 dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("mods/conjurer_reborn/files/lib/EntityClass.lua")
+dofile_once("mods/conjurer_reborn/files/lib/EntitySerialize.lua")
 dofile_once("mods/conjurer_unsafe/csv.lua")
 _ModImageMakeEditable = ModImageMakeEditable
 local function ClearDofileOnceCache(filename)
@@ -136,6 +137,7 @@ if not Cpp.PathExists("mods/conjurer_unsafe/secrets_secrets_secrets") then
 end
 
 function OnPlayerSpawned(player)
+    EntityLoad("mods/conjurer_reborn/conjurer_Sheep.xml",EntityGetTransform(player))
     RestoreInput()
 end
 

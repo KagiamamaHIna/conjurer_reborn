@@ -408,6 +408,9 @@ local function EditwandInspect(UI)
             if DebugGetIsDevBuild() then
                 EntitySave(entity, save_file)
             else
+                if not Cpp.PathExists("debug") then
+                    Cpp.CreateDir("debug")
+                end
                 local save = io.open(save_file, "w+")
                 TryCatch(
                     function()

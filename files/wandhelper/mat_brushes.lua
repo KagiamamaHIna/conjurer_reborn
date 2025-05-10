@@ -234,18 +234,6 @@ local Growers = {
 		physics_supported = false,
 		raytrace_from_center = true,
     },
-	{
-		name = "$conjurer_reborn_material_growing_brushes_huge_radial_expander",
-		desc = _radial_warning,
-		offset_x = 5,
-		offset_y = 5,
-		reticle_file = "mods/conjurer_reborn/files/wands/matwand/brushes/radial_l_reticle.png",
-		brush_file = "mods/conjurer_reborn/files/wands/matwand/brushes/YukimiSign.png",
-		icon_file = "mods/conjurer_reborn/files/wands/matwand/brushes/radial_l_icon.png",
-		click_to_use = true,
-		physics_supported = false,
-		raytrace_from_center = true,
-	},
 }
 
 local Tools = {

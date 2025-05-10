@@ -137,7 +137,6 @@ if not Cpp.PathExists("mods/conjurer_unsafe/secrets_secrets_secrets") then
 end
 
 function OnPlayerSpawned(player)
-    EntityLoad("mods/conjurer_reborn/conjurer_Sheep.xml",EntityGetTransform(player))
     RestoreInput()
 end
 

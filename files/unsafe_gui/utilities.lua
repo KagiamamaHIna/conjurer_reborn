@@ -104,7 +104,7 @@ function WorldGlobalSetBool(UI, key, value)
 	UI.UserData["__WorldGlobalCache"][key] = InputText
 end
 
----带向上取整和方向键减少增加功能的滑条
+---带四舍五入和方向键减少增加功能的滑条
 ---@param UI Gui
 ---@param id string
 ---@param x number
@@ -120,7 +120,7 @@ function EasyCeilSlider(UI, id, x, y, text, value_min, value_max, value_default,
 	value_formatting = Default(value_formatting, "")
 	local value = UI.Slider(id, x, y, text, value_min, value_max, value_default, 1, value_formatting, width)
 	local _, _, hover = UI.WidgetInfo()
-	local result = math.ceil(value)
+	local result = math.floor(value + 0.5)
 	UI.SetSliderValue(id, result)
 	local SliderFrKey = id .. "SliderFr"
 	if hover then

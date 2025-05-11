@@ -175,7 +175,7 @@ function MatTooltipText(UI, id)
                     local ImgHeight = GuiGetImageDimensions(UI.gui, effect.ui_icon)
                     local ImgX = k == 1 and -5 or 0
 					
-					UI.Image(Name..tostring(k).."Stain",ImgX,TextHeight / 2 - ImgHeight / 2, effect.ui_icon)
+					UI.Image(Name..tostring(k).."Ingest",ImgX,TextHeight / 2 - ImgHeight / 2, effect.ui_icon)
                     UI.Text(-2, 0, Name)
 					local PxielText = GameTextGet("$conjurer_reborn_material_tooltip_ingest_pixel",v[2])
                     UI.Text(0, 0, PxielText)

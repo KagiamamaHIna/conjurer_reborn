@@ -31,7 +31,7 @@ end
 ---@param UI Gui
 ---@param id string
 function MatTooltipText(UI, id)
-	local rightMargin = 72
+	local rightMargin = tonumber(GameTextGet("$conjurer_reborn_mat_tooltip_offset")) or 72
 	local function NewLine(str1, str2, callback)
 		local text = GameTextGetTranslatedOrNot(str1)
 		local w = GuiGetTextDimensions(UI.gui,text)

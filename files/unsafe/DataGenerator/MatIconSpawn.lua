@@ -104,6 +104,7 @@ for matid, mat in pairs(MatTable) do
                         else
                             Cpp.PngFlatAndCroppingToFile(ModDataPath, WritePath, IconWidth, IconHeight)
                         end
+                        break--草，刚才忘记写退出了
                     end--没有图片:(
                 end
             end

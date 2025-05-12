@@ -97,13 +97,13 @@ for matid, mat in pairs(MatTable) do
 
                 for _, path in pairs(ModsToDataPath) do
                     local ModDataPath = path .. v.attr.texture_file
-                    flag = true
 					if Cpp.PathExists(ModDataPath) then
                         if NearestTable[mat.attr.name] then
                             Cpp.PngScaleToFile(ModDataPath, WritePath, IconWidth, IconHeight)
                         else
                             Cpp.PngFlatAndCroppingToFile(ModDataPath, WritePath, IconWidth, IconHeight)
                         end
+                        flag = true
                         break--草，刚才忘记写退出了
                     end--没有图片:(
                 end

@@ -94,6 +94,7 @@ for matid, mat in pairs(MatTable) do
                     datawak:GetImgFlatAndCropping(v.attr.texture_file, WritePath, IconWidth, IconHeight)
                 end
             else --判断模组写入到了data里的逻辑
+
                 for _, path in pairs(ModsToDataPath) do
                     local ModDataPath = path .. v.attr.texture_file
                     flag = true
@@ -103,9 +104,7 @@ for matid, mat in pairs(MatTable) do
                         else
                             Cpp.PngFlatAndCroppingToFile(ModDataPath, WritePath, IconWidth, IconHeight)
                         end
-                    else--没有图片:(
-						Cpp.RGBAPng(WritePath, IconWidth, IconHeight, 0, 0, 0, 0)
-                    end
+                    end--没有图片:(
                 end
             end
             if flag then --如果正常执行了，那么就设置标志位并退出，否则就到下一步渲染纯色图片

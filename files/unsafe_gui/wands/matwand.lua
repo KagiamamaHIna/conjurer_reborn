@@ -808,7 +808,7 @@ local function MatPicker(UI)
 		UI.VerticalSpacing(1)
 		SpawnMatContainers("MatwandGetCan", "get_can.png", "data/entities/items/easter/minit_watering.xml", 1000, "$conjurer_reborn_matwand_get_can")
 		UI.VerticalSpacing(1)
-		SpawnMatContainers("MatwandGetBeer", "get_beer.png", "data/entities/items/easter/beer_bottle.xml", 1000, "$conjurer_reborn_matwand_get_beer")	
+		SpawnMatContainers("MatwandGetBeer", "get_beer.png", "data/entities/items/easter/beer_bottle.xml", 1000, "$conjurer_reborn_matwand_get_beer")
     end)
     UI.DrawScrollContainer("GetMaterialContainers", true, true, MatWandSpriteLeft, nil, nil, -99)
 end

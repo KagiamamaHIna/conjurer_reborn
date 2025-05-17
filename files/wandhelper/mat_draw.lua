@@ -220,11 +220,7 @@ local function DrawBox2D(brush, rotation)
     local reticle = EntityGetWithName("conjurer_reborn_brush_reticle")
     local var = GetMatDrawVars("conjurer_reborn_construction_steel", brush, rotation)
 	var["emitter_lifetime_frames"] = 6
-	EntityAddComponent2(
-		reticle,
-		"ParticleEmitterComponent",
-		var
-	)
+	EntityAddComponent2(reticle, "ParticleEmitterComponent",var)
 end
 
 ---绘制材料，按下的过程

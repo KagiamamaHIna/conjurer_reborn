@@ -15,10 +15,13 @@ function shot(projectile)
     local projComp = projectile.comp_all.ProjectileComponent[1]
 
     if happiness <= -100 and projComp then
-        projComp.attr.friendly_fire = true
+        projComp.set_attrs = {
+            friendly_fire = true,
 
-        -- Everyone can self-damage, why not?
-        projComp.attr.collide_with_shooter_frames = 10
-        projComp.attr.explosion_dont_damage_shooter = false
+            -- Everyone can self-damage, why not?
+            collide_with_shooter_frames = 10,
+            explosion_dont_damage_shooter = false,
+        }
+
     end
 end

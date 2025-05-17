@@ -26,9 +26,9 @@ if has_clicked_m1() or is_holding_m2() then
 		-- 2. If the Eye of Conjurer is active while we give the player some velocity
 		-- it'll make the player float off helpless, so we disable it in that case.
 		if GlobalsGetValue("conjurer_unsafePowerBinocularsActive", "0") == "1" and player.comp.CharacterDataComponent then
-			local mVelocity = player.comp.CharacterDataComponent[1].attr.mVelocity
-			mVelocity.x = 0
-			mVelocity.y = 0
+            player.comp.CharacterDataComponent[1].set_attrs = {
+                mVelocity = { x = 0, y = 0 },
+			}
 		end
 	end
 end

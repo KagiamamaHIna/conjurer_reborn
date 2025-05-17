@@ -91,9 +91,11 @@ function RefreshBrushSprite(UI)
     local brush_reticle = EntityObj(EntityGetWithName("conjurer_reborn_brush_reticle"))
 
     for _, v in ipairs(brush_reticle.comp.SpriteComponent or {}) do
-        v.attr.image_file = brush.reticle_file
-        v.attr.offset_x = brush.offset_x
-        v.attr.offset_y = brush.offset_y
+        v.set_attrs = {
+	        image_file = brush.reticle_file,
+        	offset_x = brush.offset_x,
+        	offset_y = brush.offset_y
+		}
         brush_reticle:RefreshSprite(v)
     end
 	

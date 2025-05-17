@@ -53,7 +53,7 @@ function get_hitbox_transform(box)
     return x, y, width, height
 end
 
----@param sprites SpriteComponentClass[]|EntityComponent[]
+---@param sprites SpriteComponentClass[]
 ---@param hitboxes integer[]
 function reset_sprites(sprites, hitboxes)
     -- Reset sprites
@@ -63,7 +63,7 @@ function reset_sprites(sprites, hitboxes)
     create_sprites(hitboxes)
 end
 
----@param sprites SpriteComponentClass[]|EntityComponent[]
+---@param sprites SpriteComponentClass[]
 ---@param hitboxes integer[]
 function update_sprites(sprites, hitboxes)
     if #hitboxes ~= #sprites then
@@ -75,10 +75,12 @@ function update_sprites(sprites, hitboxes)
         local sprite = sprites[i]
         local x, y, width, height = get_hitbox_transform(box)
 
-        sprite.attr.special_scale_x = width
-        sprite.attr.special_scale_y = height
-        sprite.attr.offset_x = x
-        sprite.attr.offset_y = y
+        sprite.set_attrs = {
+            special_scale_x = width,
+            special_scale_y = height,
+            offset_x = x,
+            offset_y = y
+        }
     end
 end
 

@@ -112,7 +112,6 @@ dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("mods/conjurer_reborn/files/lib/EntityClass.lua")
 dofile_once("mods/conjurer_reborn/files/lib/EntitySerialize.lua")
 dofile_once("mods/conjurer_unsafe/csv.lua")
-_ModImageMakeEditable = ModImageMakeEditable
 local function ClearDofileOnceCache(filename)
 	__loadonce[filename] = nil
 end

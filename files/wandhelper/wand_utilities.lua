@@ -67,13 +67,14 @@ function IsValidEntity(UI, entity)
 		name ~= "conjurer_reborn_editwand_cursor" and
         name ~= "conjurer_reborn_grid_overlay" and
         name ~= "conjurer_reborn_mat_check" and
-		name ~= "conjurer_reborn_del_all_visual" and
+        name ~= "conjurer_reborn_del_all_visual" and
+		name ~= "conjurer_reborn_binoculars_light" and
 		-- The reticle shouldn't ever even be detected, but good to have anyway.
 		name ~= "conjurer_reborn_spawner_reticle" and
 		not IsPlayer(entity) and
 		entity ~= GameGetWorldStateEntity() and
 		-- This is something that always exists in 0,0.
-		name ~= "example_container"
+        name ~= "example_container"
 	)
 
 	if GetEntWandIgnoreBG(UI) and name == BG_NAME then

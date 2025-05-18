@@ -1,0 +1,14 @@
+<Entity name="conjurer_reborn_binoculars_light">
+	<SpriteComponent
+		offset_x = "512" 
+		offset_y = "512"
+		alpha="1"
+		image_file="mods/conjurer_reborn/files/powers/binoculars_light.png"
+		smooth_filtering="1"
+		fog_of_war_hole="1" >
+	</SpriteComponent>
+	<LuaComponent
+		script_source_file="mods/conjurer_reborn/files/powers/binoculars_light.lua"
+		execute_every_n_frame="1"
+	></LuaComponent>
+</Entity>

@@ -996,7 +996,29 @@ local main_menu_items = {
 		action = ToggleBinoculars,
 		get_active = function(UI)
 			return GetBinocularsActive(UI)
-		end,
+        end,
+		update = function (UI)
+            local enable = GetBinocularsActive(UI)
+			--维护灵魂出窍
+			if enable then
+                GameSetCameraFree(true)
+                local player = GetPlayerObj()
+                if player and player.comp_all.PlatformShooterPlayerComponent then
+                    player.comp_all.PlatformShooterPlayerComponent[1].set_attrs = {
+                        mSmoothedCameraPosition = player.attr,
+						mDesiredCameraPos = player.attr
+					}
+				end
+			end
+
+			--维护光照实体
+			local id = EntityGetWithName("conjurer_reborn_binoculars_light")
+			if enable and (id == nil or id == 0) then
+				EntityLoad("mods/conjurer_reborn/files/powers/binoculars_light.xml", GameGetCameraPos())
+            elseif not enable and id and id ~= 0 then
+				EntityKill(id)
+			end
+		end
 	},
 	{
 		name = "$conjurer_reborn_power_grid",

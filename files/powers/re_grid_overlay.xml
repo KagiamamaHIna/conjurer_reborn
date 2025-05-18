@@ -1,11 +1,11 @@
 <Entity name="conjurer_reborn_grid_overlay">
   <SpriteComponent
-    alpha="0.07"
+    alpha="1"
     emissive="1"
     additive="0"
     offset_x="600"
     offset_y="340"
-    image_file="mods/conjurer_reborn/files/powers/grid_overlay.png"
+    image_file="mods/conjurer_reborn/files/powers/grid_overlay_0.07alpha.png"
   ></SpriteComponent>
 
   <LuaComponent

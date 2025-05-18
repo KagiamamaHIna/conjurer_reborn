@@ -77,6 +77,6 @@ function collision_trigger(entity)
   end
 
   -- Kill any non-player colliding entities
-  EntityConvertToMaterial(entity, "void_liquid")
+  EntityConvertToMaterial(entity, "plasma_fading_bright")
   EntityKill(entity)
 end

@@ -377,3 +377,15 @@ function GetHappinessImage()
     end
 	return neutral
 end
+
+
+---返回死亡点
+---@return number?
+---@return number?
+function GetLastDeathPoint()
+	local death_x = tonumber(GlobalsGetValue("conjurer_reborn_last_death_x", "nan"))
+    local death_y = tonumber(GlobalsGetValue("conjurer_reborn_last_death_y", "nan"))
+	if death_x and death_y and not IsNaN(death_x) and not IsNaN(death_y) then
+		return death_x, death_y
+	end
+end

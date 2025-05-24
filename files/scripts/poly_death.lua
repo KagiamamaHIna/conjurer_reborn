@@ -13,9 +13,13 @@ function damage_received(damage, message, entity_thats_responsible, is_fatal)--�
             end
         end
     end
-    for _,v in ipairs(player.comp_all.DamageModelComponent)do--回满血并关闭
+    for _, v in ipairs(player.comp_all.DamageModelComponent) do --回满血并关闭
         v.attr.hp = v.attr.max_hp
         v.enable = false
     end
+    local death_x,death_y = player:GetTransform()
+    GlobalsSetValue("conjurer_reborn_last_death_x", tostring(death_x))
+    GlobalsSetValue("conjurer_reborn_last_death_y", tostring(death_y))
+
     GlobalsSetValue("conjurer_reborn_poly_death", "1")
 end

@@ -429,7 +429,7 @@ UI.TickEventFn["PolyDeath"] = function()
         return
     end
 	
-	if ModSettingGet("conjurer_reborn.rebirth_blinded") then
+	if ModSettingGet("conjurer_reborn.rebirth_blinded") and not GetBinocularsActive(UI) then
 		player:NewChild().NewComp.GameEffectComponent {
 			effect="BLINDNESS",
 			frames=120,

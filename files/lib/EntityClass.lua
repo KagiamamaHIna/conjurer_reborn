@@ -1,4 +1,4 @@
----v1.0.10
+---v1.0.11
 
 ---如果为空则返回v（默认值），不为空返回本身的函数
 ---@param arg any
@@ -1215,6 +1215,31 @@ function GetPlayerObj()
 	if player then
 		return EntityObj(player)
 	end
+end
+
+---返回变形玩家实体封装
+---@return NoitaEntity|nil
+function GetPolyPlayerObj()
+    local player = EntityGetWithTag("polymorphed_player")[1]
+	if player then
+		return EntityObj(player)
+	end
+end
+
+---返回遁入虚空玩家实体封装
+---@return NoitaEntity|nil
+function GetCessationPlayerObj()
+    local player = EntityGetWithTag("polymorphed_cessation")[1]
+	if player then
+		return EntityObj(player)
+	end
+end
+
+---返回世界状态组件
+---@return WorldStateComponentClass
+function GetWorldStateComp()
+    local world = EntityObj(GameGetWorldStateEntity())
+	return world.comp.WorldStateComponent[1]
 end
 
 ---EntityCreateNew

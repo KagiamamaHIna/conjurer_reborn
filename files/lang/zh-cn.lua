@@ -326,6 +326,7 @@ conjurer_reborn_power_dim_bostrom_simulation = "尼克·博斯特罗姆的模拟
 conjurer_reborn_power_dim_endworld_hillplains = "终界丘陵"
 conjurer_reborn_power_memorize = "传送秘法"
 conjurer_reborn_power_memorize_return = "返回出生点"
+conjurer_reborn_power_memorize_back = "右键返回你上一个死亡的地方"
 conjurer_reborn_power_memorize_set_location = "保存当前位置"
 conjurer_reborn_power_memorize_set_location_desc = "右键保存的位置以忘掉它"
 conjurer_reborn_power_memorize_ahma = "狼獾"

@@ -222,7 +222,14 @@ end
 local function RenderTeleportMenu(UI)
 	local teleport_buttons = {
 		{
-			name = "$conjurer_reborn_power_memorize_return",
+            name = "$conjurer_reborn_power_memorize_return",
+			desc_fn = function (_UI)
+                local death_x, death_y = GetLastDeathPoint()
+                if death_x == nil then
+                    return
+                end
+				UI.Text(0,0,"$conjurer_reborn_power_memorize_back")
+			end,
 			image = "mods/conjurer_reborn/files/gfx/power_icons/tower.png",
 			action = function()
 				local x, y = GetSpawnPosition()
@@ -231,7 +238,17 @@ local function RenderTeleportMenu(UI)
 					return
 				end
 				EntitySetTransform(player, x, y)
-			end,
+            end,
+            right_action = function()
+                local player = GetPlayerObj()
+				if player == nil then
+					return
+				end
+				local death_x,death_y = GetLastDeathPoint()
+				if death_x then
+					player:SetX(death_x):SetY(death_y)
+				end
+			end
 		},
 		{
 			name = "$conjurer_reborn_power_memorize_set_location",
@@ -253,15 +270,25 @@ local function RenderTeleportMenu(UI)
 	UI.BeginHorizontal(x, BottomBoxY - 23, true, 1)
 	for _, v in ipairs(teleport_buttons) do
 		UI.NextZDeep(0)
-		if UI.ImageButton("Teleport" .. v.name, 0, 0, v.image) then
+		local left, right = UI.ImageButton("Teleport" .. v.name, 0, 0, v.image)
+        if left then
             v.action(UI)
+            ClickSound()
+        end
+		if right then
+            v.right_action(UI)
 			ClickSound()
 		end
 		local tip = GameTextGet(v.name)
-		if v.desc then
-			tip = tip .. "\n" .. GameTextGet(v.desc)
-		end
-		UI.GuiTooltip(tip)
+        if v.desc then
+            tip = tip .. "\n" .. GameTextGet(v.desc)
+        end
+		UI.BetterTooltipsNoCenter(function()
+            UI.Text(0, 0, tip)
+			if v.desc_fn then
+				v.desc_fn(UI)
+			end
+    	end, UI.GetZDeep() - 1000, 10, 3)
 	end
 	UI.LayoutEnd()
 	UI.NextZDeep(-1000)
@@ -1006,7 +1033,12 @@ local main_menu_items = {
                 if player and player.comp_all.PlatformShooterPlayerComponent then
                     player.comp_all.PlatformShooterPlayerComponent[1].set_attrs = {
                         mSmoothedCameraPosition = player.attr,
-						mDesiredCameraPos = player.attr
+                        mDesiredCameraPos = player.attr
+                    }
+                end
+				if player and player.comp.CharacterDataComponent then
+		            player.comp.CharacterDataComponent[1].set_attrs = {
+        	        	mVelocity = { x = 0, y = 0 },
 					}
 				end
 			end

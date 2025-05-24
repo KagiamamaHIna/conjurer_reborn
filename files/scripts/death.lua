@@ -7,8 +7,11 @@ function damage_received(damage, message, entity_thats_responsible, is_fatal)
         return
     end
     local player = GetUpdatedEntityID()
-
-    if ModSettingGet("conjurer_reborn.rebirth_blinded") then
+    local death_x,death_y = EntityGetTransform(player)
+    GlobalsSetValue("conjurer_reborn_last_death_x", tostring(death_x))
+    GlobalsSetValue("conjurer_reborn_last_death_y", tostring(death_y))
+    
+    if ModSettingGet("conjurer_reborn.rebirth_blinded") and GlobalsGetValue("conjurer_unsafePowerBinocularsActive", "0") ~= "1" then
         -- Momentary blindness
         local blindness = EntityCreateNew()
         EntityAddComponent2(blindness, "GameEffectComponent", {
@@ -17,6 +20,8 @@ function damage_received(damage, message, entity_thats_responsible, is_fatal)
         })
         EntityAddChild(player, blindness)
     end
+
+
     -- Teleport to spawn
     local x, y = get_spawn_position()
     teleport_player(x, y)

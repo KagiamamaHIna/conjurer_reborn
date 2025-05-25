@@ -1,4 +1,4 @@
----v1.0.11
+---v1.0.12
 
 ---如果为空则返回v（默认值），不为空返回本身的函数
 ---@param arg any
@@ -421,7 +421,7 @@ function EntityObj(entity_id)
                     src_y = vecv.y or src_y
                     ComponentSetValue2(NewComp, veck, src_x, src_y)
                 end
-				return Entity
+				return Entity, EntityComponentObj(NewComp)
 			end
 		end
 	})
@@ -795,10 +795,10 @@ function EntityObj(entity_id)
 	---增加组件
 	---@param type_name NoitaComponentNames
 	---@param table_of_component_values table<string, any>? nil
-	---@return NoitaEntity self
-	function Entity:AddComp(type_name, table_of_component_values)
-		EntityAddComponent2(self.entity_id, type_name, table_of_component_values or {})
-		return self
+	---@return NoitaEntity self, EntityComponent NewComponent
+    function Entity:AddComp(type_name, table_of_component_values)
+		local comp = EntityComponentObj(EntityAddComponent2(self.entity_id, type_name, table_of_component_values or {}))
+		return self, comp
 	end
 
 	---移除指定id组件

@@ -77,7 +77,7 @@ function WorldGlobalGetBool(UI, key, default)
 	if default then
 		defaultStr = "1"
 	else
-		defaultStr = "2"
+		defaultStr = "0"
 	end
 	local text = WorldGlobalGet(UI, key, defaultStr)
 	local result

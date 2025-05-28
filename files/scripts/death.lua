@@ -6,6 +6,11 @@ function damage_received(damage, message, entity_thats_responsible, is_fatal)
     if not is_fatal then
         return
     end
+    if GlobalsGetValue("conjurer_unsafePowerKalmaActive", "0") == "0" then
+        --像老版本一样，没血了不会送回去，不过这次会回满血。还有原来我数字写的那么诡异，不过现在修了:)
+        GlobalsSetValue("conjurer_reborn_next_refresh_hp", "1")
+        return
+    end
     local player = GetUpdatedEntityID()
     local death_x,death_y = EntityGetTransform(player)
     GlobalsSetValue("conjurer_reborn_last_death_x", tostring(death_x))

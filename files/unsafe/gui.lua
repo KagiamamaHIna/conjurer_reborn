@@ -3,12 +3,14 @@ dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("data/scripts/debug/keycodes.lua")
 dofile_once("data/scripts/lib/utilities.lua")
 
+local DollarASCII = string.byte("$")
 ---@param key string
 ---@return boolean
 local function IsOnlyKey(key)
-	if key == nil then
-		return true
-	end
+    if key == nil or key == "" or key.byte(1,1) ~= DollarASCII then--判空和判美元符号
+        return false
+    end
+
 	local name = GameTextGetTranslatedOrNot(key)
     if name == "" then
         --name = string.sub(key, 2)

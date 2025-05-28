@@ -25,7 +25,8 @@ function GetNameOrKey(key)
 	end
 	local name = GameTextGetTranslatedOrNot(key)
     if name == "" then
-        name = string.sub(key, 2)
+        --name = string.sub(key, 2)
+		return key
     end
 	return name
 end

@@ -3,6 +3,63 @@ dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("data/scripts/debug/keycodes.lua")
 dofile_once("data/scripts/lib/utilities.lua")
 
+---@param key string
+---@return boolean
+local function IsOnlyKey(key)
+	if key == nil then
+		return true
+	end
+	local name = GameTextGetTranslatedOrNot(key)
+    if name == "" then
+        --name = string.sub(key, 2)
+		return true
+    end
+	return false
+end
+local function UnpackNoNil(t, i)
+    i = i or 0
+    local newIndex, result = next(t, i)
+    if result ~= nil then
+        return result, UnpackNoNil(t, newIndex)
+    end
+end
+
+local OldGuiText = GuiText
+---@param gui userdata
+---@param x number
+---@param y number
+---@param text string
+---@param scale number? 1
+---@param font string? ""
+---@param font_is_pixel_font boolean? true
+function GuiText(gui, x, y, text, scale, font, font_is_pixel_font)
+    --支持$开头的非键文本显示，虽然不完美，但是也可用
+    if IsOnlyKey(text) then
+        --前缀空格，防止内部解析成空字符串
+        local SafeText = " " .. text
+        --符号倒置，确保文本正确占用宽度
+        local NoDisplayText = string.sub(text, 2) .. "$"
+        --计算二者宽度，用于偏移布局之外文本的计算
+        local srcWidth = GuiGetTextDimensions(gui, NoDisplayText)
+        local newWidth = GuiGetTextDimensions(gui, SafeText)
+
+        --隐藏文本，用于在类似自动布局场景下的兼容
+        GuiIdPushString(gui, "___FuckYouNollaYouWriteGuiCodeIsShit___")
+        GuiAnimateBegin(gui)
+        GuiAnimateAlphaFadeIn(gui, 1, 0, 0, false)
+        OldGuiText(gui, x, y, NoDisplayText, UnpackNoNil({scale, font, font_is_pixel_font}))
+        local _,_,_,TrueX,TrueY = GuiGetPreviousWidgetInfo(gui)
+        GuiAnimateEnd(gui)
+        GuiIdPop(gui)
+
+        --布局之外绘制，使得文本正常显示
+        GuiOptionsAddForNextWidget(gui,GUI_OPTION.Layout_NoLayouting)
+        OldGuiText(gui, TrueX - (newWidth - srcWidth), TrueY, SafeText, UnpackNoNil({scale, font, font_is_pixel_font}))
+    else--不含nil的解包，尽量兼容参数数的传递
+        return OldGuiText(UnpackNoNil({gui, x, y, text, scale, font, font_is_pixel_font}))
+    end
+end
+
 local checkboxFile = "mods/conjurer_reborn/files/unsafe/images/checkbox.png"
 local checkboxFillFile = "mods/conjurer_reborn/files/unsafe/images/checkbox_fill.png"
 local grey_1pxFile = "mods/conjurer_reborn/files/unsafe/images/grey_1px.png"

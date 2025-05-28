@@ -106,8 +106,7 @@ end
 ---返回当前魔球列表
 ---@return table<integer, true>
 function GetCurrentOrbTable()
-    local World = EntityObj(GameGetWorldStateEntity())
-    local WorldComp = World.comp_all.WorldStateComponent[1]
+    local WorldComp = GetWorldStateComp()
     local FoundOrb = {}
     for i = 0, WorldComp:GetVecSize("orbs_found_thisrun", "int")-1 do
         local id = WorldComp:GetVecValue("orbs_found_thisrun", "int", i)

@@ -7,7 +7,7 @@ local DollarASCII = string.byte("$")
 ---@param key string
 ---@return boolean
 local function IsOnlyKey(key)
-    if key == nil or key == "" or key.byte(1,1) ~= DollarASCII then--判空和判美元符号
+    if key == nil or key == "" or key:byte(1,1) ~= DollarASCII then--判空和判美元符号
         return false
     end
 
@@ -26,6 +26,24 @@ local function UnpackNoNil(t, i)
     end
 end
 
+---@param str string
+---@return string
+local function KeyToSafeStr(str)
+    local count = 0
+    for i = 1, #str do
+        if str:byte(i, i) == DollarASCII then
+            count = count + 1
+        else
+            break
+        end
+    end
+    local result = str:sub(count + 1)
+    for i=1,count do
+        result = result .. "$"
+    end
+    return result
+end
+
 local OldGuiText = GuiText
 ---@param gui userdata
 ---@param x number
@@ -40,7 +58,7 @@ function GuiText(gui, x, y, text, scale, font, font_is_pixel_font)
         --前缀空格，防止内部解析成空字符串
         local SafeText = " " .. text
         --符号倒置，确保文本正确占用宽度
-        local NoDisplayText = string.sub(text, 2) .. "$"
+        local NoDisplayText = KeyToSafeStr(text)
         --计算二者宽度，用于偏移布局之外文本的计算
         local srcWidth = GuiGetTextDimensions(gui, NoDisplayText)
         local newWidth = GuiGetTextDimensions(gui, SafeText)

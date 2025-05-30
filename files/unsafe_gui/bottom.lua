@@ -275,7 +275,7 @@ local function RenderTeleportMenu(UI)
             v.action(UI)
             ClickSound()
         end
-		if right then
+		if right and v.right_action then
             v.right_action(UI)
 			ClickSound()
 		end

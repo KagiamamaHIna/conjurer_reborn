@@ -356,6 +356,7 @@ conjurer_reborn_reset_IKnowWhatImDoing,"This action cannot be undone, click agai
 conjurer_reborn_inf_chaos_poly,Potential Permanent Chaotic Polymorphine,,,,,,,,潜在的永久混沌变形,,,,,,,
 conjurer_reborn_inf_chaos_poly_desc,Note: This cannot salvage player affected by Permanent Chaotic Polymorphine.,,,,,,,,注意：这无法挽回已经被永久混沌变形的玩家,,,,,,,
 conjurer_reborn_rebirth_blinded,Blinded effect after rebirth,,,,,,,,重生后的致盲效果,,,,,,,
+conjurer_reborn_game_print_gui_error,In-game print GUI error,,,,,,,,游戏内打印GUI错误,,,,,,,
 ]]
 
 dofile("data/scripts/lib/mod_settings.lua")
@@ -561,6 +562,13 @@ mod_settings =
 		category_id = "conjurer_other",
 		ui_name = "conjurer_reborn_setting_other",
         settings = {
+			Setting({
+				id = "game_print_gui_error",
+				ui_name = "conjurer_reborn_game_print_gui_error",
+				ui_description = "",
+                value_default = true,
+				scope = MOD_SETTING_SCOPE_RUNTIME,
+            }),
 			Setting({
 				id = "get_carrot",
 				ui_name = "",

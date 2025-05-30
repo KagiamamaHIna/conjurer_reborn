@@ -1,4 +1,4 @@
----v1.0.13
+---v1.0.13.1
 
 ---如果为空则返回v（默认值），不为空返回本身的函数
 ---@param arg any
@@ -787,8 +787,7 @@ function EntityObj(entity_id)
 	---@param filename string
 	---@return integer
 	function Entity:LoadChild(filename)
-		local x = Entity:GetX()
-		local y = Entity:GetY()
+		local x, y = Entity:GetTransform()
 		local child = EntityLoad(filename, x, y)
 		self:AddChild(child)
 		return child

@@ -143,7 +143,7 @@ VisualFileSet = ModTextFileSetContent
 SrcModMaterialsFileAdd = ModMaterialsFileAdd
 SrcModImageMakeEditable = ModImageMakeEditable
 local initFlag = false
-GuiUpdate = nil
+local GUIDatas = nil
 function OnWorldPostUpdate()
     if not initFlag then
         if ModSettingGet("conjurer_reborn.force_open") then
@@ -152,12 +152,26 @@ function OnWorldPostUpdate()
         initFlag = true
         dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetAllData.lua") --确保数据收集
         dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/MatIconSpawn.lua")
-        GuiUpdate = dofile_once("mods/conjurer_reborn/files/unsafe_gui/update.lua")
+        GUIDatas = dofile_once("mods/conjurer_reborn/files/unsafe_gui/update.lua")
         --加载流程
         ClearDofileOnceCache("mods/conjurer_reborn/files/unsafe/DataGenerator/GetDataWak.lua") --清除缓存，将datawak的数据交给lua销毁
     end
     KeyListeningUpdate()
-    GuiUpdate()
+    local flag, msg = pcall(GUIDatas[1])
+    if not flag then
+        GUIDatas[2]()--这里应该返回的是销毁函数，销毁GUI句柄
+        print_error("conjurer_reborn:", "GUI Crashes!,\nError:", msg)
+        print("conjurer_reborn:Gui Reload")
+
+        if ModSettingGet("conjurer_reborn.game_print_gui_error") then
+            GamePrint("conjurer_reborn:", "GUI Crashes!")
+            GamePrint("Error:", msg)
+            GamePrint("conjurer_reborn:Gui Reload")
+        end
+        
+        ClearDofileOnceCache("mods/conjurer_reborn/files/unsafe_gui/update.lua")--清除缓存
+        GUIDatas = dofile_once("mods/conjurer_reborn/files/unsafe_gui/update.lua")--重新加载
+    end
 end
 
 function OnModPreInit()--模组init执行完成之后首先调用的

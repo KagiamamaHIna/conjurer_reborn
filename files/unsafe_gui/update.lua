@@ -500,4 +500,4 @@ UI.TickEventFn["WaypointInMap"] = function ()
 	end
 end
 
-return UI.DispatchMessage
+return {UI.DispatchMessage, UI.Destroy}

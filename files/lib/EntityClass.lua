@@ -1,4 +1,4 @@
----v1.0.12
+---v1.0.13
 
 ---如果为空则返回v（默认值），不为空返回本身的函数
 ---@param arg any
@@ -341,7 +341,11 @@ function EntityObj(entity_id)
 		
         ---@type NewCompObj
 		---@diagnostic disable-next-line: missing-fields
-		NewComp = {},
+        NewComp = {},
+		
+		---VariableStorageComponent key是name字段
+		---@type table<string, VariableStorageComponent>
+		VSC = {},
 		attr = {
 			---@type number
 			x = nil,
@@ -423,6 +427,32 @@ function EntityObj(entity_id)
                 end
 				return Entity, EntityComponentObj(NewComp)
 			end
+		end
+    })
+	setmetatable(Entity.VSC, {
+		__newindex = function(t, k, v)
+            rawset(t, k, nil)
+			for _, cv in ipairs(Entity.comp_all.VariableStorageComponent or {}) do
+                if cv.attr.name == k then
+                    cv.set_attrs = v
+					return
+                end
+            end--没找到就新建
+            local _,c = Entity.NewComp.VariableStorageComponent {
+                name = k,
+            }
+			c.set_attrs = v
+		end,
+		__index = function(t, k)
+            for _, v in ipairs(Entity.comp_all.VariableStorageComponent or {}) do
+                if v.attr.name == k then
+                    return v.attr
+                end
+            end--没找到就新建
+            local _,result = Entity.NewComp.VariableStorageComponent {
+				name = k
+            }
+			return result.attr
 		end
 	})
 	--其他属性

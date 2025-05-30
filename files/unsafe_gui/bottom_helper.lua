@@ -138,38 +138,79 @@ local player_speedy_defaults = {
 	velocity_max_y = 350,
 }
 
-local speedy_vars = {}
-for key, var in pairs(player_speedy_defaults) do
-	speedy_vars[key] = var * 7
+local player_speedy_keys = {
+	"jump_velocity_y",
+	"jump_velocity_x",
+	"fly_speed_max_up",
+	"fly_speed_max_down",
+	--"fly_speed_change_spd",
+	"run_velocity",
+	"fly_velocity_x",
+	"velocity_min_x",
+	"velocity_max_x",
+	"velocity_min_y",
+	"velocity_max_y",
+}
+
+---@param srcData table
+---@param mul number?
+---@return table
+local function NewSpeedy(srcData, mul)
+	mul = mul or 7
+	local speedy_vars = {}
+	for key, var in pairs(srcData) do
+		speedy_vars[key] = var * mul
+	end
+	return speedy_vars
+end
+
+---@param entity NoitaEntity
+---@return table
+local function GetEntitySpeedField(entity)--从vsc组件上读取数据
+    local result = {}
+    for _, k in ipairs(player_speedy_keys) do
+		local value = entity.VSC["conjurer_speed_" .. k].value_float
+		if value == 0 then--如果是0作为默认值
+			value = player_speedy_defaults[k]--读取这个数据作为默认值
+		end
+        result[k] = value
+    end
+	return result
 end
 
 function GetSpeed()
-	local particles = EntityGetWithName("conjurer_reborn_speed_particles")
-	if particles == 0 or particles == nil then
+    local player = GetPlayerObj()
+	if player == nil then
+		return false
+	end
+	local particles = player:GetChildWithName("conjurer_reborn_speed_particles")
+	if particles == nil then
 		return false
 	end
 	return true
 end
 
 function ToggleSpeed()
-	local player = GetPlayer()
+	local player = GetPlayerObj()
 	if player == nil then
 		return
 	end
-	local particles = EntityGetWithName("conjurer_reborn_speed_particles")
+	local particles = player:GetChildWithName("conjurer_reborn_speed_particles")
 
-	if particles == 0 or particles == nil then
-		EntitySetValues(player, "CharacterPlatformingComponent", speedy_vars)
-
-		local new_particles = EntityLoad("mods/conjurer_reborn/files/powers/speed_particles.xml")
-		EntityAddChild(player, new_particles)
+    if particles == nil then
+		for _,k in ipairs(player_speedy_keys) do--作为vsc组件保存
+			player.VSC["conjurer_speed_"..k].value_float = player.comp_all.CharacterPlatformingComponent[1].attr[k]
+		end
+        player.comp_all.CharacterPlatformingComponent[1].set_attrs = NewSpeedy(GetEntitySpeedField(player))
+		
+		player:LoadChild("mods/conjurer_reborn/files/powers/speed_particles.xml")
 
 		GamePrint("$conjurer_reborn_power_viima_on")
-	else
-		EntitySetValues(player, "CharacterPlatformingComponent", player_speedy_defaults)
+    else
+		player.comp_all.CharacterPlatformingComponent[1].set_attrs = GetEntitySpeedField(player)
 
-		EntityRemoveFromParent(particles)
-		EntityKill(particles)
+		particles:RemoveFromParent()
+        particles:Kill()
 
 		GamePrint("$conjurer_reborn_power_viima_off")
 	end
@@ -204,7 +245,9 @@ function CreateDimensionalPortal(biome, world, biome_file, scene_file)
 		GlobalsSetValue(WORLD_SELECTION, world)
         WorldCurrent = world
 		
-		if right then
+        if right then
+			local _,_,_,_,_,s = GameGetDateAndTimeLocal()
+			SetRandomSeed(s, GameGetFrameNum())--不要再给我报错了！
             dim_env.collision_trigger(player)
 			return
 		end

@@ -3,7 +3,7 @@ dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/misc/ModIdUtilities.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/SimulateAppend.lua")
 dofile_once("data/scripts/gun/gun_enums.lua")
-
+local sandbox = dofile_once("mods/conjurer_reborn/files/lib/SandBox.lua")
 --[[
 SpellTypeBG = {
 	[ACTION_TYPE_PROJECTILE] = "data/ui_gfx/inventory/item_bg_projectile.png",
@@ -20,14 +20,16 @@ SpellTypeBG = {
 ---@type DataWak
 local datawak = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetDataWak.lua")
 
---先加载所有的内容
-dofile_once("data/scripts/gun/gun_actions.lua")
+--先加载所有的内容，sandbox专门防止全局变量污染
+local gun_action_fn = loadfile("data/scripts/gun/gun_actions.lua")
+local fn, env = sandbox(gun_action_fn)
+pcall(fn)
 
 local SpellTable = {}
 local OrderedListId = {}
 local EnumToListId = {}
 
-for _,v in pairs(actions) do
+for _,v in pairs(env.actions) do
     SpellTable[v.id] = v
 	SpellTable[v.id].conjurer_unsafe_from_id = "?"--提前标记为?，方便后续处理，因为不能检测set文件的
     OrderedListId[#OrderedListId + 1] = v.id
@@ -36,13 +38,12 @@ for _,v in pairs(actions) do
     end
 	EnumToListId[v.type][#EnumToListId[v.type]+1] = v.id
 end
-actions = nil
 
 --加载原生的内容
 local OriSpellLua = datawak:At("data/scripts/gun/gun_actions.lua")
-loadstring(OriSpellLua)()
-
-for _,v in pairs(actions) do
+local fn,env = sandbox(loadstring(OriSpellLua))
+pcall(fn)
+for _,v in pairs(env.actions or {}) do
     if SpellTable[v.id] then--如果存在数据，标记为noita
 		SpellTable[v.id].conjurer_unsafe_from_id = "Noita"
 	end
@@ -53,11 +54,12 @@ local AppendsModToFile = GetAppendedModIdToFile(OriSpellLua, "data/scripts/gun/g
 
 for modid,v in pairs(AppendsModToFile) do
     local fn = loadstring(v)--防止出问题？
-	if fn then
+    if fn then
+		fn,env = sandbox(fn)
         pcall(fn)
-		for _, perk in pairs(actions) do
-			if SpellTable[perk.id] and SpellTable[perk.id].conjurer_unsafe_from_id == "?" then--如果存在数据，且为?，那么标记为模组id
-				SpellTable[perk.id].conjurer_unsafe_from_id = modid
+		for _, spell in pairs(env.actions or {}) do
+			if SpellTable[spell.id] and SpellTable[spell.id].conjurer_unsafe_from_id == "?" then--如果存在数据，且为?，那么标记为模组id
+				SpellTable[spell.id].conjurer_unsafe_from_id = modid
 			end
 		end
 		actions = nil

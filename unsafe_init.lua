@@ -11,6 +11,22 @@ if not UnsafeTrueVer then--如果版本检查没通过
 	end
 	return
 end
+--一组表，如果全局变量不存在的时候就会从这里面的表找到一个可用值，避免全局变量污染的同时兼容一部分需要访问的全局变量
+_GLOBAL_INDEX_TABLES = {}
+
+setmetatable(_G, {
+    __index = function (t, k)
+        for i=1,#_GLOBAL_INDEX_TABLES do
+            local indexTable = rawget(_GLOBAL_INDEX_TABLES, i)
+            local result = rawget(indexTable, k)
+            if result then
+                return result
+            end
+        end
+        return nil
+    end
+})
+
 --检查是否被强制启动
 local Nxml = dofile_once("mods/conjurer_reborn/files/lib/nxml.lua")
 local ModConfigPath
@@ -165,7 +181,12 @@ function OnWorldPostUpdate()
             GamePrint("conjurer_reborn:Error:", GuiDofileError)
         end
     else
-        local flag, msg = pcall(GUIDatas[1])
+        local oneLineMsg
+        local msg
+        local flag = xpcall(GUIDatas[1],function (arg)
+            msg = debug.traceback(arg)
+            oneLineMsg = arg
+        end)
         if not flag then
             GUIDatas[2]()--这里应该返回的是销毁函数，销毁GUI句柄
             print_error("conjurer_reborn:", "GUI Crashes!,\nError:", msg)
@@ -173,7 +194,7 @@ function OnWorldPostUpdate()
 
             if ModSettingGet("conjurer_reborn.game_print_gui_error") then
                 GamePrint("conjurer_reborn:", "GUI Crashes!")
-                GamePrint("Error:", msg)
+                GamePrint("Error:", oneLineMsg)
                 GamePrint("conjurer_reborn:Gui Reload")
             end
         

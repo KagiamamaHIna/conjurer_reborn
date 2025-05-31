@@ -1,9 +1,10 @@
 <Entity name="conjurer_reborn_kalma">
 	<InheritTransformComponent>
 	</InheritTransformComponent>
-	<GameEffectComponent
-		effect="PROTECTION_ALL"
-		frames="-1"
+	<LuaComponent
+		execute_every_n_frame="1"
+		execute_on_added="1"
+        script_source_file="mods/conjurer_reborn/files/powers/kalma.lua"
 	/>
 	<GameEffectComponent 
         effect="PROTECTION_POLYMORPH"

@@ -67,6 +67,88 @@ GamePrint = function(...)
 	noita_game_print(table.concat(cache))
 end
 
+local print_once_cache = {}
+---@param ... any
+function print_once(...)
+    local cache = {}
+    local cacheCount = 1
+    for _, v in pairs({ ... }) do
+        cache[cacheCount] = tostring(v)
+        cacheCount = cacheCount + 1
+    end
+    local print_str = table.concat(cache)
+    if print_once_cache[print_str] then
+        return
+    end
+    print_once_cache[print_str] = true
+    print(print_str)
+end
+
+local print_once_last_has_id = {}
+---@param id string
+function print_once_last(id)
+    if print_once_last_has_id[id] then
+        return
+    end
+	print_once_last_has_id[id] = true
+	print("(skipping logging of recurring log)")
+end
+
+local print_error_once_cache = {}
+---@param ... any
+function print_error_once(...)
+	local cache = {}
+	local cacheCount = 1
+    for _, v in pairs({ ... }) do
+        cache[cacheCount] = tostring(v)
+        cacheCount = cacheCount + 1
+    end
+    local print_str = table.concat(cache)
+	if print_error_once_cache[print_str] then
+		return
+	end
+    print_error_once_cache[print_str] = true
+    print_error(print_str)
+end
+
+local print_error_once_last_has_id = {}
+---@param id string
+function print_error_once_last(id)
+	if print_error_once_last_has_id[id] then
+        return
+    end
+	print_error_once_last_has_id[id] = true
+	print_error("(skipping logging of recurring lua errors)")
+end
+
+local game_print_once_cache = {}
+---@param ... any
+function GamePrintOnce(...)
+	local cache = {}
+	local cacheCount = 1
+    for _, v in pairs({ ... }) do
+        cache[cacheCount] = tostring(v)
+        cacheCount = cacheCount + 1
+    end
+    local print_str = table.concat(cache)
+	if game_print_once_cache[print_str] then
+		return
+	end
+    game_print_once_cache[print_str] = true
+    GamePrint(print_str)
+end
+
+local GamePrintOnceLastHasID = {}
+---@param id string
+function GamePrintOnceLast(id)
+    if GamePrintOnceLastHasID[id] then
+        return
+    end
+	GamePrintOnceLastHasID[id] = true
+	GamePrint("(skipping logging of recurring log)")
+end
+
+
 function PushValueOnList(t, v)
 	if t == nil then
 		return

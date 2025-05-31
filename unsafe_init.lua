@@ -174,21 +174,24 @@ function OnWorldPostUpdate()
         ClearDofileOnceCache("mods/conjurer_reborn/files/unsafe/DataGenerator/GetDataWak.lua") --清除缓存，将datawak的数据交给lua销毁
     end
     KeyListeningUpdate()
-    if GUIDatas == nil then--获取失败就不获取了，打印错误
-        print_error("conjurer_reborn:GUI Load Error!")
+    if GUIDatas == nil then --获取失败就不获取了，打印错误
+        print_error_once("conjurer_reborn:GUI Load Error!")
+        --print_error_once(GuiDofileError)
+        --print_error_once_last("GuiLoadError")
         if ModSettingGet("conjurer_reborn.game_print_gui_error") then
-            GamePrint("conjurer_reborn:GUI Load Error!")
-            GamePrint("conjurer_reborn:Error:", GuiDofileError)
+            GamePrintOnce("conjurer_reborn:GUI Load Error!")
+            GamePrintOnce("conjurer_reborn:Error:", GuiDofileError)
+            GamePrintOnceLast("GuiLoadError")
         end
     else
         local oneLineMsg
         local msg
-        local flag = xpcall(GUIDatas[1],function (arg)
+        local flag = xpcall(GUIDatas[1], function(arg)
             msg = debug.traceback(arg)
             oneLineMsg = arg
         end)
         if not flag then
-            GUIDatas[2]()--这里应该返回的是销毁函数，销毁GUI句柄
+            GUIDatas[2]() --这里应该返回的是销毁函数，销毁GUI句柄
             print_error("conjurer_reborn:", "GUI Crashes!,\nError:", msg)
             print("conjurer_reborn:Gui Reload")
 
@@ -197,9 +200,9 @@ function OnWorldPostUpdate()
                 GamePrint("Error:", oneLineMsg)
                 GamePrint("conjurer_reborn:Gui Reload")
             end
-        
-            ClearDofileOnceCache("mods/conjurer_reborn/files/unsafe_gui/update.lua")--清除缓存
-            GUIDatas, GuiDofileError = dofile_once("mods/conjurer_reborn/files/unsafe_gui/update.lua")--重新加载
+
+            ClearDofileOnceCache("mods/conjurer_reborn/files/unsafe_gui/update.lua")                   --清除缓存
+            GUIDatas, GuiDofileError = dofile_once("mods/conjurer_reborn/files/unsafe_gui/update.lua") --重新加载
         end
     end
 end

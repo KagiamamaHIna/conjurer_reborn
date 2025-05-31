@@ -103,5 +103,11 @@ CUSTOM_ENTITIES = {
 		name = "$conjurer_reborn_free_perk_reroll",
 		path = "mods/conjurer_reborn/files/custom_entities/free_perk_reroll/free_perk_reroll.xml",
 		image = "mods/conjurer_reborn/files/gfx/pickup_icons/perk_reroll.png",
+    },
+	{
+		name = "$conjurer_reborn_tp_carrot",
+		desc = "$conjurer_reborn_tp_carrot_desc",
+		path = "mods/conjurer_reborn/files/wands/carrot/entity.xml",
+		image = "mods/conjurer_reborn/files/wands/carrot/ui_gfx.png",
 	},
 }

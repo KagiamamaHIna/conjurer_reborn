@@ -821,7 +821,9 @@ local function DrawFav(UI)
         GlobalsSetValue("conjurer_reborn_reset_matwand_fav_refresh", "0")
         favItems = {}
     end
-    VerticalPage(UI, "MatWandFavVerticalPage", favItems, 6, 138, 0, 0, 9, MatWandSpriteBG, function(value, index)
+    local ColumnMax = ModSettingGet("conjurer_reborn.vertical_page_column_max") or 9
+	ColumnMax = math.floor(ColumnMax + 0.5)
+    VerticalPage(UI, "MatWandFavVerticalPage", favItems, 6, 138, 0, 0, ColumnMax, MatWandSpriteBG, function(value, index)
 		UI.NextZDeep(0)
         local right = false
 		local left = false

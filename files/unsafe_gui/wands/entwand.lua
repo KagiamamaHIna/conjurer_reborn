@@ -312,11 +312,13 @@ local function DrawFav(UI)
     local OnceRemove = false
 	local NoHasItem = false
 	local count = -0x7FFFFFFF
-	if GlobalsGetValue("conjurer_reborn_reset_entwand_fav_refresh", "0") == "1" then
+    if GlobalsGetValue("conjurer_reborn_reset_entwand_fav_refresh", "0") == "1" then
         GlobalsSetValue("conjurer_reborn_reset_entwand_fav_refresh", "0")
         favItems = {}
     end
-    VerticalPage(UI, "EntWandFavVerticalPage", favItems, 6, 138, 0, 0, 9, EntWandSpriteBG, function(value, index)
+    local ColumnMax = ModSettingGet("conjurer_reborn.vertical_page_column_max") or 9
+	ColumnMax = math.floor(ColumnMax + 0.5)
+    VerticalPage(UI, "EntWandFavVerticalPage", favItems, 6, 138, 0, 0, ColumnMax, EntWandSpriteBG, function(value, index)
 		UI.NextZDeep(0)
         local left
 		local right

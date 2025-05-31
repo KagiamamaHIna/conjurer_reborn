@@ -392,7 +392,7 @@ conjurer_reborn_entwand_options_not_delete_bg_fg = "Don't target bg/fg visuals"
 conjurer_reborn_entwand_options_not_delete_bg_fg_desc = "Prevents you from deleting background & foreground entities."
 conjurer_reborn_entwand_options_gold_drop = "Gold drops"
 conjurer_reborn_entwand_options_gold_drop_desc = "If creatures should drop gold upon death or not."
-conjurer_reborn_no_reaction = " (No reaction)"
+conjurer_reborn_no_reaction = " (No material reaction)"
 
 --editwand
 conjurer_reborn_editwand_move_btn = "[LEFT-CLICK] to move entities"

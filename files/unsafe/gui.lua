@@ -347,13 +347,20 @@ function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, ri
 	end
 end
 
---覆盖掉原版的函数
+---覆盖掉原版的函数
+---@param text string
+---@param description string?
+---@param xOffset number?
 UI.GuiTooltip = function(text, description, xOffset)
-	xOffset = Default(xOffset, 0)
-	UI.BetterTooltipsNoCenter(function ()
-        GuiText(this.public.gui, 0, 0, text)
+    xOffset = Default(xOffset, 0)
+    UI.BetterTooltipsNoCenter(function()
+        for _, v in ipairs(split(text, '\n')) do
+            GuiText(this.public.gui, 0, 0, v)
+        end
 		if description ~= nil and description ~= "" then
-			GuiText(this.public.gui, 0, 0, description)
+			for _,v in ipairs(split(description, '\n')) do
+                GuiText(this.public.gui, 0, 0, v)
+            end
 		end
 	end,-3000,10 + xOffset)
 end

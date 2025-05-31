@@ -357,6 +357,8 @@ conjurer_reborn_inf_chaos_poly,Potential Permanent Chaotic Polymorphine,,,,,,,,�
 conjurer_reborn_inf_chaos_poly_desc,Note: This cannot salvage player affected by Permanent Chaotic Polymorphine.,,,,,,,,注意：这无法挽回已经被永久混沌变形的玩家,,,,,,,
 conjurer_reborn_rebirth_blinded,Blinded effect after rebirth,,,,,,,,重生后的致盲效果,,,,,,,
 conjurer_reborn_game_print_gui_error,In-game print GUI error,,,,,,,,游戏内打印GUI错误,,,,,,,
+conjurer_reborn_vertical_page_column_max,Favorite Bar Single Column Size,,,,,,,,收藏栏单列大小,,,,,,,
+conjurer_reborn_vertical_page_column_max_desc,How many items can be displayed in one column?,,,,,,,,一列可以显示多少个？,,,,,,,
 ]]
 
 dofile("data/scripts/lib/mod_settings.lua")
@@ -590,6 +592,15 @@ mod_settings =
 					end
 					GuiIdPop(gui)
 				end
+            }),
+			Setting({
+				id = "vertical_page_column_max",
+				ui_name = "conjurer_reborn_vertical_page_column_max",
+				ui_description = "conjurer_reborn_vertical_page_column_max_desc",
+				value_default = 9,
+				value_min = 1,
+				value_max = 18,
+				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),
 			Setting({
 				id = "reset_matwand_fav",

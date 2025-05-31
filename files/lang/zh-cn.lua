@@ -207,7 +207,7 @@ conjurer_reborn_matwand_get_beer = "点击获得当前选中材料的啤酒瓶($
 conjurer_reborn_matwand_get_powder = "点击获得当前选中材料的袋子($0%)"
 conjurer_reborn_matwand_get_desc = "滚动[鼠标滚轮]更改材料数量(+-1, 按住[CTRL]是+-10)\n按下[鼠标右键]重置"
 conjurer_reborn_matwand_get_desc2 = "[SHIFT]+[鼠标左键]获得不会发生反应的容器"
-conjurer_reborn_no_reaction = " (没有反应)"
+conjurer_reborn_no_reaction = " (没有材料反应)"
 
 --实体法杖相关
 conjurer_reborn_entwand_entity_picker = "实体选择"

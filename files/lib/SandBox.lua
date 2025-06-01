@@ -22,9 +22,6 @@ local function NewSandBox(fn)
         setfenv(0, env)
         return do_mod_appends(...)
     end
-    env.do_mod_appends = function ()
-        
-    end
     
     env.dofile_once = function(filename)
         local result = nil

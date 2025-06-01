@@ -7,9 +7,10 @@ local datawak = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/Get
 
 local sandbox = dofile_once("mods/conjurer_reborn/files/lib/SandBox.lua")
 
-local status_list_fn = loadfile("data/scripts/status_effects/status_list.lua")
-local fn, env = sandbox(status_list_fn)
-fn()
+local fn, env = sandbox(function ()
+	dofile("data/scripts/status_effects/status_list.lua")
+end)
+pcall(fn)
 _GLOBAL_INDEX_TABLES[#_GLOBAL_INDEX_TABLES+1] = env
 
 --先加载所有的内容

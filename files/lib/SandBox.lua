@@ -1,19 +1,27 @@
+---输入函数，返回沙盒环境下的函数和环境
+---@param fn function
+---@return function
+---@return table env
 local function NewSandBox(fn)
-	local loadonce = {}
-	local loaded = {}
+    local loadonce = {}
+    local loaded = {}
     local env = {
         __loadonce = loadonce,
         __loaded = loaded,
         ModTextFileSetContent = function()
 
         end,
-		ModLuaFileSetAppends = function ()
-			
+        ModLuaFileSetAppends = function()
+
         end,
-		ModLuaFileAppend = function ()
-			
-		end
+        ModLuaFileAppend = function()
+
+        end
     }
+    local new_do_mod = function(...)
+        setfenv(0, env)
+        return do_mod_appends(...)
+    end
     env.dofile_once = function(filename)
         local result = nil
         local cached = loadonce[filename]
@@ -24,7 +32,7 @@ local function NewSandBox(fn)
             if f == nil then return f, err end
             result = setfenv(f, env)()
             loadonce[filename] = { result }
-            do_mod_appends(filename)
+            new_do_mod(filename)
         end
         return result
     end
@@ -37,12 +45,12 @@ local function NewSandBox(fn)
             loaded[filename] = setfenv(f, env)
         end
         local result = f()
-        do_mod_appends(filename)
+        new_do_mod(filename)
         return result
     end
-	
+
     setmetatable(env, { __index = _G })
-	
+
     return setfenv(fn, env), env
 end
 

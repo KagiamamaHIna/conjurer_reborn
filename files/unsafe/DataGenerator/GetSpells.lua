@@ -21,8 +21,9 @@ SpellTypeBG = {
 local datawak = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetDataWak.lua")
 
 --先加载所有的内容，sandbox专门防止全局变量污染
-local gun_action_fn = loadfile("data/scripts/gun/gun_actions.lua")
-local fn, env = sandbox(gun_action_fn)
+local fn, env = sandbox(function ()
+	dofile("data/scripts/gun/gun_actions.lua")
+end)
 pcall(fn)
 
 local SpellTable = {}

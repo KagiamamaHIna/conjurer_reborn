@@ -5,6 +5,8 @@ function damage_received(damage, message, entity_thats_responsible, is_fatal)--�
         return
     end
     local player = EntityObj(GetUpdatedEntityID())
+    player.comp.DamageModelComponent[1].attr.wait_for_kill_flag_on_death = true --不要真的死了
+    
     for _, v in ipairs(player:GetAllChildObj() or {}) do
         for _, c in ipairs(v.comp_all.GameEffectComponent or {}) do
             local effect = c.attr.effect

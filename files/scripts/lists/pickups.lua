@@ -234,7 +234,12 @@ PICKUPS = {
 		name = "Egg worm",
 		path = "data/entities/items/pickup/egg_worm.xml",
 		image = "mods/conjurer_reborn/files/gfx/pickup_icons/egg_worm.png",
-	},
+    },
+	{
+		name = "Essence eater",
+		path = "data/entities/buildings/essence_eater.xml",
+		image = "mods/conjurer_reborn/files/gfx/pickup_icons/essence_eater.png",
+    },
 	{
 		name = "Essence air",
 		desc = "$conjurer_reborn_pickup_danger_tip",

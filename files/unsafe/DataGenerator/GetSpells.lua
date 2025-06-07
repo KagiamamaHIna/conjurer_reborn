@@ -48,10 +48,14 @@ end
 local OriSpellLua = datawak:At("data/scripts/gun/gun_actions.lua")
 local fn,env = sandbox(loadstring(OriSpellLua))
 pcall(fn)
-for _,v in pairs(env.actions or {}) do
-    if SpellTable[v.id] then--如果存在数据，标记为noita
-		SpellTable[v.id].conjurer_unsafe_from_id = "Noita"
+for _, v in pairs(env.actions or {}) do
+	if v.id == nil or v.type == nil then
+		goto continue
 	end
+    if SpellTable[v.id] then --如果存在数据，标记为noita
+        SpellTable[v.id].conjurer_unsafe_from_id = "Noita"
+    end
+	::continue::
 end
 actions = nil
 
@@ -62,10 +66,14 @@ for modid,v in pairs(AppendsModToFile) do
     if fn then
 		fn,env = sandbox(fn)
         pcall(fn)
-		for _, spell in pairs(env.actions or {}) do
-			if SpellTable[spell.id] and SpellTable[spell.id].conjurer_unsafe_from_id == "?" then--如果存在数据，且为?，那么标记为模组id
-				SpellTable[spell.id].conjurer_unsafe_from_id = modid
+        for _, spell in pairs(env.actions or {}) do
+			if v.id == nil or v.type == nil then
+				goto continue
 			end
+            if SpellTable[spell.id] and SpellTable[spell.id].conjurer_unsafe_from_id == "?" then --如果存在数据，且为?，那么标记为模组id
+                SpellTable[spell.id].conjurer_unsafe_from_id = modid
+            end
+			::continue::
 		end
 		actions = nil
 	end

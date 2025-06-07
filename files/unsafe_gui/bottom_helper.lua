@@ -190,6 +190,17 @@ function GetSpeed()
 	return true
 end
 
+function SetPlayerToDefaultSpeed()
+    if GetSpeed() then
+        ToggleSpeed()
+    end
+    local player = GetPlayerObj()
+    if player == nil then
+        return
+    end
+	player.comp_all.CharacterPlatformingComponent[1].set_attrs = player_speedy_defaults
+end
+
 function ToggleSpeed()
 	local player = GetPlayerObj()
 	if player == nil then

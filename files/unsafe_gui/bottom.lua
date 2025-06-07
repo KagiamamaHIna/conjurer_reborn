@@ -1091,12 +1091,18 @@ local main_menu_items = {
 		end,
 	},
 	{
-		name = "$conjurer_reborn_power_viima",
+        name = "$conjurer_reborn_power_viima",
+        tip_func = function()
+			return GameTextGet("$conjurer_reborn_power_viima_desc")
+		end,
 		image = "mods/conjurer_reborn/files/gfx/power_icons/viima.png",
 		action = ToggleSpeed,
 		get_active = function(UI)
 			return GetSpeed()
-		end,
+        end,
+		right_action = function (UI)
+			SetPlayerToDefaultSpeed()
+		end
 	},
 }
 

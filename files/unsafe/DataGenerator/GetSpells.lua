@@ -30,14 +30,18 @@ local SpellTable = {}
 local OrderedListId = {}
 local EnumToListId = {}
 
-for _,v in pairs(env.actions) do
+for _, v in pairs(env.actions) do
+	if v.id == nil or v.type == nil then
+		goto continue
+	end
     SpellTable[v.id] = v
 	SpellTable[v.id].conjurer_unsafe_from_id = "?"--提前标记为?，方便后续处理，因为不能检测set文件的
     OrderedListId[#OrderedListId + 1] = v.id
     if EnumToListId[v.type] == nil then
         EnumToListId[v.type] = {}
     end
-	EnumToListId[v.type][#EnumToListId[v.type]+1] = v.id
+    EnumToListId[v.type][#EnumToListId[v.type] + 1] = v.id
+	::continue::
 end
 
 --加载原生的内容

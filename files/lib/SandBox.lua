@@ -18,11 +18,12 @@ local function NewSandBox(fn)
 
         end
     }
-    local new_do_mod = function(...)
-        setfenv(0, env)
-        return do_mod_appends(...)
+    env.do_mod_appends = function(filename)
+        for _,v in ipairs(ModLuaFileGetAppends(filename) or {}) do
+            env.dofile(v)
+        end
     end
-    
+
     env.dofile_once = function(filename)
         local result = nil
         local cached = loadonce[filename]
@@ -33,7 +34,7 @@ local function NewSandBox(fn)
             if f == nil then return f, err end
             result = setfenv(f, env)()
             loadonce[filename] = { result }
-            new_do_mod(filename)
+            env.do_mod_appends(filename)
         end
         return result
     end
@@ -46,7 +47,7 @@ local function NewSandBox(fn)
             loaded[filename] = setfenv(f, env)
         end
         local result = f()
-        new_do_mod(filename)
+        env.do_mod_appends(filename)
         return result
     end
 

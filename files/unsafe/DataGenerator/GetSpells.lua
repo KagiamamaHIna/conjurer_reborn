@@ -57,7 +57,6 @@ for _, v in pairs(env.actions or {}) do
     end
 	::continue::
 end
-actions = nil
 
 local AppendsModToFile = GetAppendedModIdToFile(OriSpellLua, "data/scripts/gun/gun_actions.lua")
 
@@ -67,7 +66,7 @@ for modid,v in pairs(AppendsModToFile) do
 		fn,env = sandbox(fn)
         pcall(fn)
         for _, spell in pairs(env.actions or {}) do
-			if v.id == nil or v.type == nil then
+			if spell.id == nil or spell.type == nil then
 				goto continue
 			end
             if SpellTable[spell.id] and SpellTable[spell.id].conjurer_unsafe_from_id == "?" then --如果存在数据，且为?，那么标记为模组id
@@ -75,7 +74,6 @@ for modid,v in pairs(AppendsModToFile) do
             end
 			::continue::
 		end
-		actions = nil
 	end
 end
 

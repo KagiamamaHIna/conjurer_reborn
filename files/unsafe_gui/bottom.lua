@@ -6,6 +6,7 @@ dofile_once("mods/conjurer_reborn/files/powers/change_herd.lua")
 local WorldGlobalGetNumber = Compose(tonumber, WorldGlobalGet)
 
 local BottomBoxX
+local BottomWidth
 local BottomBoxY = -100
 
 local SpriteBG = "data/ui_gfx/decorations/9piece0.png"
@@ -1128,10 +1129,16 @@ function BottomBtnDraw(UI)
 
 	local Enable = WorldGlobalGetBool(UI, "BottomBoxEnable", true)
     UI.NextZDeep(0)
-	if not Enable then
-		UI.NextOption(GUI_OPTION.DrawSemiTransparent)
+    if not Enable then
+        UI.NextOption(GUI_OPTION.DrawSemiTransparent)
+    end
+	local BoxSwitchX = BottomBoxX - 12
+
+	if ModSettingGet("conjurer_reborn.bottom_hidden_pos") == "right" and BottomWidth ~= nil then
+		BoxSwitchX = BottomBoxX + BottomWidth + 1
 	end
-    if UI.ImageButton("BottomBoxSwitch", BottomBoxX - 12, UI.ScreenHeight - 11.5, "mods/conjurer_reborn/files/gfx/BottomSwitch.png") then
+
+    if UI.ImageButton("BottomBoxSwitch", BoxSwitchX, UI.ScreenHeight - 11.5, "mods/conjurer_reborn/files/gfx/BottomSwitch.png") then
         WorldGlobalSetBool(UI, "BottomBoxEnable", not Enable)
         ClickSound()
     end
@@ -1184,7 +1191,8 @@ function BottomBtnDraw(UI)
 	end
 	UI.NextZDeep(-99)
 	GuiEndAutoBoxNinePiece(UI.gui, 1, 0, 0, false, 0, SpriteBG, SpriteBG)
-	local info = UI.WidgetInfoTable()
+    local info = UI.WidgetInfoTable()
+	BottomWidth = info.width
     InputBlockEasy(UI, "BottomBtns阻挡框", info)
 
 	if Enable and BottomBoxX == nil then
@@ -1197,6 +1205,9 @@ function BottomBtnDraw(UI)
     elseif mode == "bottom_left" then
 		BottomBoxX = 14
 	end
+    if ModSettingGet("conjurer_reborn.bottom_hidden_pos") == "right" then
+        BottomBoxX = BottomBoxX - 1
+    end
 	
     BottomBoxY = info.y
 	UI.LayoutEnd()

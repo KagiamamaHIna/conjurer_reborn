@@ -359,6 +359,9 @@ conjurer_reborn_rebirth_blinded,Blinded effect after rebirth,,,,,,,,重生后的
 conjurer_reborn_game_print_gui_error,In-game print GUI error,,,,,,,,游戏内打印GUI错误,,,,,,,
 conjurer_reborn_vertical_page_column_max,Favorite Bar Single Column Size,,,,,,,,收藏栏单列大小,,,,,,,
 conjurer_reborn_vertical_page_column_max_desc,How many items can be displayed in one column?,,,,,,,,一列可以显示多少个？,,,,,,,
+conjurer_reborn_bottom_hidden_btn_pos,Bottom hidden button position,,,,,,,,底部隐藏按钮位置,,,,,,,
+conjurer_reborn_bottom_hidden_btn_pos_left,Left,,,,,,,,左,,,,,,,
+conjurer_reborn_bottom_hidden_btn_pos_right,Right,,,,,,,,右,,,,,,,
 ]]
 
 dofile("data/scripts/lib/mod_settings.lua")
@@ -506,6 +509,16 @@ mod_settings =
                     { "bottom_right",  "conjurer_reborn_setting_bottom_bottom_right" },
                     { "bottom_left",   "conjurer_reborn_setting_bottom_bottom_left" },
 					{ "no_display", "conjurer_reborn_setting_bottom_no_display" },
+				}),
+				scope = MOD_SETTING_SCOPE_RUNTIME,
+            }),
+			Setting({
+				id = "bottom_hidden_pos",
+				ui_name = "conjurer_reborn_bottom_hidden_btn_pos",
+				value_default = "left",
+				values = ValueList({
+					{ "left", "conjurer_reborn_bottom_hidden_btn_pos_left" },
+                    { "right",  "conjurer_reborn_bottom_hidden_btn_pos_right" },
 				}),
 				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),

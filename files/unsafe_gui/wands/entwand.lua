@@ -417,7 +417,7 @@ local function EntPicker(UI)
 		UI.BetterTooltipsNoCenter(function ()
             UI.Text(0, 0, v.name)
 			UI.VerticalSpacing(2)
-			if v.desc then
+			if v.desc and v.desc ~= "" then
 				UI.Text(0, 0, v.desc)
 			end
         end, UI.GetZDeep() - 1000, 10, 3)

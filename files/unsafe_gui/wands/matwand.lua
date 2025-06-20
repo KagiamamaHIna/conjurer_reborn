@@ -616,7 +616,7 @@ local function MatPicker(UI)
     local SwitchIndex = UI.UserData["MatWandPageSwitchIndex"]
 	UI.BeginHorizontal(X + 8, Y - 11, true, 4)
 	for k,v in pairs(SwtichType)do
-		local thiskey = "MatWandPageTap" .. v.id
+		local thiskey = "MatWandPageTab" .. v.id
 		GuiBeginAutoBox(UI.gui)--框住用的自动盒子
 		local ThisIcon = v.icon_off
         local ThisBG = MatWandSpriteBG
@@ -638,8 +638,7 @@ local function MatPicker(UI)
 
 		UI.NextZDeep(0)
         GuiEndAutoBoxNinePiece(UI.gui, 0, 0, 0, false, 0, ThisBG)
-        local TapInfo = UI.WidgetInfoTable()
-		InputBlockEasy(UI, "MatWandPageTap阻止框" .. k, TapInfo)
+		InputBlockEasy(UI, "MatWandPageTab阻止框" .. k, UI.WidgetInfoTable())
 	end
     UI.LayoutEnd()
 

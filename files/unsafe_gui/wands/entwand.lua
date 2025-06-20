@@ -398,7 +398,7 @@ local function EntPicker(UI)
     local SwitchIndex = UI.UserData["EntWandPageSwitchIndex"]
 	UI.BeginHorizontal(X + 4, Y - 11, true, 4)
     for k, v in pairs(ALL_ENTITIES) do
-		local thiskey = "EntWandPageTap" .. v.name
+		local thiskey = "EntWandPageTab" .. v.name
 		GuiBeginAutoBox(UI.gui)--框住用的自动盒子
 		local ThisIcon = v.icon_off
         local ThisBG = EntWandSpriteBG
@@ -424,8 +424,7 @@ local function EntPicker(UI)
 
 		UI.NextZDeep(0)
         GuiEndAutoBoxNinePiece(UI.gui, 0, 0, 0, false, 0, ThisBG)
-        local TapInfo = UI.WidgetInfoTable()
-		InputBlockEasy(UI, "EntWandPageTap阻止框" .. k, TapInfo)
+		InputBlockEasy(UI, "EntWandPageTab阻止框" .. k, UI.WidgetInfoTable())
 	end
     UI.LayoutEnd()
 

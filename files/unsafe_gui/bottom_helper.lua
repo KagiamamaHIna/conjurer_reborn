@@ -443,3 +443,32 @@ function GetLastDeathPoint()
 		return death_x, death_y
 	end
 end
+
+---维护光照实体
+---@param UI Gui
+function FullbrightUpdate(UI)
+	local enable = GetFullbright(UI) or GetBinocularsActive(UI)
+	local id = EntityGetWithName("conjurer_reborn_binoculars_light")
+	if enable and (id == nil or id == 0) then
+		EntityLoad("mods/conjurer_reborn/files/powers/binoculars_light.xml", GameGetCameraPos())
+    elseif not enable and id and id ~= 0 then
+		EntityKill(id)
+	end
+end
+
+---@param UI Gui
+---@return boolean
+function GetFullbright(UI)
+	return WorldGlobalGetBool(UI, "Fullbright", false)
+end
+
+---@param UI Gui
+---@param enable boolean
+function SetFullbright(UI, enable)
+	WorldGlobalSetBool(UI, "Fullbright", enable)
+end
+
+---@param UI Gui
+function ToggleFullbright(UI)
+	SetFullbright(UI, not GetFullbright(UI))
+end

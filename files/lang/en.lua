@@ -556,6 +556,8 @@ conjurer_reborn_power_up_world = "Next West World"
 conjurer_reborn_power_overworld = "Overworld"
 conjurer_reborn_power_east = "$0 East World"
 conjurer_reborn_power_west = "$0 West World"
+conjurer_reborn_open_fullbright = "Right-click to open All-seeing eye"
+conjurer_reborn_close_fullbright = "Right-click to close All-seeing eye"
 
 --tunewand
 conjurer_reborn_tunewand_status_effect = "Status Effect"

@@ -1025,6 +1025,9 @@ local main_menu_items = {
 		get_active = function(UI)
 			return GetBinocularsActive(UI)
         end,
+		tip_func = function(UI)
+            return GetFullbright(UI) and "$conjurer_reborn_close_fullbright" or "$conjurer_reborn_open_fullbright"
+		end,
 		update = function (UI)
             local enable = GetBinocularsActive(UI)
 			--维护灵魂出窍
@@ -1043,14 +1046,9 @@ local main_menu_items = {
 					}
 				end
 			end
-
-			--维护光照实体
-			local id = EntityGetWithName("conjurer_reborn_binoculars_light")
-			if enable and (id == nil or id == 0) then
-				EntityLoad("mods/conjurer_reborn/files/powers/binoculars_light.xml", GameGetCameraPos())
-            elseif not enable and id and id ~= 0 then
-				EntityKill(id)
-			end
+        end,
+		right_action = function (UI)
+			ToggleFullbright(UI)
 		end
 	},
 	{

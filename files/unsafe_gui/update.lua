@@ -500,4 +500,8 @@ UI.TickEventFn["WaypointInMap"] = function ()
 	end
 end
 
+UI.MiscEventFn["FullbrightUpdate"] = function ()
+	FullbrightUpdate(UI)
+end
+
 return {UI.DispatchMessage, UI.Destroy}

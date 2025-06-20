@@ -419,6 +419,8 @@ conjurer_reborn_power_up_world = "下一个西世界"
 conjurer_reborn_power_overworld = "主世界"
 conjurer_reborn_power_east = "$0 东世界"
 conjurer_reborn_power_west = "$0 西世界"
+conjurer_reborn_open_fullbright = "按 鼠标右键 打开全视之眼"
+conjurer_reborn_close_fullbright = "按 鼠标右键 关闭全视之眼"
 
 --调谐法杖相关
 conjurer_reborn_tunewand_status_effect = "状态效果"

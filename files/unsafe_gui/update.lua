@@ -389,13 +389,12 @@ UI.MiscEventFn["POLYMORPH"] = function()
 	if not ModSettingGet("conjurer_reborn.disable_inf_chaos_poly") then
 		SetWorldValue("player_polymorph_random_count", 0)
 	end
-    local player_id = EntityGetWithTag("polymorphed_player")[1]
-    if player_id == nil then
+    local player = GetPolyPlayerObj()
+    if player == nil then
         PolymorphMessage = false
         return
     end
     if not PolymorphMessage then
-        local player = EntityObj(player_id)
         player.NewComp.LuaComponent {
 			script_damage_received="mods/conjurer_reborn/files/scripts/poly_death.lua"
         }
@@ -409,7 +408,6 @@ UI.MiscEventFn["POLYMORPH"] = function()
     if not InputIsKeyDown(Key_q) then
         return
     end
-    local player = EntityObj(player_id)
 	for _,v in ipairs(player:GetAllChildObj() or {})do
         for _, c in ipairs(v.comp_all.GameEffectComponent or {}) do
 			local effect = c.attr.effect
@@ -429,18 +427,18 @@ UI.TickEventFn["PolyDeath"] = function()
         return
     end
 	
-	if ModSettingGet("conjurer_reborn.rebirth_blinded") and not GetBinocularsActive(UI) then
-		player:NewChild().NewComp.GameEffectComponent {
-			effect="BLINDNESS",
-			frames=120,
-		}
-	end
+    if ModSettingGet("conjurer_reborn.rebirth_blinded") and not GetBinocularsActive(UI) then
+        player:NewChild().NewComp.GameEffectComponent {
+            effect = "BLINDNESS",
+            frames = 120,
+        }
+    end
 
 	player:NewChild().NewComp.GameEffectComponent {
 		effect="PROTECTION_POLYMORPH",
 		frames=60,
-	}
-
+    }
+	
     local x, y = GetSpawnPosition()
     player.attr.x = x
     player.attr.y = y
@@ -448,7 +446,7 @@ UI.TickEventFn["PolyDeath"] = function()
 	GlobalsSetValue("conjurer_reborn_poly_death", "0")
 end
 
-local MagrinSize = 10
+local MarginSize = 10
 local ImageScale = 0.75
 UI.TickEventFn["WaypointInMap"] = function ()
 	local x, y = UI.GetScreenPosition(GameGetCameraPos())
@@ -465,18 +463,18 @@ UI.TickEventFn["WaypointInMap"] = function ()
 			local hIW = IW / 2
 			local hIH = IH / 2
 			vx = vx - hIW
-			if vx < MagrinSize - hIW then
-				vx = MagrinSize - hIW
-			elseif vx > UI.ScreenWidth - MagrinSize - hIW then
-				vx = UI.ScreenWidth - MagrinSize - hIW
+			if vx < MarginSize - hIW then
+				vx = MarginSize - hIW
+			elseif vx > UI.ScreenWidth - MarginSize - hIW then
+				vx = UI.ScreenWidth - MarginSize - hIW
 			end
 			
 			vy = vy - hIH
 			local srcVY = vy
-			if vy < MagrinSize - hIH then
-				vy = MagrinSize - hIH
-			elseif vy > UI.ScreenHeight - MagrinSize - hIH then
-				vy = UI.ScreenHeight - MagrinSize - hIH
+			if vy < MarginSize - hIH then
+				vy = MarginSize - hIH
+			elseif vy > UI.ScreenHeight - MarginSize - hIH then
+				vy = UI.ScreenHeight - MarginSize - hIH
 			end
 			UI.NextZDeep(-10000)
 			UI.Image("OnScreen" .. v.name, vx, vy, v.image, 0.75, ImageScale)
@@ -485,7 +483,7 @@ UI.TickEventFn["WaypointInMap"] = function ()
 				local lenStr = string.format("%0.f", len)
 				local TextW, TextH = UI.TextDimensions(lenStr, ImageScale, 2, "data/fonts/font_pixel.xml")
 				local LenY = Info.y + IH
-                if srcVY > UI.ScreenHeight - MagrinSize - hIH - TextH then
+                if srcVY > UI.ScreenHeight - MarginSize - hIH - TextH then
                     LenY = Info.y - IH / 2
                 end
 				local TextXOffset = 0

@@ -5,8 +5,8 @@ dofile_once("mods/conjurer_reborn/files/lib/EntityClass.lua")
 -- Without this the bullets would just go through, with only melee working.
 function shot(projectile)
     projectile = EntityObj(projectile)
-    local world = EntityObj(GameGetWorldStateEntity())
-    local happiness = world.comp.WorldStateComponent[1].attr.global_genome_relations_modifier
+    local world = GetWorldStateComp()
+    local happiness = world.attr.global_genome_relations_modifier
 
     if projectile.comp.ProjectileComponent == nil then
         return

@@ -6,7 +6,13 @@ local Nxml = dofile_once("mods/conjurer_reborn/files/lib/nxml.lua")
 local speChar = string.byte("/")
 
 local SteamAPIInit = GetSteamAPIInit()
-local mod_config_text = ReadFileAll(SavePath .. "save00/mod_config.xml")
+local ModConfigPath
+if DebugGetIsDevBuild() then
+    ModConfigPath = "save00/mod_config.xml"
+else
+    ModConfigPath = SavePath .. "save00/mod_config.xml"
+end
+local mod_config_text = ReadFileAll(ModConfigPath)
 local mod_config = Nxml.parse(mod_config_text)
 
 local ModIdToNameTable = {}
@@ -33,7 +39,7 @@ for _, v in pairs(mod_config.children) do --解析来获取一个id到模组实�
     local path = ModIdToPathTable[v.attr.name] .. "mod.xml"
 	if Cpp.PathExists(path) then--如果存在mod.xml的话
         local ModXml = Nxml.parse(ReadFileAll(path))
-		ModIdToNameTable[v.attr.name] = ModXml.attr.name
+        ModIdToNameTable[v.attr.name] = ModXml.attr.name
 	end
     ::continue::
 end

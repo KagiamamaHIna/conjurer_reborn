@@ -1,7 +1,7 @@
 ModDir = "mods/conjurer_unsafe/"
 ModID = "conjurer_unsafe"
-ModVersion = "0.0.1"
-ModLink = "none"
+-- ModVersion = "0.0.1"
+-- ModLink = "none"
 Int64Max = 2^63-1
 Int32Max = 2^31-1
 

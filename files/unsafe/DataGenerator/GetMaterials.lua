@@ -79,12 +79,14 @@ local function MaterialAdd(v, modid)
             v.attr._inherit_reactions = "0"
         end
         local DeduplicationTable = {}
+        local NewChildren = {}
         for _, elem in ipairs(v.children) do
             if DeduplicationTable[elem.name] == nil then
                 DeduplicationTable[elem.name] = elem
+                NewChildren[#NewChildren+1] = elem
             end
         end
-		v.children = DeduplicationTable
+		v.children = NewChildren
 	end
 end
 

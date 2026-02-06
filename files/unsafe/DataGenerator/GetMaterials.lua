@@ -78,6 +78,13 @@ local function MaterialAdd(v, modid)
         if v.name == "CellDataChild" and v.attr._inherit_reactions == nil then
             v.attr._inherit_reactions = "0"
         end
+        local DeduplicationTable = {}
+        for _, elem in ipairs(v.children) do
+            if DeduplicationTable[elem.name] == nil then
+                DeduplicationTable[elem.name] = elem
+            end
+        end
+		v.children = DeduplicationTable
 	end
 end
 
@@ -106,14 +113,25 @@ end
 
 local function ChildExpansion(mat)
     local function RecursiveParse(ReadTable, WriteTable)
-		for k,v in pairs(ReadTable.attr or {}) do--继承后子元素会继承值，所以需要递归解析子元素
-			if WriteTable.attr[k] == nil then
-				WriteTable.attr[k] = v
+        for k, v in pairs(ReadTable.attr or {}) do --可能子元素的字段是继承，子元素的子元素是直接覆盖，所以这么写
+            if WriteTable.attr[k] == nil then
+                WriteTable.attr[k] = v
+            end
+        end
+        local ElemChildTable = {}
+        for _, v in ipairs(WriteTable.children) do
+			if ElemChildTable[v.name] == nil then
+	            ElemChildTable[v.name] = v
 			end
-		end
-		if ReadTable.children then
-			RecursiveParse(ReadTable.children, WriteTable)
-		end
+        end
+		local newChilds = {}
+        for _, c in ipairs(ReadTable.children) do
+            if ElemChildTable[c.name] == nil then
+                ElemChildTable[c.name] = c
+                newChilds[#newChilds + 1] = c
+            end
+        end
+		WriteTable:add_children(newChilds)
 	end
 	local function IsChild(m)--判断是否为继承材料
         if m.name == "CellDataChild" then
@@ -126,8 +144,10 @@ local function ChildExpansion(mat)
     end
 	
     local MatChildTable = {}--构造一个子材料已有的数据表
-	for _,v in pairs(mat.children) do
-		MatChildTable[v.name] = v
+    for _, v in pairs(mat.children) do
+		if MatChildTable[v.name] == nil then
+			MatChildTable[v.name] = v
+		end
 	end
 
 	local function SetParentData(ParentMat)

@@ -78,8 +78,8 @@ local function MaterialAdd(v, modid)
         if v.name == "CellDataChild" and v.attr._inherit_reactions == nil then
             v.attr._inherit_reactions = "0"
         end
-        local DeduplicationTable = {}
-        local NewChildren = {}
+        local DeduplicationTable = {}--去重用
+        local NewChildren = {}--去重完成的表
         for _, elem in ipairs(v.children) do
             if DeduplicationTable[elem.name] == nil then
                 DeduplicationTable[elem.name] = elem

@@ -145,9 +145,7 @@ local function ChildExpansion(mat)
 	
     local MatChildTable = {}--构造一个子材料已有的数据表
     for _, v in pairs(mat.children) do
-		if MatChildTable[v.name] == nil then
-			MatChildTable[v.name] = v
-		end
+		MatChildTable[v.name] = v
 	end
 
 	local function SetParentData(ParentMat)

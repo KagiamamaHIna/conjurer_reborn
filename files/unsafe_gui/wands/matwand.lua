@@ -50,12 +50,13 @@ function MatTooltipText(UI, id)
 	end
 
     local name = GetNameOrKey(MatTable[id].attr.ui_name)
-	if name == "" then
-		name = MatTable[id].attr.name
-	end
+    if name == "" then
+        name = MatTable[id].attr.name
+    end
+    name = name
 	UI.Text(0, 0, name)--本地化名称显示
 	UI.NextColor(127, 127, 127, 255)
-    UI.Text(0, 0, id) --id显示
+    UI.Text(0, 0, id .. " - " .. tostring(CellFactory_GetType(MatTable[id].attr.name))) --id显示
 	
 	UI.NextColor(127, 127, 255, 255)
 	local typeText = GameTextGet(MatTypeToLocal[MatTable[id].conjurer_unsafe_type])

@@ -60,6 +60,10 @@ local function OneEntitySerialize(entity_id)
         for k, v in pairs(ComponentGetMembers(c) or {}) do--序列化组件字段
             if v ~= "" then
                 comp.attr[k] = v
+            elseif #{TryCatch(ComponentGetValue2)(c,k)} == 2 then
+                local pair1, pair2 = ComponentGetValue2(c, k)
+                comp.attr[k .. ".x"] = tostring(pair1)
+                comp.attr[k .. ".y"] = tostring(pair2)
             else--如果是空，则检查是否是object
                 local objFields = ComponentObjectGetMembers(c, k)
                 if objFields then--不是object就下一个

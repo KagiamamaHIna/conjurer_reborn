@@ -13,6 +13,10 @@ local function CreateBrush(UI)
             MatCheck = EntityCreateNew("conjurer_reborn_mat_check")
             EntityAddComponent2(MatCheck, "InheritTransformComponent", {})
 			EntityAddComponent2(MatCheck, "StreamingKeepAliveComponent", {})
+            EntityAddComponent2(MatCheck, "LuaComponent", {
+                execute_every_n_frame = 1,
+                script_source_file = "mods/conjurer_reborn/files/scripts/mat_check_move.lua"
+            })
             local luacomp = {
                 script_material_area_checker_success = "mods/conjurer_reborn/files/wandhelper/checkmat.lua",
                 remove_after_executed = false,

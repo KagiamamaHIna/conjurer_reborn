@@ -109,5 +109,10 @@ CUSTOM_ENTITIES = {
 		desc = "$conjurer_reborn_tp_carrot_desc",
 		path = "mods/conjurer_reborn/files/wands/carrot/entity.xml",
 		image = "mods/conjurer_reborn/files/wands/carrot/ui_gfx.png",
+    },
+	{
+		name = "$conjurer_reborn_custom_entities_hamis_pet",
+		path = "mods/conjurer_reborn/files/custom_entities/hamis/hamis.xml",
+		image = "mods/conjurer_reborn/files/custom_entities/hamis/icon.png",
 	},
 }

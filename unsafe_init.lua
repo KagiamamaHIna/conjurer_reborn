@@ -1,3 +1,4 @@
+dofile_once("mods/conjurer_reborn/files/compatible/do_compatible.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/unsafe.lua")
 if not UnsafeTrueVer then--如果版本检查没通过
 	local count = 0

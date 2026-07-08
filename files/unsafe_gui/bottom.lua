@@ -76,8 +76,10 @@ local function RenderWorldMenu(UI)
 		{
 			name = "$conjurer_reborn_power_dim_peculiar_ountainside",
 			image = "mods/conjurer_reborn/files/gfx/power_icons/worlds/noita.png",
-			action = CreateDimensionalPortal("noita", "world_noita", "data/biome_impl/biome_map.png",
-				"mods/conjurer_reborn/files/overrides/original_pixel_scenes.xml")
+			action = CreateDimensionalPortal("noita", "world_noita", "data/scripts/biome_map.lua",
+				ModSettingGet("conjurer_reborn.force_open") and
+				"data/biome/_pixel_scenes.xml"
+				or "mods/conjurer_reborn/files/overrides/original_pixel_scenes.xml")
 		},
 		{
 			name = "$conjurer_reborn_power_dim_ng_plus",
@@ -247,7 +249,7 @@ local function RenderTeleportMenu(UI)
 				end
 				local death_x,death_y = GetLastDeathPoint()
 				if death_x then
-					player:SetX(death_x):SetY(death_y)
+					SetCameraPlayerXY(death_x, death_y)
 				end
 			end
 		},
@@ -308,13 +310,13 @@ local function RenderTeleportMenu(UI)
     local up_click = UI.ImageButton("Teleport_upworld", 0, 0, "mods/conjurer_reborn/files/gfx/power_icons/up_world.png")
 	UI.GuiTooltip("$conjurer_reborn_power_up_world")
 	if up_click and player then
-		player.attr.x = player.attr.x - WorldSize
+        SetCameraPlayerXY(player.attr.x - WorldSize, player.attr.y)
 	end
 	UI.NextZDeep(0)
 	local next_click = UI.ImageButton("Teleport_nextworld", 0,0,"mods/conjurer_reborn/files/gfx/power_icons/next_world.png")
 	UI.GuiTooltip("$conjurer_reborn_power_next_world")
     if next_click and player then
-        player.attr.x = player.attr.x + WorldSize
+		SetCameraPlayerXY(player.attr.x + WorldSize, player.attr.y)
     end
 	
 	UI.LayoutEnd()

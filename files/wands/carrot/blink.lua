@@ -1,4 +1,5 @@
 dofile_once("mods/conjurer_reborn/files/scripts/utilities.lua")
+dofile_once("data/scripts/debug/keycodes.lua")
 dofile_once("mods/conjurer_reborn/files/lib/EntityClass.lua")
 ---返回玩家当前手持物品
 ---@return integer|nil
@@ -12,14 +13,41 @@ function GetActiveItem()
 		return ComponentGetValue2(inventory2, "mActiveItem")
 	end
 end
-
+---可以同时设置相机和玩家位置的函数
+---@param x number?
+---@param y number?
+function SetCameraPlayerXY(x, y)
+    local player = GetPlayerObj()
+    if player == nil then
+        return
+    end
+    x = x and x or player.attr.x
+    y = y and y or player.attr.y
+    player.attr.x = x
+    player.attr.y = y
+    local pspc = player.comp.PlatformShooterPlayerComponent
+    if pspc then
+        local SrcPos = pspc[1].attr.mSmoothedCameraPosition
+        local Desired = pspc[1].attr.mDesiredCameraPos
+        local xOffset = Desired.x - SrcPos.x
+        local yOffset = Desired.y - SrcPos.y
+        pspc[1].set_attrs = {
+            mSmoothedCameraPosition = { x = x, y = y },
+            mDesiredCameraPos = {x = x + xOffset, y = y + yOffset}
+        }
+    end
+end
 if has_clicked_m1() or is_holding_m2() then
 	local item = GetActiveItem()
 	local player = GetPlayerObj()
 	if player and EntityGetName(item or 0) == "conjurer_reborn_carrot" then
-		local x, y = DEBUG_GetMouseWorld()
-		player.attr.x = x
-		player.attr.y = y
+        local x, y = DEBUG_GetMouseWorld()
+        if InputIsKeyDown(Key_LSHIFT) or InputIsKeyDown(Key_RSHIFT) then
+            SetCameraPlayerXY(x, y)
+        else
+            player.attr.x = x
+            player.attr.y = y
+        end
 		--等价的
 		-- 1. Make the arrival less janky when teleporting in-air.
 		--

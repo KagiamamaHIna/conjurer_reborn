@@ -54,7 +54,8 @@ local MainBtns = {
 			EnabledBrushes(UI, true)
 		end,
 		release = function()
-			EnabledBrushes(UI, false)
+            EnabledBrushes(UI, false)
+			HandleEraseRelease()
 		end,
 		index = 1
 	},
@@ -184,7 +185,8 @@ UI.MainTickFn["Main"] = function()
 			local pos_x, pos_y = EntityGetTransform(wand)
 			ComponentSetValue2(comp, "image_file", ActiveImage)
 			EntityRefreshSprite(wand, comp)
-			EntityLoad("data/entities/particles/poof_blue.xml", pos_x, pos_y)
+            EntityLoad("data/entities/particles/poof_blue.xml", pos_x, pos_y)
+			CloseParticle()
 		end
 	else
 		local wand = EntityGetWithName("conjurer_reborn_wand_entity") --关闭时这个实体也应该关闭
@@ -440,8 +442,7 @@ UI.TickEventFn["PolyDeath"] = function()
     }
 	
     local x, y = GetSpawnPosition()
-    player.attr.x = x
-    player.attr.y = y
+	SetCameraPlayerXY(x, y)
     GamePrintImportant("$conjurer_reborn_player_reborn1", "$conjurer_reborn_player_reborn2")
 	GlobalsSetValue("conjurer_reborn_poly_death", "0")
 end

@@ -162,7 +162,7 @@ local function HandleErase(UI, material)
 end
 
 ---材料擦除释放
-local function HandleEraseRelease()
+function HandleEraseRelease()
 	EraseEntityIdList = {}
 	local entity = EntityGetWithName("conjurer_reborn_eraser_entity")
 	while entity ~= 0 do
@@ -350,19 +350,23 @@ function MaterialToolEntityUpdate(UI)
 
 	local material = GetActiveMaterial(UI)
 	if ACTION_HOLD_DRAW or ACTION_CLICK_DRAW then
-		HandleDraw(UI, material, brush, bx, by, math.deg(brushObj.attr.rotation))
+        HandleDraw(UI, material, brush, bx, by, math.deg(brushObj.attr.rotation))
+        ActiveParticle(material, 16, 2)
 	end
 
 	if ACTION_RELEASE_DRAW then
-		HandleRelease(material, brush, bx, by, math.deg(brushObj.attr.rotation))
+        HandleRelease(material, brush, bx, by, math.deg(brushObj.attr.rotation))
+		CloseParticle()
 	end
 
 	if ACTION_HOLD_ERASE then
-		HandleErase(UI, material)
+        HandleErase(UI, material)
+		ActiveParticle("plasma_fading_pink", 16, 2)
 	end
 
 	if ACTION_RELEASE_ERASE then
-		HandleEraseRelease()
+        HandleEraseRelease()
+		CloseParticle()
 	end
 
 	PrevDraw = holding_m1

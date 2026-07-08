@@ -2,7 +2,32 @@ dofile_once("data/scripts/newgame_plus.lua")
 
 dofile_once("mods/conjurer_reborn/files/scripts/utilities.lua")
 dofile_once("mods/conjurer_reborn/files/scripts/enums.lua")
+dofile_once("mods/conjurer_reborn/files/lib/EntityClass.lua")
 
+---可以同时设置相机和玩家位置的函数
+---@param x number?
+---@param y number?
+function SetCameraPlayerXY(x, y)
+    local player = GetPlayerObj()
+    if player == nil then
+        return
+    end
+    x = x and x or player.attr.x
+    y = y and y or player.attr.y
+    player.attr.x = x
+    player.attr.y = y
+    local pspc = player.comp.PlatformShooterPlayerComponent
+    if pspc then
+        local SrcPos = pspc[1].attr.mSmoothedCameraPosition
+        local Desired = pspc[1].attr.mDesiredCameraPos
+        local xOffset = Desired.x - SrcPos.x
+        local yOffset = Desired.y - SrcPos.y
+        pspc[1].set_attrs = {
+            mSmoothedCameraPosition = { x = x, y = y },
+            mDesiredCameraPos = {x = x + xOffset, y = y + yOffset}
+        }
+    end
+end
 
 -- Teleport player to spawn locations only when changing between Noita's
 -- and our Conjurer's own worlds, not just different biomes.
@@ -12,7 +37,7 @@ function teleport_if_necessary(destination_world)
   if current_world ~= destination_world then
     local x, y = get_spawn_position(destination_world)
     print("TELEPORTING PLAYER TO " .. tostring(x) .. ", " .. tostring(y))
-    teleport_player(x, y)
+    SetCameraPlayerXY(x, y)
   end
 end
 

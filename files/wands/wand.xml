@@ -21,7 +21,6 @@
 		image_file="mods/conjurer_reborn/files/wands/matwand/matwand.png"
 		>
 	</SpriteComponent>
-	
 	<LuaComponent 
 		script_source_file="mods/conjurer_reborn/files/wands/wand_move.lua"
 		execute_every_n_frame="1"

@@ -75,7 +75,9 @@ conjurer_reborn_tp_carrot_desc =
 [[有魔法的陈年胡萝卜
 使用它可瞬间移动持有者，还有不要吃掉了
 ---
-左键单击传送一次，右键按下持续传送]]
+左键单击传送一次，右键按下持续传送
+按住shift使用会强制同步摄像机，这会让传送变得极快]]
+conjurer_reborn_custom_entities_hamis_pet = "哈米斯宠物"
 
 --conjurer的材料
 conjurer_reborn_new_material_construction_steel = "建筑钢"
@@ -463,7 +465,7 @@ conjurer_reborn_picker_more = "按住ctrl查阅更多信息"
 conjurer_reborn_exit_cessation = "[Q]退出虚空状态"
 conjurer_reborn_exit_poly = "[Q]退出变形状态"
 conjurer_reborn_player_reborn1 = "你死了"
-conjurer_reborn_player_reborn2 = "恶人不得安宁"
+conjurer_reborn_player_reborn2 = "恶人不得安宁\n(在传送秘法里可以回到上一次死亡点)"
 conjurer_reborn_pickup_danger_tip = "警告：本模组无法移除此物品"
 conjurer_reborn_reset_IKnowWhatImDoing = "此操作不可撤销，再点击一次确认"
 conjurer_reborn_force_open_message = "检测到Conjurer Reborn被强制启动，地图修改已关闭"

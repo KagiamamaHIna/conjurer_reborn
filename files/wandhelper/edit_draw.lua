@@ -201,12 +201,24 @@ function EditWandUpdate(UI)
 	local m2_action_released = not IsHoldingMouse2() and ENTITY_TO_ROTATE
 
 	-- Click events
-	if only_m1_clicked then m1_click_event(hovered_entity) end
-	if only_m2_clicked then m2_click_event(hovered_entity) end
+    if only_m1_clicked then
+        m1_click_event(hovered_entity)
+		ActiveParticle("spark_purple", 8, 3)
+    end
+    if only_m2_clicked then
+        m2_click_event(hovered_entity)
+		ActiveParticle("spark_white", 8, 3)
+    end
 
 	-- Release event
-	if m1_action_released then m1_release_event(ENTITY_TO_MOVE) end
-	if m2_action_released then m2_release_event(ENTITY_TO_ROTATE) end
+    if m1_action_released then
+        m1_release_event(ENTITY_TO_MOVE)
+		CloseParticle()
+    end
+    if m2_action_released then
+        m2_release_event(ENTITY_TO_ROTATE)
+		CloseParticle()
+    end
 
 	-- Actions
 	if ENTITY_TO_MOVE then m1_action(ENTITY_TO_MOVE, x, y) end

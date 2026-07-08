@@ -2,6 +2,31 @@ dofile_once("mods/conjurer_reborn/files/scripts/utilities.lua")
 dofile_once("mods/conjurer_reborn/files/scripts/enums.lua")
 dofile_once("mods/conjurer_reborn/files/lib/EntityClass.lua")
 
+---可以同时设置相机和玩家位置的函数
+---@param x number?
+---@param y number?
+function SetCameraPlayerXY(x, y)
+    local player = GetPlayerObj()
+    if player == nil then
+        return
+    end
+    x = x and x or player.attr.x
+    y = y and y or player.attr.y
+    player.attr.x = x
+    player.attr.y = y
+    local pspc = player.comp.PlatformShooterPlayerComponent
+    if pspc then
+        local SrcPos = pspc[1].attr.mSmoothedCameraPosition
+        local Desired = pspc[1].attr.mDesiredCameraPos
+        local xOffset = Desired.x - SrcPos.x
+        local yOffset = Desired.y - SrcPos.y
+        pspc[1].set_attrs = {
+            mSmoothedCameraPosition = { x = x, y = y },
+            mDesiredCameraPos = {x = x + xOffset, y = y + yOffset}
+        }
+    end
+end
+
 function damage_received(damage, message, entity_thats_responsible, is_fatal)
     if not is_fatal then
         return
@@ -30,7 +55,7 @@ function damage_received(damage, message, entity_thats_responsible, is_fatal)
 
     -- Teleport to spawn
     local x, y = get_spawn_position()
-    teleport_player(x, y)
+    SetCameraPlayerXY(x, y)
     GlobalsSetValue("conjurer_reborn_next_refresh_hp", "1")
     -- Refresh health
     --[[

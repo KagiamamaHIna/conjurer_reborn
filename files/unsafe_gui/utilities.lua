@@ -17,6 +17,89 @@ function OrbSound()
 	end
 end
 
+---@param matid string
+---@param x number
+---@param y number
+function ActiveParticle(matid,x,y)
+    local wandid = EntityGetWithName("conjurer_reborn_wand_entity")
+    if wandid == 0 then
+        return
+    end
+    local wand = EntityObj(wandid)
+    local particles = wand.comp_all.ParticleEmitterComponent
+	local particle
+    if particles == nil then
+        _, particle = wand.NewComp.ParticleEmitterComponent {
+            emitted_material_name = "plasma_fading_pink",
+            offset = { x = x, y = y },
+            x_pos_offset_min = -4,
+            x_pos_offset_max = 4,
+            y_pos_offset_min = -4,
+            y_pos_offset_max = 4,
+            x_vel_min = -8,
+            x_vel_max = 8,
+            y_vel_min = -8,
+            y_vel_max = 8,
+            count_min = 2,
+            count_max = 4,
+            lifetime_min = 0.1,
+            lifetime_max = 0.6,
+            create_real_particles = false,
+            emit_cosmetic_particles = true,
+            emission_interval_min_frames = 3,
+            emission_interval_max_frames = 5,
+			draw_as_long = true,
+            is_emitting = true,
+			render_ultrabright = true
+        }
+    else
+		particle = particles[1]
+    end
+	particle.enable = true
+    particle.set_attrs = {
+        offset = { x = x, y = y },
+		emitted_material_name = matid
+	}
+end
+
+function CloseParticle()
+	local wandid = EntityGetWithName("conjurer_reborn_wand_entity")
+    if wandid == 0 then
+        return
+    end
+    local wand = EntityObj(wandid)
+    local particles = wand.comp_all.ParticleEmitterComponent
+	if particles == nil then
+		return
+	end
+	particles[1].enable = false
+end
+
+---可以同时设置相机和玩家位置的函数
+---@param x number?
+---@param y number?
+function SetCameraPlayerXY(x, y)
+    local player = GetPlayerObj()
+    if player == nil then
+        return
+    end
+    x = x and x or player.attr.x
+    y = y and y or player.attr.y
+    player.attr.x = x
+    player.attr.y = y
+    local pspc = player.comp.PlatformShooterPlayerComponent
+    if pspc then
+        local SrcPos = pspc[1].attr.mSmoothedCameraPosition
+        local Desired = pspc[1].attr.mDesiredCameraPos
+        local xOffset = Desired.x - SrcPos.x
+        local yOffset = Desired.y - SrcPos.y
+        pspc[1].set_attrs = {
+            mSmoothedCameraPosition = { x = x, y = y },
+            mDesiredCameraPos = {x = x + xOffset, y = y + yOffset}
+        }
+    end
+end
+
 ---@param key string
 ---@return string
 function GetNameOrKey(key)

@@ -212,7 +212,9 @@ conjurer_reborn_tp_carrot_desc =
 [[Enchanted old carrot.
 Point and squeeze to instantly relocate the wielder. Do not eat.
 ---
-Left-click to blink, right-click to hold.]]
+Left-click to blink, right-click to hold.
+Hold Shift to force-sync the camera, enabling lightning-fast relocation.]]
+conjurer_reborn_custom_entities_hamis_pet = "Hämis pet"
 
 --conjurer's mat
 conjurer_reborn_new_material_construction_steel = "Construction Steel"
@@ -600,7 +602,7 @@ conjurer_reborn_picker_more = "Hold ctrl for more information"
 conjurer_reborn_exit_cessation = "[Q] Exit Cessation State"
 conjurer_reborn_exit_poly = "[Q] Exit Polymorph State"
 conjurer_reborn_player_reborn1 = "You died"
-conjurer_reborn_player_reborn2 = "No rest for the wicked"
+conjurer_reborn_player_reborn2 = "No rest for the wicked\nIn Arcane Mind, you can return to the point where you last died"
 conjurer_reborn_pickup_danger_tip = "Danger: Not removable after picking up"
 conjurer_reborn_reset_IKnowWhatImDoing = "This action cannot be undone, click again to confirm"
 conjurer_reborn_force_open_message = "Conjurer Reborn has been forced to open, map modification has been closed"

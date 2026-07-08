@@ -352,7 +352,7 @@ function get_spawn_position(world)
   end
 
   -- For now all other worlds are just Conjurer's own.
-  return CONJURER_SPAWN_X, CONJURER_SPAWN_Y
+  return tonumber(CONJURER_SPAWN_X), tonumber(CONJURER_SPAWN_Y)
 end
 
 

@@ -334,16 +334,24 @@ function EntEntityUpdate(UI)
 
 	local spawn_function = GetEntWandHoldSpawn(UI) and IsHoldingMouse1 or HasClickedMouse1
 	if spawn_function() then
-		SpawnEntity(UI)
+        SpawnEntity(UI)
+        ActiveParticle("spark_blue", 14, 3)
+		UI.OnceCallOnExecute(function ()
+			CloseParticle()
+		end)
 	end
 
 
 	local delete_function = GetEntWandHoldDelete(UI) and IsHoldingMouse2 or HasClickedMouse2
 	if delete_function() then
-		if GetEntWandDeleteAll(UI) then
-			DeleteAll(UI, x, y)
-		else
-			DeleteEntity(UI)
-		end
+        if GetEntWandDeleteAll(UI) then
+            DeleteAll(UI, x, y)
+        else
+            DeleteEntity(UI)
+        end
+		ActiveParticle("spark_red", 14, 3)
+		UI.OnceCallOnExecute(function ()
+			CloseParticle()
+		end)
 	end
 end

@@ -807,3 +807,30 @@ function SetStorageComp(entity, VariableName, i_value, ValueType)
 		end
 	end
 end
+
+
+local GamemodeFlag = nil
+---返回当前conjurer reborn是否为模式模组
+---@return boolean
+function IsGamemode()
+    if GamemodeFlag ~= nil then
+        return GamemodeFlag
+    end
+    local modXml = Nxml.parse(ReadFileAll(ModIdToPath("conjurer_reborn") .. "mod.xml"))
+    GamemodeFlag = modXml.attr.is_game_mode ~= "0"
+    return GamemodeFlag
+end
+
+function ChangeGamemode()
+    IsGamemode()
+    local path = ModIdToPath("conjurer_reborn") .. "mod.xml"
+    local oldtext = string.format('is_game_mode="%d"', GamemodeFlag and "1" or "0")
+    GamemodeFlag = not GamemodeFlag
+    local text = string.format('is_game_mode="%d"', GamemodeFlag and "1" or "0")
+    local xml = ReadFileAll(path)
+    xml = xml:gsub(oldtext, text, 1)
+    
+    local file = io.open(path, "w+")
+    file:write(xml)
+    file:close()
+end

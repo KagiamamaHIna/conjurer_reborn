@@ -1,4 +1,5 @@
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/utilities.lua")
+local Nxml = dofile_once("mods/conjurer_reborn/files/lib/nxml.lua")
 
 ---拼接成技术性材料id
 ---@param id string

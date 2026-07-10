@@ -318,7 +318,7 @@ conjurer_reborn_power_planetary_controls_skytop,Skytop,,,,,,,,云层,,,,,,,,,,,,
 conjurer_reborn_power_planetary_controls_skytop_desc,Adjust the topmost sky gradient,,,,,,,,调整天空顶部云层的渐变,,,,,,,,,,,,,,,
 conjurer_reborn_power_planetary_controls_sunset,Sunset,,,,,,,,日落,,,,,,,,,,,,,,,
 conjurer_reborn_power_planetary_controls_sunset_desc,Adjust the bottom sky gradient,,,,,,,,调整天空底部云层的渐变,,,,,,,,,,,,,,,
-conjurer_reborn_setting_notice,",\n!   NOTICE!\n!   Forcing this mod to open via Mod Manager will disable map modifications, \n!   -making it easier to debug in other mods.\n!\n!   If you experience problems using [Restart with enabled mods active]\n!   it is advised to rather just [Save & Quit] and [Continue].\n!\n!   Quick restart is known to mess up at least the following:\n!     1. Selected zoom level\n!     2. The tower background\n!     3. Custom Staff GUI\n`",,,,,,,,"/\n!   注意事项！\n!   使用Mod Manager强制启动本模组会关闭地图修改，\n!   方便你在其他模组中调试\n!\n!   如果你在使用[以已启用模组生效的状态重新启动](快捷重启)时遇到问题\n!   那么建议使用[保存并退出]然后[继续]的方法避免问题\n!\n!   须知，快捷重启可能会导致以下功能出现问题：\n!     1. 选定的缩放级别\n!     2. 背景贴图\n!     3. 自定义的GUI\n\",,,,,,,,,,,,,,,
+conjurer_reborn_setting_notice,",\n!   NOTICE!\n!\n!   If you experience problems using [Restart with enabled mods active]\n!   it is advised to rather just [Save & Quit] and [Continue].\n!\n!   Quick restart is known to mess up at least the following:\n!     1. Selected zoom level\n!     2. The tower background\n!     3. Custom Staff GUI\n`",,,,,,,,"/\n!   注意事项！\n!\n!   如果你在使用[以已启用模组生效的状态重新启动](快捷重启)时遇到问题\n!   那么建议使用[保存并退出]然后[继续]的方法避免问题\n!\n!   须知，快捷重启可能会导致以下功能出现问题：\n!     1. 选定的缩放级别\n!     2. 背景贴图\n!     3. 自定义的GUI\n\",,,,,,,,,,,,,,,
 conjurer_reborn_setting_general,General,,,,,,,,主要,,,,,,,,,,,,,,,
 conjurer_reborn_setting_zoom_level,Zoom level,,,,,,,,缩放级别,,,,,,,,,,,,,,,
 conjurer_reborn_setting_zoom_level_desc,"How much do you want to see? Heavily affects performance.\nWARNING:\nBig resolutions are glitchy, and probably not useful for anything but screenshots.",,,,,,,,"你想要看多大？\n警告：\n太大的分辨率有一些问题，它们可能除了截图之外没有什么用",,,,,,,,,,,,,,,
@@ -362,6 +362,9 @@ conjurer_reborn_vertical_page_column_max_desc,How many items can be displayed in
 conjurer_reborn_bottom_hidden_btn_pos,Bottom hidden button position,,,,,,,,底部隐藏按钮位置,,,,,,,
 conjurer_reborn_bottom_hidden_btn_pos_left,Left,,,,,,,,左,,,,,,,
 conjurer_reborn_bottom_hidden_btn_pos_right,Right,,,,,,,,右,,,,,,,
+conjurer_reborn_unsafe_options,Unsafe Setting,,,,,,,,不安全设置,,,,,,,
+conjurer_reborn_unsafe_options_load_conjurer,Unsafe automatically loads Conjurer in non-gamemode,,,,,,,,Unsafe主动以非游戏模式加载Conjurer,,,,,,,
+conjurer_reborn_unsafe_options_load_conjurer_desc,No need to manually enable Conjurer Reborn\nSimply enabling Unsafe is enough,,,,,,,,无需启用Conjurer Reborn\n只要启用unsafe即可,,,,,,,
 ]]
 
 dofile("data/scripts/lib/mod_settings.lua")
@@ -687,8 +690,22 @@ mod_settings =
 					GuiIdPop(gui)
 				end
 			})
-		},
-	}),
+        },
+    }),
+	Setting({
+		category_id = "unsafe_settings",
+		ui_name = "conjurer_reborn_unsafe_options",
+		settings = {
+			Setting({
+				id = "unsafe_load_conjurer",
+				ui_name = "conjurer_reborn_unsafe_options_load_conjurer",
+				ui_description = "conjurer_reborn_unsafe_options_load_conjurer_desc",
+				value_default = false,
+				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
+            }),
+		}
+    }),
+		
 	Setting({
 		category_id = "control_settings",
 		ui_name = "conjurer_reborn_setting_notice",

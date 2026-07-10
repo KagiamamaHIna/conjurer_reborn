@@ -15,7 +15,7 @@ handle_zoom_setting()
 
 -- World overrides
 function OnModPreInit()
-	if not (ModSettingGet("conjurer_reborn.force_open") and ModIsEnabled("conjurer_unsafe")) then
+	if not (ModSettingGet("conjurer_reborn.unsafe_load_conjurer_flag") and ModIsEnabled("conjurer_unsafe")) then
 		replace_biome_map()
 		append_custom_biomes()
 		replace_pixel_scenes()

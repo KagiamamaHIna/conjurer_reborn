@@ -645,6 +645,26 @@ local MainTuneBtns = {
             ToggleActiveOverlay(PlayerEditer)
         end,
     },
+    -- {
+    --     id = "tune_gamemode",
+    --     name_func = function ()
+    --         if IsGamemode() then
+    --             return "$conjurer_reborn_tunewand_is_gamemode_open"
+    --         else
+    --             return "$conjurer_reborn_tunewand_is_gamemode_close"
+    --         end
+    --     end,
+    --     image_func = function()
+    --         if IsGamemode() then
+    --             return "mods/conjurer_reborn/files/gfx/tunewand_icons/is_gamemode.png"
+    --         else
+    --             return "mods/conjurer_reborn/files/gfx/tunewand_icons/is_gamemode_grey.png"
+    --         end
+    --     end,
+    --     action = function()
+    --         ChangeGamemode()
+    --     end,
+    -- },
 }
 
 ---绘制左边的主按钮
@@ -654,8 +674,17 @@ local function TunewandButtons(UI)
 	GuiBeginAutoBox(UI.gui)--框住用的自动盒子
     for _, v in ipairs(MainTuneBtns) do
         UI.NextZDeep(0)
-        local left = UI.ImageButton(v.id, 0, 0, v.image)
-        UI.GuiTooltip(v.name)
+        local img = v.image
+        if v.image_func then
+            img = v.image_func()
+        end
+        local left = UI.ImageButton(v.id, 0, 0, img)
+
+        local name = v.name
+        if v.name_func then
+            name = v.name_func()
+        end
+        UI.GuiTooltip(name)
         if left then
 			ClickSound()
             v.action()

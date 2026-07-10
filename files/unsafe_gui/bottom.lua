@@ -77,7 +77,7 @@ local function RenderWorldMenu(UI)
 			name = "$conjurer_reborn_power_dim_peculiar_ountainside",
 			image = "mods/conjurer_reborn/files/gfx/power_icons/worlds/noita.png",
 			action = CreateDimensionalPortal("noita", "world_noita", "data/scripts/biome_map.lua",
-				ModSettingGet("conjurer_reborn.force_open") and
+				ModSettingGet("conjurer_reborn.unsafe_load_conjurer_flag") and
 				"data/biome/_pixel_scenes.xml"
 				or "mods/conjurer_reborn/files/overrides/original_pixel_scenes.xml")
 		},
@@ -156,7 +156,7 @@ local function RenderWorldMenu(UI)
 		GuiBeginAutoBox(UI.gui)
         UI.NextZDeep(0)
         local imagePath = v.image
-		local ForceOpen = ModSettingGet("conjurer_reborn.force_open")
+		local ForceOpen = ModSettingGet("conjurer_reborn.unsafe_load_conjurer_flag")
 		if ForceOpen then
 			imagePath = imagePath:gsub(".png", "_close.png")
 		end

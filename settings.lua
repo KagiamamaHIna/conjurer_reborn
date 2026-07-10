@@ -372,27 +372,40 @@ dofile("data/scripts/lib/mod_settings.lua")
 local csv = dofile_once("mods/conjurer_unsafe/csv.lua")
 
 local currentLang = csv(LocalText)
-local gameLang = csv(ModTextFileGetContent("data/translations/common.csv"))
 local CurrentMap = {}
-for v, _ in pairs(gameLang.rowHeads) do --构建一个关联表用来查询键值
-	if v ~= "" then
-		local tempKey = gameLang.get("current_language", v)
-		CurrentMap[tempKey] = v
-	end
+local gameLang = csv(ModTextFileGetContent("data/translations/common.csv"))
+function LoadLang()
+    CurrentMap = {}
+	gameLang = csv(ModTextFileGetContent("data/translations/common.csv"))
+    for v, _ in pairs(gameLang.rowHeads) do --构建一个关联表用来查询键值
+        if v ~= "" then
+            local tempKey = gameLang.get("current_language", v)
+            CurrentMap[tempKey] = v
+        end
+    end
 end
+LoadLang()
+
+local inGame = false
+
 local function GetText(key) --获取文本
 	if key == "" then
 		return key
 	end
 	local GameKey
-	local GameTextLangGet = GameTextGet("$current_language")
+    local GameTextLangGet = GameTextGet("$current_language")
+    local flag, entity = pcall(GameGetWorldStateEntity)
+	if entity and entity ~= 0 and not inGame then
+        LoadLang()
+		inGame = true
+	end
 	GameKey = CurrentMap[GameTextLangGet]
 	if GameKey == nil then
 		GameKey = "en"
 	end
 	local result = currentLang.get(key, GameKey) or ""
 	result = string.gsub(result, [[\n]], "\n")
-	if result == nil or result == "" then
+    if result == nil or result == "" then
 		result = currentLang.get(key, "en")
 	end
 	return result

@@ -2,7 +2,7 @@ dofile_once("mods/conjurer_reborn/files/unsafe/unsafe.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 
 function ClickSound()
-	if ModSettingGet("conjurer_reborn.click_sound") then
+	if CurSettingGet("click_sound") then
 		GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", GameGetCameraPos())
 	end
 end
@@ -12,7 +12,7 @@ function ItemSound()
 end
 
 function OrbSound()
-	if ModSettingGet("conjurer_reborn.click_sound") then
+	if CurSettingGet("click_sound") then
 		GamePlaySound("data/audio/Desktop/event_cues.bank", "event_cues/orb/create", GameGetCameraPos())
 	end
 end
@@ -455,7 +455,7 @@ function ConjurerCheckboxNoSave(UI, id, x, y, text, zdeep, default)
 	return UI.UserData[StatusKey], left
 end
 
-local BUTTON_SETTING = ModSettingGet("conjurer_reborn.secondary_button")
+local BUTTON_SETTING = CurSettingGet("secondary_button")
 local BUTTON_CHOICES = {
 	throw = { hold = "mButtonDownThrow", click = "mButtonFrameThrow" },
 	mouse2 = { hold = "mButtonDownRightClick", click = "mButtonFrameRightClick" }

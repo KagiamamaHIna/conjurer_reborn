@@ -2,7 +2,7 @@ dofile_once("mods/conjurer_reborn/files/scripts/enums.lua")
 
 
 function handle_zoom_setting()
-  local zoom = ModSettingGet("conjurer_reborn.zoom_level")
+  local zoom = CurSettingGet("zoom_level")
   if zoom == "noita" then
     -- Nothing needs overwriting
     return
@@ -40,7 +40,7 @@ end
 
 
 function handle_progression_setting()
-  local progression = ModSettingGet("conjurer_reborn.progression")
+  local progression = CurSettingGet("progression")
 
   if not progression then
     print("Conjurer: Disabling progression logging")

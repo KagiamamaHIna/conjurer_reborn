@@ -1,3 +1,13 @@
+if not ModIsEnabled("conjurer_reborn") then
+    function CurSettingGet(key)
+        return ModSettingGetNextValue("conjurer_reborn." .. key)
+    end
+else
+    function CurSettingGet(key)
+        return ModSettingGet("conjurer_reborn." .. key)
+    end
+end
+
 dofile_once("data/scripts/lib/utilities.lua")
 
 dofile_once("mods/conjurer_reborn/files/scripts/enums.lua")
@@ -9,7 +19,7 @@ dofile_once("mods/conjurer_reborn/files/scripts/enums.lua")
 MOD_PATH = "mods/conjurer_reborn/files/"
 ICON_UNKNOWN = "mods/conjurer_reborn/files/gfx/icon_unknown.png"
 
-local BUTTON_SETTING = ModSettingGet("conjurer_reborn.secondary_button")
+local BUTTON_SETTING = CurSettingGet("secondary_button")
 local BUTTON_CHOICES = {
   throw={hold="mButtonDownThrow", click="mButtonFrameThrow"},
   mouse2={hold="mButtonDownRightClick", click="mButtonFrameRightClick"}

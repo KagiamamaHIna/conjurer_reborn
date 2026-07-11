@@ -388,7 +388,7 @@ end
 
 local PolymorphMessage = false
 UI.MiscEventFn["POLYMORPH"] = function()
-	if not ModSettingGet("conjurer_reborn.disable_inf_chaos_poly") then
+	if not CurSettingGet("disable_inf_chaos_poly") then
 		SetWorldValue("player_polymorph_random_count", 0)
 	end
     local player = GetPolyPlayerObj()
@@ -429,7 +429,7 @@ UI.TickEventFn["PolyDeath"] = function()
         return
     end
 	
-    if ModSettingGet("conjurer_reborn.rebirth_blinded") and not GetBinocularsActive(UI) then
+    if CurSettingGet("rebirth_blinded") and not GetBinocularsActive(UI) then
         player:NewChild().NewComp.GameEffectComponent {
             effect = "BLINDNESS",
             frames = 120,

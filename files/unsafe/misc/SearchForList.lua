@@ -13,7 +13,7 @@ local function SearchList(list, keyword, score_min, callback)
         return list
     end
     local SearchItemList
-    if ModSettingGet("conjurer_reborn.split_search_text") then
+    if CurSettingGet("split_search_text") then
 		SearchItemList = split(string.lower(keyword), " ")
     else
         SearchItemList = { string.lower(keyword) }

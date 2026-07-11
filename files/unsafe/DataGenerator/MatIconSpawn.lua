@@ -9,7 +9,7 @@ local datawak = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/Get
 local IconList = Cpp.GetDirectoryPathAll("mods/conjurer_unsafe/cache/MatIcon/")
 local IconTable = {}
 local MatTable = GetMaterialData()
-if ModSettingGet("conjurer_reborn.regen_mat_img_every_time") then
+if CurSettingGet("regen_mat_img_every_time") then
 	Cpp.RemoveAll("mods/conjurer_unsafe/cache/MatWang/")
     Cpp.RemoveAll("mods/conjurer_unsafe/cache/MatIcon/")
     Cpp.CreateDir("mods/conjurer_unsafe/cache/MatWang/")

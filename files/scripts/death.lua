@@ -44,7 +44,7 @@ function damage_received(damage, message, entity_thats_responsible, is_fatal)
     GlobalsSetValue("conjurer_reborn_last_death_x", tostring(death_x))
     GlobalsSetValue("conjurer_reborn_last_death_y", tostring(death_y))
     
-    if ModSettingGet("conjurer_reborn.rebirth_blinded") and GlobalsGetValue("conjurer_unsafePowerBinocularsActive", "0") ~= "1" then
+    if CurSettingGet("rebirth_blinded") and GlobalsGetValue("conjurer_unsafePowerBinocularsActive", "0") ~= "1" then
         -- Momentary blindness
         player:NewChild().NewComp.GameEffectComponent {
             effect = "BLINDNESS",

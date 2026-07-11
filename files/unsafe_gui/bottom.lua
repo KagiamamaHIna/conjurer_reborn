@@ -77,7 +77,7 @@ local function RenderWorldMenu(UI)
 			name = "$conjurer_reborn_power_dim_peculiar_ountainside",
 			image = "mods/conjurer_reborn/files/gfx/power_icons/worlds/noita.png",
 			action = CreateDimensionalPortal("noita", "world_noita", "data/scripts/biome_map.lua",
-				ModSettingGet("conjurer_reborn.unsafe_load_conjurer_flag") and
+				not ModIsEnabled("conjurer_reborn") and
 				"data/biome/_pixel_scenes.xml"
 				or "mods/conjurer_reborn/files/overrides/original_pixel_scenes.xml")
 		},
@@ -156,7 +156,7 @@ local function RenderWorldMenu(UI)
 		GuiBeginAutoBox(UI.gui)
         UI.NextZDeep(0)
         local imagePath = v.image
-		local ForceOpen = ModSettingGet("conjurer_reborn.unsafe_load_conjurer_flag")
+		local ForceOpen = not ModIsEnabled("conjurer_reborn")
 		if ForceOpen then
 			imagePath = imagePath:gsub(".png", "_close.png")
 		end
@@ -1122,7 +1122,7 @@ function BottomBtnDraw(UI)
     if BottomBoxX == nil then
         BottomBoxX = -UI.ScreenWidth
     end
-    local mode = ModSettingGet("conjurer_reborn.bottom_pos")
+    local mode = CurSettingGet("bottom_pos")
     if mode == "no_display" then
         return
     end
@@ -1134,7 +1134,7 @@ function BottomBtnDraw(UI)
     end
 	local BoxSwitchX = BottomBoxX - 12
 
-	if ModSettingGet("conjurer_reborn.bottom_hidden_pos") == "right" and BottomWidth ~= nil then
+	if CurSettingGet("bottom_hidden_pos") == "right" and BottomWidth ~= nil then
 		BoxSwitchX = BottomBoxX + BottomWidth + 1
 	end
 
@@ -1205,7 +1205,7 @@ function BottomBtnDraw(UI)
     elseif mode == "bottom_left" then
 		BottomBoxX = 14
 	end
-    if ModSettingGet("conjurer_reborn.bottom_hidden_pos") == "right" then
+    if CurSettingGet("bottom_hidden_pos") == "right" then
         BottomBoxX = BottomBoxX - 1
     end
 	

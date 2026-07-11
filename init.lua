@@ -1,3 +1,13 @@
+if not ModIsEnabled("conjurer_reborn") then
+    function CurSettingGet(key)
+        return ModSettingGetNextValue("conjurer_reborn." .. key)
+    end
+else
+    function CurSettingGet(key)
+        return ModSettingGet("conjurer_reborn." .. key)
+    end
+end
+
 local SrcCsv = ModTextFileGetContent("data/translations/common.csv") --设置新语言文件
 local AddCsv = dofile_once("mods/conjurer_reborn/files/lang/tocsv.lua")
 ModTextFileSetContent("data/translations/common.csv", SrcCsv .. AddCsv)
@@ -15,7 +25,7 @@ handle_zoom_setting()
 
 -- World overrides
 function OnModPreInit()
-	if not (ModSettingGet("conjurer_reborn.unsafe_load_conjurer_flag") and ModIsEnabled("conjurer_unsafe")) then
+	if not (not ModIsEnabled("conjurer_reborn") and ModIsEnabled("conjurer_unsafe")) then
 		replace_biome_map()
 		append_custom_biomes()
 		replace_pixel_scenes()

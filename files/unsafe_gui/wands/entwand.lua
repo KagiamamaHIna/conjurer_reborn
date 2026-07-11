@@ -316,7 +316,7 @@ local function DrawFav(UI)
         GlobalsSetValue("conjurer_reborn_reset_entwand_fav_refresh", "0")
         favItems = {}
     end
-    local ColumnMax = ModSettingGet("conjurer_reborn.vertical_page_column_max") or 9
+    local ColumnMax = CurSettingGet("vertical_page_column_max") or 9
 	ColumnMax = math.floor(ColumnMax + 0.5)
     VerticalPage(UI, "EntWandFavVerticalPage", favItems, 6, 138, 0, 0, ColumnMax, EntWandSpriteBG, function(value, index)
 		UI.NextZDeep(0)

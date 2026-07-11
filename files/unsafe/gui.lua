@@ -2,6 +2,7 @@ dofile_once("mods/conjurer_reborn/files/unsafe/unsafe.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("data/scripts/debug/keycodes.lua")
 dofile_once("data/scripts/lib/utilities.lua")
+dofile_once("mods/conjurer_reborn/files/lib/EntityClass.lua")
 
 local DollarASCII = string.byte("$")
 ---@param key string

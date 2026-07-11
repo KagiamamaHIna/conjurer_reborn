@@ -1,3 +1,13 @@
+if not ModIsEnabled("conjurer_reborn") then
+    function CurSettingGet(key)
+        return ModSettingGetNextValue("conjurer_reborn." .. key)
+    end
+else
+    function CurSettingGet(key)
+        return ModSettingGet("conjurer_reborn." .. key)
+    end
+end
+
 dofile_once("mods/conjurer_reborn/files/compatible/do_compatible.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/unsafe.lua")
 if not UnsafeTrueVer then--如果版本检查没通过
@@ -164,7 +174,7 @@ local GUIDatas = nil
 local GuiDofileError = nil
 function OnWorldPostUpdate()
     if not initFlag then
-        if ModSettingGet("conjurer_reborn.unsafe_load_conjurer_flag") then
+        if not ModIsEnabled("conjurer_reborn") then
             GamePrint("$conjurer_reborn_force_open_message")
         end
         initFlag = true
@@ -179,7 +189,7 @@ function OnWorldPostUpdate()
         print_error_once("conjurer_reborn:GUI Load Error!")
         --print_error_once(GuiDofileError)
         --print_error_once_last("GuiLoadError")
-        if ModSettingGet("conjurer_reborn.game_print_gui_error") then
+        if CurSettingGet("game_print_gui_error") then
             GamePrintOnce("conjurer_reborn:GUI Load Error!")
             GamePrintOnce("conjurer_reborn:Error:", GuiDofileError)
             GamePrintOnceLast("GuiLoadError")
@@ -196,7 +206,7 @@ function OnWorldPostUpdate()
             print_error("conjurer_reborn:", "GUI Crashes!,\nError:", msg)
             print("conjurer_reborn:Gui Reload")
 
-            if ModSettingGet("conjurer_reborn.game_print_gui_error") then
+            if CurSettingGet("game_print_gui_error") then
                 GamePrint("conjurer_reborn:", "GUI Crashes!")
                 GamePrint("Error:", oneLineMsg)
                 GamePrint("conjurer_reborn:Gui Reload")

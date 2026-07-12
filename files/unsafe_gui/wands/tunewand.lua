@@ -664,6 +664,19 @@ local MainTuneBtns = {
                 return
             end
             UI.UserData["UnlockallConfirm"] = false
+            local LastPerkFlag = GameHasFlagRun("no_progress_flags_perk")
+            if LastPerkFlag then
+                GameRemoveFlagRun("no_progress_flags_perk")
+            end
+            local LastAnimalFlag = GameHasFlagRun("no_progress_flags_animal")
+            if LastAnimalFlag then
+                GameRemoveFlagRun("no_progress_flags_animal")
+            end
+            local LastActionFlag = GameHasFlagRun("no_progress_flags_action")
+            if LastActionFlag then
+                GameRemoveFlagRun("no_progress_flags_action")
+            end
+    
             for id, _ in pairs(GetPerkData()) do
                 local name = "perk_picked_" .. string.lower(id)
                 GameAddFlagRun("new_" .. name)
@@ -689,13 +702,23 @@ local MainTuneBtns = {
                 StatsLogPlayerKill(eid)
                 EntityKill(eid)
             end
-            for _,id in ipairs(IgnoreEnemies or {}) do
+            for _, id in ipairs(IgnoreEnemies or {}) do
                 GameAddFlagRun("new_kill_" .. id)
-                local path = "mods/conjurer_reborn/vfiles/enemies/" ..id ..".xml"
-                VisualFileSet(path ,"<Entity></Entity>")
+                local path = "mods/conjurer_reborn/vfiles/enemies/" .. id .. ".xml"
+                VisualFileSet(path, "<Entity></Entity>")
                 local eid = EntityLoad(path)
                 StatsLogPlayerKill(eid)
                 EntityKill(eid)
+            end
+
+            if LastPerkFlag then
+                GameAddFlagRun("no_progress_flags_perk")
+            end
+            if LastAnimalFlag then
+                GameAddFlagRun("no_progress_flags_animal")
+            end
+            if LastActionFlag then
+                GameAddFlagRun("no_progress_flags_action")
             end
         end,
     },

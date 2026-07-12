@@ -10,7 +10,6 @@ local IgnoreEntTable = {}
 for _, v in pairs(IgnoreEnemies) do
     IgnoreEntTable[v] = true
 end
-IgnoreEnemies = nil
 
 ---@type DataWak
 local datawak = dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetDataWak.lua")

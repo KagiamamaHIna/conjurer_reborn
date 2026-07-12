@@ -594,6 +594,7 @@ conjurer_reborn_tunewand_select_all = "[Select All]"
 conjurer_reborn_tunewand_select_none = "[Select None]"
 conjurer_reborn_tunewand_is_gamemode_open = "Set Conjurer Reborn as a non-gamemode mod\nOnce set, you can enable Conjurer Reborn in the mod list"
 conjurer_reborn_tunewand_is_gamemode_close = "Set Conjurer Reborn as a gamemode mod\nPlease disable Conjurer Reborn in the mod list before setup."
+conjurer_reborn_tunewand_unlockall = "Unlock all progress"
 
 --other
 conjurer_reborn_player_died1 = "Somehow you managed to die for real"

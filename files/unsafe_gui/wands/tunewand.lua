@@ -645,26 +645,60 @@ local MainTuneBtns = {
             ToggleActiveOverlay(PlayerEditer)
         end,
     },
-    -- {
-    --     id = "tune_gamemode",
-    --     name_func = function ()
-    --         if IsGamemode() then
-    --             return "$conjurer_reborn_tunewand_is_gamemode_open"
-    --         else
-    --             return "$conjurer_reborn_tunewand_is_gamemode_close"
-    --         end
-    --     end,
-    --     image_func = function()
-    --         if IsGamemode() then
-    --             return "mods/conjurer_reborn/files/gfx/tunewand_icons/is_gamemode.png"
-    --         else
-    --             return "mods/conjurer_reborn/files/gfx/tunewand_icons/is_gamemode_grey.png"
-    --         end
-    --     end,
-    --     action = function()
-    --         ChangeGamemode()
-    --     end,
-    -- },
+    {
+        id = "tune_unlockall",
+        name = "$conjurer_reborn_tunewand_unlockall",
+        image = "mods/conjurer_reborn/files/gfx/tunewand_icons/unlockall.png",
+        desc_func = function (UI)
+            if not UI.WidgetInfoTable().hovered then --经典的确认实现（
+                UI.UserData["UnlockallConfirm"] = false
+            end
+            if UI.UserData["UnlockallConfirm"] then
+                return "$conjurer_reborn_reset_IKnowWhatImDoing"
+            end
+            return ""
+        end,
+        action = function(UI)
+            if not UI.UserData["UnlockallConfirm"] then
+                UI.UserData["UnlockallConfirm"] = true
+                return
+            end
+            UI.UserData["UnlockallConfirm"] = false
+            for id, _ in pairs(GetPerkData()) do
+                local name = "perk_picked_" .. string.lower(id)
+                GameAddFlagRun("new_" .. name)
+                if not HasFlagPersistent(name) then
+                    AddFlagPersistent(name)
+                end
+            end
+            for id, data in pairs(GetSpellData()) do
+                local name = "action_" .. string.lower(id)
+                GameAddFlagRun("new_" .. name)
+                if not HasFlagPersistent(name) then
+                    AddFlagPersistent(name)
+                end
+                if not HasFlagPersistent(data.spawn_requires_flag) then
+                    AddFlagPersistent(data.spawn_requires_flag)
+                end
+            end
+            for id, _ in pairs(GetEnemyData()) do
+                GameAddFlagRun("new_kill_" .. id)
+                local path = "mods/conjurer_reborn/vfiles/enemies/" ..id ..".xml"
+                VisualFileSet(path ,"<Entity></Entity>")
+                local eid = EntityLoad(path)
+                StatsLogPlayerKill(eid)
+                EntityKill(eid)
+            end
+            for _,id in ipairs(IgnoreEnemies or {}) do
+                GameAddFlagRun("new_kill_" .. id)
+                local path = "mods/conjurer_reborn/vfiles/enemies/" ..id ..".xml"
+                VisualFileSet(path ,"<Entity></Entity>")
+                local eid = EntityLoad(path)
+                StatsLogPlayerKill(eid)
+                EntityKill(eid)
+            end
+        end,
+    },
 }
 
 ---绘制左边的主按钮
@@ -674,20 +708,16 @@ local function TunewandButtons(UI)
 	GuiBeginAutoBox(UI.gui)--框住用的自动盒子
     for _, v in ipairs(MainTuneBtns) do
         UI.NextZDeep(0)
-        local img = v.image
-        if v.image_func then
-            img = v.image_func()
-        end
-        local left = UI.ImageButton(v.id, 0, 0, img)
+        local left = UI.ImageButton(v.id, 0, 0, v.image)
 
-        local name = v.name
-        if v.name_func then
-            name = v.name_func()
+        if not v.desc_func then
+            UI.GuiTooltip(v.name)
+        else
+            UI.GuiTooltip(GameTextGetTranslatedOrNot(v.name) .. '\n' .. GameTextGetTranslatedOrNot(v.desc_func(UI)))
         end
-        UI.GuiTooltip(name)
         if left then
 			ClickSound()
-            v.action()
+            v.action(UI)
         end
     end
 	UI.NextZDeep(-10)

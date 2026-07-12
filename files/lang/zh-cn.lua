@@ -457,6 +457,7 @@ conjurer_reborn_tunewand_select_all = "[全部选择]"
 conjurer_reborn_tunewand_select_none = "[全部取消]"
 conjurer_reborn_tunewand_is_gamemode_open = "设置Conjurer Reborn为非游戏模式模组\n设置后，可以在模组列表里启用Conjurer Reborn"
 conjurer_reborn_tunewand_is_gamemode_close = "设置Conjurer Reborn为游戏模式模组\n设置前应当先在模组列表中关闭Conjurer Reborn"
+conjurer_reborn_tunewand_unlockall = "解锁所有进展"
 
 --其他信息
 conjurer_reborn_player_died1 = "你竟然真的死了"

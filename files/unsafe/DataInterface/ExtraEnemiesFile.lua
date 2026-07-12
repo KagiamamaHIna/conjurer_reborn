@@ -25,7 +25,8 @@ ExtraEnemiesFile = {
   boss_dragon = {
     first = true,
     list = {
-      "mods/conjurer_reborn/files/custom_entities/extra_enemies/dragon_with_drops.xml"
+      "mods/conjurer_reborn/files/custom_entities/extra_enemies/dragon_with_drops.xml",
+      "data/entities/animals/ending_placeholder/boss_dragon_endcrystal.xml",
     }
   }
 }

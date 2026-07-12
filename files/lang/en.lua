@@ -218,6 +218,7 @@ conjurer_reborn_custom_entities_hamis_pet = "Hämis pet"
 
 --conjurer's mat
 conjurer_reborn_new_material_construction_steel = "Construction Steel"
+conjurer_reborn_construction_steel_desc = "Placeholder material for Box2D drawing, \nideal for sketching shapes beforehand and converting them later"
 conjurer_reborn_new_material_construction_paste = "Construction Paste"
 conjurer_reborn_new_material_ash = "Ash"
 

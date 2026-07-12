@@ -81,6 +81,7 @@ conjurer_reborn_custom_entities_hamis_pet = "哈米斯宠物"
 
 --conjurer的材料
 conjurer_reborn_new_material_construction_steel = "建筑钢"
+conjurer_reborn_construction_steel_desc = "用于Box2D材料绘制的中间材料，\n可用于提前画好形状后再转换"
 conjurer_reborn_new_material_construction_paste = "建筑膏"
 conjurer_reborn_new_material_ash = "灰烬"
 

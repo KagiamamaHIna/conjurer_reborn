@@ -10,7 +10,7 @@ grid_size字段将不再有任何效果:
 ```lua
 -- init.lua
 --
-if ModIsEnabled("conjurer_reborn") then
+if ModIsEnabled("conjurer_reborn") or (ModIsEnabled("conjurer_unsafe") and ModSettingGetNextValue("conjurer_reborn.unsafe_load_conjurer")) then
   ModLuaFileAppend(
     "mods/conjurer_reborn/files/wandhelper/ent_list_pre.lua",
     "path/to/my_entities.lua"
@@ -60,7 +60,7 @@ table.insert(ALL_ENTITIES, {
 ```lua
 -- init.lua
 --
-if ModIsEnabled("conjurer_reborn") then
+if ModIsEnabled("conjurer_reborn") or (ModIsEnabled("conjurer_unsafe") and ModSettingGetNextValue("conjurer_reborn.unsafe_load_conjurer")) then
   ModLuaFileAppend(
     "mods/conjurer_reborn/files/unsafe/DataInterface/IgnoreEnemies.lua",
     "path/to/my_ignore_enemies.lua"
@@ -79,7 +79,7 @@ table.insert(IgnoreEnemies, "enemy_id")
 ```lua
 -- init.lua
 --
-if ModIsEnabled("conjurer_reborn") then
+if ModIsEnabled("conjurer_reborn") or (ModIsEnabled("conjurer_unsafe") and ModSettingGetNextValue("conjurer_reborn.unsafe_load_conjurer")) then
   ModLuaFileAppend(
     "mods/conjurer_reborn/files/unsafe/DataInterface/ExtraEnemiesFile.lua",
     "path/to/my_extra_enemies.lua"
@@ -103,7 +103,7 @@ ExtraEnemiesFile["enemy_id"] = {
 ```lua
 -- init.lua
 --
-if ModIsEnabled("conjurer_reborn") then
+if ModIsEnabled("conjurer_reborn") or (ModIsEnabled("conjurer_unsafe") and ModSettingGetNextValue("conjurer_reborn.unsafe_load_conjurer")) then
   ModLuaFileAppend(
     "mods/conjurer_reborn/files/unsafe/DataInterface/EnemiesDesc.lua",
     "path/to/my_enemies_desc.lua"
@@ -131,7 +131,7 @@ EnemiesDesc["enemy_id2"] = {
 ```lua
 -- init.lua
 --
-if ModIsEnabled("conjurer_reborn") then
+if ModIsEnabled("conjurer_reborn") or (ModIsEnabled("conjurer_unsafe") and ModSettingGetNextValue("conjurer_reborn.unsafe_load_conjurer")) then
   ModLuaFileAppend(
     "mods/conjurer_reborn/files/unsafe/DataInterface/NewOtherEnemies.lua",
     "path/to/my_new_enemies.lua"
@@ -163,7 +163,7 @@ table.insert(NewOtherEnemies,{
 ```lua
 -- init.lua
 --
-if ModIsEnabled("conjurer_reborn") then
+if ModIsEnabled("conjurer_reborn") or (ModIsEnabled("conjurer_unsafe") and ModSettingGetNextValue("conjurer_reborn.unsafe_load_conjurer")) then
   ModLuaFileAppend(
     "mods/conjurer_reborn/files/unsafe/DataInterface/NearestMaterials.lua",
     "path/to/my_mats.lua"
@@ -183,7 +183,7 @@ table.insert(NearestMaterials, "material_id")
 ```lua
 -- init.lua
 --
-if ModIsEnabled("conjurer_reborn") then
+if ModIsEnabled("conjurer_reborn") or (ModIsEnabled("conjurer_unsafe") and ModSettingGetNextValue("conjurer_reborn.unsafe_load_conjurer")) then
   ModLuaFileAppend(
     "mods/conjurer_reborn/files/unsafe/DataInterface/MatModidSet.lua",
     "path/to/my_mats.lua"
@@ -203,7 +203,7 @@ MatModidSet["material_id"] = "modid"
 ```lua
 -- init.lua
 --
-if ModIsEnabled("conjurer_reborn") then
+if ModIsEnabled("conjurer_reborn") or (ModIsEnabled("conjurer_unsafe") and ModSettingGetNextValue("conjurer_reborn.unsafe_load_conjurer")) then
   ModLuaFileAppend(
     "mods/conjurer_reborn/files/unsafe/DataInterface/MaterialsDesc.lua",
     "path/to/my_mat_desc.lua"
@@ -231,7 +231,7 @@ MaterialsDesc["material_id2"] = {
 ```lua
 -- init.lua
 --
-if ModIsEnabled("conjurer_reborn") then
+if ModIsEnabled("conjurer_reborn") or (ModIsEnabled("conjurer_unsafe") and ModSettingGetNextValue("conjurer_reborn.unsafe_load_conjurer")) then
   ModLuaFileAppend(
     "mods/conjurer_reborn/files/scripts/lists/new_brushes.lua",
     "path/to/my_brushes.lua"

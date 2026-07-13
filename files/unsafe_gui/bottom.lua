@@ -95,6 +95,11 @@ local function RenderWorldMenu(UI)
 			action = CreateDimensionalPortal("noita", "world_noita", "data/scripts/biomes/biome_map_gen.lua", ""),
 		},
 		{
+			name = "$conjurer_reborn_power_dim_old_meta",
+			image = "mods/conjurer_reborn/files/gfx/power_icons/worlds/noita_old_metapeli.png",
+			action = CreateDimensionalPortal("noita", "world_noita", "mods/conjurer_reborn/files/biomes/biome_map/biome_map_gen.lua", ""),
+		},
+		{
 			name = "$conjurer_reborn_power_dim_takalands_niilo",
 			image = "mods/conjurer_reborn/files/gfx/power_icons/worlds/noita_niilo.png",
 			action = CreateDimensionalPortal("noita", "world_noita", "data/biome_impl/biome_map_niilo.png",

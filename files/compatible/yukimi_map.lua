@@ -7,3 +7,12 @@ SessionNumbersGetValue = function(key)
     end
     return result
 end
+
+MapPin["data/biome/shop_room.xml"] = {
+    icon = "mods/biome_map_viewer/files/gfx/location.png",
+    name = "$biome_shop_room",
+}
+MapPin["data/biome/temple_altar_secret.xml"] = {
+    icon = "mods/biome_map_viewer/files/gfx/location.png",
+    name = "$biome_holymountain",
+}

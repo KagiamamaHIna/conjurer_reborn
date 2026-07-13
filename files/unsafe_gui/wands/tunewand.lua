@@ -687,6 +687,11 @@ local MainTuneBtns = {
             for id, data in pairs(GetSpellData()) do
                 local name = "action_" .. string.lower(id)
                 GameAddFlagRun("new_" .. name)
+                local path = "mods/conjurer_reborn/vfiles/enemies/" .. name .. ".xml"
+                VisualFileSet(path, "<Entity></Entity>")
+                local eid = EntityLoad(path)
+                StatsLogPlayerKill(eid)--用于记录玩家使用
+                EntityKill(eid)
                 if not HasFlagPersistent(name) then
                     AddFlagPersistent(name)
                 end

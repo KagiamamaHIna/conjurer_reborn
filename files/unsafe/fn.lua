@@ -596,9 +596,23 @@ function GetEntityHeldWand(entity)
 end
 
 ---获得玩家id
----@return integer
+---@return integer?
 function GetPlayer()
 	return EntityGetWithTag("player_unit")[1]
+end
+
+---获得玩家id含变形后
+---@return integer?
+function GetPlayerHasPoly()
+    local player = EntityGetWithTag("player_unit")[1]
+	if player ~= nil and player ~= 0 then
+		return player
+	end
+	player = EntityGetWithTag("polymorphed_player")[1]
+    if player ~= nil and player ~= 0 then
+        return player
+    end
+	return nil
 end
 
 ---刷新玩家手持法杖以同步数据

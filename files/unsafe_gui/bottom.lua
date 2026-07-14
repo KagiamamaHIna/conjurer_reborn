@@ -957,6 +957,195 @@ local function RenderTimeMenu(UI)
 	end
 end
 
+---渲染可调免疫面板
+---@param UI Gui
+local function RenderProtection(UI)
+    local ProtectionBtn = {
+        {
+            id = "KalmaProtectionAll",
+            name = "$conjurer_reborn_power_protection_all",
+            image = "mods/conjurer_reborn/files/gfx/power_icons/protection/protection_all.png",
+            acitve = function()
+                return SettingGet("kalma_protection_all", true)
+            end,
+            action = function()
+                SettingSet("kalma_protection_all", not SettingGet("kalma_protection_all", true))
+            end
+        },
+        {
+            id = "KalmaProtectionPolymorph",
+            name = "$conjurer_reborn_power_protection_polymorph",
+            image = "mods/conjurer_reborn/files/gfx/power_icons/protection/protection_polymorph.png",
+            acitve = function()
+                return SettingGet("kalma_protection_polymorph", true)
+            end,
+            action = function()
+                SettingSet("kalma_protection_polymorph", not SettingGet("kalma_protection_polymorph", true))
+            end
+        },
+        {
+            id = "KalmaProtectionBlindness",
+            name = "$conjurer_reborn_power_protection_blindness",
+            image = "mods/conjurer_reborn/files/gfx/power_icons/protection/protection_blindness.png",
+            acitve = function()
+                return SettingGet("kalma_protection_blindness", true)
+            end,
+            action = function()
+                SettingSet("kalma_protection_blindness", not SettingGet("kalma_protection_blindness", true))
+            end
+        },
+        {
+            id = "KalmaProtectionBreath",
+            name = "$conjurer_reborn_power_protection_breath",
+            image = "mods/conjurer_reborn/files/gfx/power_icons/protection/protection_breath.png",
+            acitve = function()
+                return SettingGet("kalma_protection_breath", false)
+            end,
+            action = function()
+                SettingSet("kalma_protection_breath", not SettingGet("kalma_protection_breath", false))
+            end
+        },
+        {
+            id = "KalmaProtectionTeleportation",
+            name = "$conjurer_reborn_power_protection_teleportation",
+            image = "mods/conjurer_reborn/files/gfx/power_icons/protection/protection_teleportation.png",
+            acitve = function()
+                return SettingGet("kalma_protection_teleportation", false)
+            end,
+            action = function()
+                SettingSet("kalma_protection_teleportation", not SettingGet("kalma_protection_teleportation", false))
+            end
+        },
+        {
+            id = "KalmaProtectionShockStun",
+            name = "$conjurer_reborn_power_protection_shock_stun",
+            image = "mods/conjurer_reborn/files/gfx/power_icons/protection/protection_shock_stun.png",
+            acitve = function()
+                return SettingGet("kalma_protection_shock_stun", false)
+            end,
+            action = function()
+                SettingSet("kalma_protection_shock_stun", not SettingGet("kalma_protection_shock_stun", false))
+            end
+        },
+        {
+            id = "KalmaProtectionFreezeStun",
+            name = "$conjurer_reborn_power_protection_freeze_stun",
+            image = "mods/conjurer_reborn/files/gfx/power_icons/protection/protection_freeze_stun.png",
+            acitve = function()
+                return SettingGet("kalma_protection_freeze_stun", false)
+            end,
+            action = function()
+                SettingSet("kalma_protection_freeze_stun", not SettingGet("kalma_protection_freeze_stun", false))
+            end
+        },
+        {
+            id = "KalmaProtectionGlue",
+            name = "$conjurer_reborn_power_protection_glue",
+            image = "mods/conjurer_reborn/files/gfx/power_icons/protection/protection_glue.png",
+            acitve = function()
+                return SettingGet("kalma_protection_glue", false)
+            end,
+            action = function()
+                SettingSet("kalma_protection_glue", not SettingGet("kalma_protection_glue", false))
+            end
+        },
+        {
+            id = "KalmaProtectionTwitchy",
+            name = "$conjurer_reborn_power_protection_twitchy",
+            image = "mods/conjurer_reborn/files/gfx/power_icons/protection/protection_twitchy.png",
+            acitve = function()
+                return SettingGet("kalma_protection_twitchy", false)
+            end,
+            action = function()
+                SettingSet("kalma_protection_twitchy", not SettingGet("kalma_protection_twitchy", false))
+            end
+        },
+        {
+            id = "KalmaProtectionConfusion",
+            name = "$conjurer_reborn_power_protection_confusion",
+            image = "mods/conjurer_reborn/files/gfx/power_icons/protection/protection_confusion.png",
+            acitve = function()
+                return SettingGet("kalma_protection_confusion", false)
+            end,
+            action = function()
+                SettingSet("kalma_protection_confusion", not SettingGet("kalma_protection_confusion", false))
+            end
+        },
+        {
+            id = "KalmaProtectionNeutralized",
+            name = "$conjurer_reborn_power_protection_neutralized",
+            image = "mods/conjurer_reborn/files/gfx/power_icons/protection/protection_neutralized.png",
+            acitve = function()
+                return SettingGet("kalma_protection_neutralized", false)
+            end,
+            action = function()
+                SettingSet("kalma_protection_neutralized", not SettingGet("kalma_protection_neutralized", false))
+            end
+        },
+        {
+            id = "KalmaProtectionKnockback",
+            name = "$conjurer_reborn_power_protection_knockback",
+            image = "mods/conjurer_reborn/files/gfx/power_icons/protection/protection_knockback.png",
+            acitve = function()
+                return SettingGet("kalma_protection_knockback", false)
+            end,
+            action = function()
+                SettingSet("kalma_protection_knockback", not SettingGet("kalma_protection_knockback", false))
+            end
+        },
+        {
+            id = "KalmaProtectionFoodPoisoning",
+            name = "$conjurer_reborn_power_protection_food_poisoning",
+            image = "mods/conjurer_reborn/files/gfx/power_icons/protection/protection_food_poisoning.png",
+            acitve = function()
+                return SettingGet("kalma_food_poisoning", false)
+            end,
+            action = function()
+                SettingSet("kalma_food_poisoning", not SettingGet("kalma_food_poisoning", false))
+            end
+        },
+        {
+            id = "KalmaMovementSlower",
+            name = "$conjurer_reborn_power_protection_movement_slower",
+            image = "mods/conjurer_reborn/files/gfx/power_icons/protection/protection_movement_slower.png",
+            acitve = function()
+                return SettingGet("kalma_protection_movement_slower", false)
+            end,
+            action = function()
+                SettingSet("kalma_protection_movement_slower", not SettingGet("kalma_protection_movement_slower", false))
+            end
+        },
+    }
+    local x = BottomBoxX + 76
+    GuiBeginAutoBox(UI.gui)
+    UI.BeginVertical(x, BottomBoxY - 42, true, 1)
+    UI.BeginHorizontal(0, 0, true, 1)
+    for k, v in ipairs(ProtectionBtn) do
+        UI.NextZDeep(0)
+        if not v.acitve() then
+            UI.NextOption(GUI_OPTION.DrawSemiTransparent)
+        end
+        if UI.ImageButton(v.id, 0, 0, v.image) then
+            v.action()
+            ClickSound()
+        end
+        UI.GuiTooltip(v.name)
+        if k == 7 then
+            UI.LayoutEnd()
+            UI.BeginHorizontal(0, 0, true, 1)
+        end
+    end
+    UI.LayoutEnd()
+    UI.NextZDeep(-1000)
+    GuiEndAutoBoxNinePiece(UI.gui, 0, 0, 0, false, 0,
+        "mods/conjurer_reborn/files/gfx/9piece_light_blue.png",
+        "mods/conjurer_reborn/files/gfx/9piece_light_blue.png")
+
+    local Info = UI.WidgetInfoTable()
+    InputBlockEasy(UI, "KalmaProtection阻挡框", Info)
+    UI.LayoutEnd()
+end
+
 local main_menu_items = {
 	{
 		name = "$conjurer_reborn_power_tran_dim",
@@ -1072,29 +1261,17 @@ local main_menu_items = {
 	},
 	{
 		name = "$conjurer_reborn_power_kalma",
-		image = "mods/conjurer_reborn/files/gfx/power_icons/kalma.png",
-        action = ToggleKalma,
-		update = function(UI)
-			local player = GetPlayer()
-			if player == nil then
-				return
-			end
-			local active = GetKalma(UI)
-			if active then
-				local entity = EntityGetWithName("conjurer_reborn_kalma")
-				if entity and entity ~= 0 then
-					EntityKill(entity)
-				end
-			else
-				local entity = EntityGetWithName("conjurer_reborn_kalma")
-				if entity == 0 then
-					EntityLoadChild(player, "mods/conjurer_reborn/files/powers/kalma.xml")
-				end
-			end
+        image = "mods/conjurer_reborn/files/gfx/power_icons/kalma.png",
+		tip_func = function(UI)
+            return ActiveFn == RenderProtection and "$conjurer_reborn_close_edit_kalma" or "$conjurer_reborn_open_edit_kalma"
 		end,
+        action = ToggleKalma,
 		get_active = function(UI)
 			return GetKalma(UI)
-		end,
+        end,
+		right_action = function (UI)
+			ToggleActiveOverlay(RenderProtection)
+		end
 	},
 	{
         name = "$conjurer_reborn_power_viima",

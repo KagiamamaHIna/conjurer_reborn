@@ -143,19 +143,24 @@ UI.MainTickFn["Main"] = function()
 			EntityKill(indicator)
 		end
 	end
-
-	local player = GetPlayer()
-	if player == nil then
-		return
-	end
 	if GlobalsGetValue("conjurer_reborn_next_refresh_hp", "0") == "1" then --全局变量通知大法（
 		UI.OnceCallOnExecute(function()--回满血用的
-			local this_player = GetPlayerObj()
+            local this_player = GetPlayerObj()
+            if this_player == nil then
+                this_player = GetPolyPlayerObj()
+            end
+			if this_player == nil then
+				return
+			end
 			if this_player and this_player.comp.DamageModelComponent then
                 GlobalsSetValue("conjurer_reborn_next_refresh_hp", "0")
 				this_player.comp.DamageModelComponent[1].attr.hp = this_player.comp.DamageModelComponent[1].attr.max_hp
 			end
 		end)
+	end
+	local player = GetPlayer()
+	if player == nil then
+		return
 	end
     BottomBtnDraw(UI) --底部功能按钮绘制
     --因为有些功能必须更新
@@ -501,6 +506,82 @@ end
 
 UI.MiscEventFn["FullbrightUpdate"] = function ()
 	FullbrightUpdate(UI)
+end
+
+UI.MiscEventFn["KalmaUpdate"] = function()
+    local player = GetPlayerHasPoly()
+    if player == nil then
+        return
+    end
+    local active = GetKalma(UI)
+    if active then
+        local entity = EntityGetWithName("conjurer_reborn_kalma")
+        if entity and entity ~= 0 then
+            EntityKill(entity)
+        end
+    else
+        local entity = EntityGetWithName("conjurer_reborn_kalma")
+        if entity == 0 then
+            EntityLoadChild(player, "mods/conjurer_reborn/files/powers/kalma.xml")
+        end
+    end
+end
+
+UI.MiscEventFn["ImmunityUpdate"] = function ()
+    if GetKalma(UI) then
+        return
+    end
+    local player_id = GetPlayerHasPoly()
+    if player_id == nil then
+        return
+    end
+	local player = EntityObj(player_id)
+	local glue = SettingGet("kalma_protection_glue", false)
+    if glue then
+        for _, v in ipairs(EntityGetWithTag("glue_anchor")) do
+            local entity = EntityObj(v)
+            for _, c in ipairs(entity.comp_all.VariableStorageComponent or {}) do
+                if c.attr.name == "target_1" and c.attr.value_int == player_id then
+                    entity:Kill()
+                end
+            end
+        end
+    end
+	
+	--用于禁用效果
+	local effectMap = {}
+    if SettingGet("kalma_protection_blindness", true) then
+		effectMap["BLINDNESS"] = true
+	end
+	if SettingGet("kalma_protection_teleportation", false) then
+        effectMap["TELEPORTATION"] = true
+		effectMap["UNSTABLE_TELEPORTATION"] = true
+	end
+    if SettingGet("kalma_protection_confusion", false) then
+        effectMap["CONFUSION"] = true
+    end
+    if SettingGet("kalma_protection_movement_slower", false) then
+        effectMap["MOVEMENT_SLOWER"] = true
+    end
+	local pathCmp = {
+		["data/entities/misc/effect_twitchy.xml"] = SettingGet("kalma_protection_twitchy", false),
+		["data/entities/misc/neutralized.xml"] = SettingGet("kalma_protection_neutralized", false),
+	}
+    for _, child in ipairs(player:GetAllChildObj() or {}) do
+		--抽搐免疫
+		if pathCmp[child:GetFilename()] then
+            child:Kill()
+			goto continue
+		end
+        local effects = child.comp.GameEffectComponent
+		if effects == nil then
+			goto continue
+		end
+		if effectMap[effects[1].attr.effect] then
+			child:Kill()
+		end
+		::continue::
+	end
 end
 
 return {UI.DispatchMessage, UI.Destroy}

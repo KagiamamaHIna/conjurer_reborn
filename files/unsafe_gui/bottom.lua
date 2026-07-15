@@ -1217,7 +1217,15 @@ local main_menu_items = {
 		-- TODO: This ugly tooltip & teaching the player
 		name = "$conjurer_reborn_power_binoculars",
 		image = "mods/conjurer_reborn/files/gfx/power_icons/binoculars.png",
-		action = ToggleBinoculars,
+        action = function(UI)
+            if GetBinocularsActive(UI) then
+				SetFullbright(UI, WorldGlobalGetBool(UI, "lastFullbright", false))
+            else
+                WorldGlobalSetBool(UI, "lastFullbright", GetFullbright(UI))
+                SetFullbright(UI, true)
+            end
+            ToggleBinoculars(UI)
+		end,
 		get_active = function(UI)
 			return GetBinocularsActive(UI)
         end,

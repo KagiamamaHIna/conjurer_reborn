@@ -31,7 +31,6 @@ local effectMap = {
 }
 
 for _, v in ipairs(entity.comp_all.GameEffectComponent or {}) do
-    print(effectMap[v.attr.effect])
     if effectMap[v.attr.effect] ~= nil then
         v:SetEnable(effectMap[v.attr.effect])
         effectMap[v.attr.effect] = nil

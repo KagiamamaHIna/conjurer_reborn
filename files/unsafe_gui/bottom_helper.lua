@@ -447,7 +447,7 @@ end
 ---维护光照实体
 ---@param UI Gui
 function FullbrightUpdate(UI)
-	local enable = GetFullbright(UI) or GetBinocularsActive(UI)
+	local enable = GetFullbright(UI)
 	local id = EntityGetWithName("conjurer_reborn_binoculars_light")
 	if enable and (id == nil or id == 0) then
 		EntityLoad("mods/conjurer_reborn/files/powers/binoculars_light.xml", GameGetCameraPos())

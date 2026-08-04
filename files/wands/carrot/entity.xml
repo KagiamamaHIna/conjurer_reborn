@@ -29,7 +29,7 @@
 
   <SpriteComponent
     _tags="enabled_in_hand"
-    _enabled="1"
+    _enabled="0"
     offset_x="3.5"
     offset_y="3.5"
     image_file="mods/conjurer_reborn/files/wands/carrot/item_gfx.png"

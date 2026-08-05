@@ -25,6 +25,11 @@ function ActiveParticle(matid,x,y)
     if wandid == 0 then
         return
     end
+	local sprite = EntityGetFirstComponentIncludingDisabled(wandid, "SpriteComponent")
+	if ComponentGetValue2(sprite, "image_file") == "mods/conjurer_reborn/files/custom_entities/pink/pink_wand.png" then
+        x = 8
+		y = -2
+	end
     local wand = EntityObj(wandid)
     local particles = wand.comp_all.ParticleEmitterComponent
 	local particle

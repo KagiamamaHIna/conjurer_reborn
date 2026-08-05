@@ -48,5 +48,18 @@ if len > 256 then--距离大于256之后直接传送
 	GamePlaySound("data/audio/Desktop/misc.bank", "game_effect/teleport/tick", GameGetCameraPos())
 end
 
-local mx,my = DEBUG_GetMouseWorld()
-EntitySetTransform( entity_id, pos_x, pos_y, math.atan2(my - pos_y,mx - pos_x), 1, 1)
+local mx, my = DEBUG_GetMouseWorld()
+local rotationRad = math.atan2(my - pos_y, mx - pos_x)
+EntitySetTransform( entity_id, pos_x, pos_y, rotationRad, 1, 1)
+
+local sprite = EntityGetFirstComponentIncludingDisabled(entity_id, "SpriteComponent")
+local img = ComponentGetValue2(sprite, "image_file")
+
+if img == "mods/conjurer_reborn/files/custom_entities/pink/pink_wand.png" then
+    local rotationDeg = math.deg(rotationRad)
+	if rotationDeg <= -90 or rotationDeg > 90 then
+		ComponentSetValue2(sprite, "special_scale_y", -0.5)
+    else
+		ComponentSetValue2(sprite, "special_scale_y", 0.5)
+	end
+end

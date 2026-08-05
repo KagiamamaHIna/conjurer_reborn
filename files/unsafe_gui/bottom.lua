@@ -1402,6 +1402,17 @@ function BottomBtnDraw(UI)
     BottomBoxY = info.y
 	UI.LayoutEnd()
     DrawActiveFn(UI)
-	
+    if GameHasFlagRun("conjurer_reborn_has_pink_wand") then
+		UI.NextZDeep(-200)
+        local left, right = UI.ImageButton("PinkNeko", BottomBoxX + 183, BottomBoxY - 11, "mods/conjurer_reborn/files/custom_entities/pink/neko.png")
+		if left then
+            WorldGlobalSetBool(UI, "neko_wand", not WorldGlobalGetBool(UI, "neko_wand", false))
+			ClickSound()
+		end
+        if right then
+			WorldGlobalSetBool(UI, "neko_wand", false)
+			GameRemoveFlagRun("conjurer_reborn_has_pink_wand")
+		end
+	end
 	UI.IterDeepEnd()
 end

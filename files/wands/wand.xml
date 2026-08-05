@@ -18,7 +18,6 @@
     ></VelocityComponent>
 
 	<SpriteComponent 
-		image_file="mods/conjurer_reborn/files/wands/matwand/matwand.png"
 		>
 	</SpriteComponent>
 	<LuaComponent 

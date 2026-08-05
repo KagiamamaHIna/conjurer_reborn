@@ -182,15 +182,27 @@ UI.MainTickFn["Main"] = function()
 		if wand == nil or wand == 0 then
 			wand = EntityLoadChild(player, "mods/conjurer_reborn/files/wands/wand.xml")
 			local pos_x, pos_y = EntityGetTransform(player)
-			EntityLoad("data/entities/particles/poof_blue.xml", pos_x, pos_y)
 		end
 		local comp = EntityGetFirstComponent(wand, "SpriteComponent")
 		local CompSprite = ComponentGetValue2(comp, "image_file")
-		if CompSprite ~= ActiveImage then
-			local pos_x, pos_y = EntityGetTransform(wand)
-			ComponentSetValue2(comp, "image_file", ActiveImage)
+		if (CompSprite ~= ActiveImage and not WorldGlobalGetBool(UI, "neko_wand", false)) or (WorldGlobalGetBool(UI, "neko_wand", false) and CompSprite ~= "mods/conjurer_reborn/files/custom_entities/pink/pink_wand.png") then
+            local pos_x, pos_y = EntityGetTransform(wand)
+			if WorldGlobalGetBool(UI, "neko_wand", false) then
+                ComponentSetValue2(comp, "image_file", "mods/conjurer_reborn/files/custom_entities/pink/pink_wand.png")
+                ComponentSetValue2(comp, "special_scale_x", 0.5)
+				ComponentSetValue2(comp, "special_scale_y", 0.5)
+                ComponentSetValue2(comp, "has_special_scale", true)
+                ComponentSetValue2(comp, "offset_x", 15)
+				ComponentSetValue2(comp, "offset_y", 12)
+            	EntityLoad("data/entities/particles/poof_pink.xml", pos_x, pos_y)
+            else
+                ComponentSetValue2(comp, "image_file", ActiveImage)
+                ComponentSetValue2(comp, "has_special_scale", false)
+                ComponentSetValue2(comp, "offset_x", 0)
+				ComponentSetValue2(comp, "offset_y", 0)
+            	EntityLoad("data/entities/particles/poof_blue.xml", pos_x, pos_y)
+			end
 			EntityRefreshSprite(wand, comp)
-            EntityLoad("data/entities/particles/poof_blue.xml", pos_x, pos_y)
 			CloseParticle()
 		end
 	else

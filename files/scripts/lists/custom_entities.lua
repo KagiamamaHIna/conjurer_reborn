@@ -114,5 +114,11 @@ CUSTOM_ENTITIES = {
 		name = "$conjurer_reborn_custom_entities_hamis_pet",
 		path = "mods/conjurer_reborn/files/custom_entities/hamis/hamis.xml",
 		image = "mods/conjurer_reborn/files/custom_entities/hamis/icon.png",
+    },
+	{
+		name = "$conjurer_reborn_pink_wand",
+		desc = "$conjurer_reborn_pink_wand_desc",
+		path = "mods/conjurer_reborn/files/custom_entities/pink/pink_wand.xml",
+		image = "mods/conjurer_reborn/files/custom_entities/pink/pink_icon.png",
 	},
 }

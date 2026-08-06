@@ -78,6 +78,8 @@ conjurer_reborn_tp_carrot_desc =
 左键单击传送一次，右键按下持续传送
 按住shift使用会强制同步摄像机，这会让传送变得极快]]
 conjurer_reborn_custom_entities_hamis_pet = "哈米斯宠物"
+conjurer_reborn_pink_wand = "Pink的法杖"
+conjurer_reborn_pink_wand_desc = "谁是Pink？"
 
 --conjurer的材料
 conjurer_reborn_new_material_construction_steel = "建筑钢"
@@ -491,5 +493,3 @@ conjurer_reborn_pickup_danger_tip = "警告：本模组无法移除此物品"
 conjurer_reborn_reset_IKnowWhatImDoing = "此操作不可撤销，再点击一次确认"
 conjurer_reborn_force_open_message = "Conjurer Reborn: 地图修改已关闭"
 conjurer_reborn_page_grid_no_items = "空空如也......"
-conjurer_reborn_pink_wand = "Pink的法杖"
-conjurer_reborn_pink_wand_desc = "谁是Pink？"

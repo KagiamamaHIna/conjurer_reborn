@@ -215,6 +215,8 @@ Point and squeeze to instantly relocate the wielder. Do not eat.
 Left-click to blink, right-click to hold.
 Hold Shift to force-sync the camera, enabling lightning-fast relocation.]]
 conjurer_reborn_custom_entities_hamis_pet = "Hämis pet"
+conjurer_reborn_pink_wand = "Pink's wand"
+conjurer_reborn_pink_wand_desc = "Who is Pink?"
 
 --conjurer's mat
 conjurer_reborn_new_material_construction_steel = "Construction Steel"
@@ -628,5 +630,3 @@ conjurer_reborn_pickup_danger_tip = "Danger: Not removable after picking up"
 conjurer_reborn_reset_IKnowWhatImDoing = "This action cannot be undone, click again to confirm"
 conjurer_reborn_force_open_message = "Conjurer Reborn: map modification has been closed"
 conjurer_reborn_page_grid_no_items = "as empty as anything..."
-conjurer_reborn_pink_wand = "Pink's wand"
-conjurer_reborn_pink_wand_desc = "Who is Pink?"

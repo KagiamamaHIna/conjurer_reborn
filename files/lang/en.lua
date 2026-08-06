@@ -38,7 +38,7 @@ kapusivat ylös ja alas kiiltäviä messinkiportaita,
 kiersivät ruuveja, säätivät kojeita ja mittasivat
 ja tekivät välillä muistiinpanoja kirjoihinsa. Heillä
 oli kova kiire ja he kaikki polttivat savukkeita.
-  -Hyvää iltaa, sanoi M#u!=peikko]]
+  -Hyvää iltaa, sanoi M#u!=peikko]]--doesn't need to be translated
 
 conjurer_reborn_book_muumi2_name = "Lost Page"
 conjurer_reborn_book_muumi2 =
@@ -46,7 +46,7 @@ conjurer_reborn_book_muumi2 =
 Eihän se tietenkään mitään haittaa. Toisen puoliskon sade
 huuhtoi mennessään. Sillä on vielä vähemmän merkitystä.
 Filosofille on yhdentekevää elääkö hän vai kuolee, mutta
-tämän vilustumisen jälkeen on epävarmaa, kuinka minun käy...]]
+tämän vilustumisen jälkeen on epävarmaa, kuinka minun käy...]]--doesn't need to be translated
 
 conjurer_reborn_book_note_name = "Journal Page"
 conjurer_reborn_book_note =
@@ -54,7 +54,7 @@ conjurer_reborn_book_note =
 uskomuksissa ja arkikielessäkin 'paholainen'; mutta
 tarkoitetaanko hiidellä suorastaan 'paholaista',
 kun puhutaan vuorihiidestä, vesihiidestä ja metsän
-hiidestä, on kyseenalaista ja tuskin luultavaa.]]
+hiidestä, on kyseenalaista ja tuskin luultavaa.]]--doesn't need to be translated
 
 conjurer_reborn_book_note2_name = "Torn Journal Page"
 conjurer_reborn_book_note2 =
@@ -63,7 +63,7 @@ joka on varustettu sammalla eli sammakolla. Koska sampa
 (vrt. sammakko, sammakka) merkitsee rotaatiokoneen sitä
 osaa, johon vertikaalinen akseli tukeutuu ja jossa se
 sivuille liukumatta pyörii; sampo on rotaatiokone, jonka
-merkityksellinen osa on sampa.]]
+merkityksellinen osa on sampa.]]--doesn't need to be translated
 
 conjurer_reborn_book_note3_name = "Stained Journal Page"
 conjurer_reborn_book_note3 =
@@ -71,7 +71,7 @@ conjurer_reborn_book_note3 =
 vuoret vapiset, järvet järkkyvät, umpilammet lainehtivat,
 kalliot tärisevät ja halkeavat, ilma liikkuu liitoksista,
 Hiiden torni torkahtelee, saatana hikoilee. Mitä tämä
-kaikki merkitsee?]]
+kaikki merkitsee?]]--doesn't need to be translated
 
 conjurer_reborn_book_poem_name = "High-Class Poem"
 conjurer_reborn_book_poem =
@@ -92,7 +92,7 @@ see kest pualenteist vuat
 \
 siinä olisis kans pähkynä
 purtavaieks matemetiika
-tunnil]]
+tunnil]]--doesn't need to be translated
 
 conjurer_reborn_book_pohjantahti_name = "Dusty Tome"
 conjurer_reborn_book_pohjantahti =
@@ -100,7 +100,7 @@ conjurer_reborn_book_pohjantahti =
   Suo oli autio, keskeltä melkein puuton neva, jonka veden vaivaamasta
 kamarasta nousi vain jokin kituskavuinen käkkyrämänty, vahvakaarnainen
 ja tasalatvainen pieni vanhus. Jussi liikkui suolla, pysähdellen, katsellen,
-tarkkaillen ja arvioiden.]]
+tarkkaillen ja arvioiden.]]--doesn't need to be translated
 
 conjurer_reborn_book_abckiria_name = "Peculiar Book"
 conjurer_reborn_book_abckiria =
@@ -113,7 +113,7 @@ mutt #\!u? sen tas lodhutta.
 Lue sijs hyue Lapsi teste /
 Alcu oppi ilman este.
 Nijte muista Elemes aina /
-nin ?e#;= sinun Armons laina.]]
+nin ?e#;= sinun Armons laina.]]--doesn't need to be translated
 
 conjurer_reborn_book_kalevala_name = "Old Book"
 conjurer_reborn_book_kalevala =
@@ -133,7 +133,7 @@ Pilven tönkän taivahalla.
 Siitä läksi laskemahan,
 Sekä läksi jotta joutui
 Sampoa tapoamahan
-Venehestä Wäinämöisen.]]
+Venehestä Wäinämöisen.]]--doesn't need to be translated
 
 conjurer_reborn_book_kalevala2 =
 [[Kivi oli kirjava selällä,
@@ -151,7 +151,7 @@ Neitonen kiven keralla,
 Aino paaen palleassa.
 ...
 Se oli surma nuoren neien,
-Loppu kaunihin kanasen.]]
+Loppu kaunihin kanasen.]]--doesn't need to be translated
 
 conjurer_reborn_book_kalevala3 =
 [[Siitä sampoa tavoitti
@@ -172,7 +172,7 @@ Ahtolaisten aartehiksi.
 Siitäp' ei sinä ikänä,
 Kuuna kullan valkeana
 Vesi puuttune varoja,
-Ve'en Ahto aartehia.]]
+Ve'en Ahto aartehia.]]--doesn't need to be translated
 
 --custom entities
 conjurer_reborn_free_perk_reroll = "Free Perk Reroll"
@@ -630,3 +630,4 @@ conjurer_reborn_pickup_danger_tip = "Danger: Not removable after picking up"
 conjurer_reborn_reset_IKnowWhatImDoing = "This action cannot be undone, click again to confirm"
 conjurer_reborn_force_open_message = "Conjurer Reborn: map modification has been closed"
 conjurer_reborn_page_grid_no_items = "as empty as anything..."
+conjurer_reborn_enemies_not_in_progress = "Not in progress"

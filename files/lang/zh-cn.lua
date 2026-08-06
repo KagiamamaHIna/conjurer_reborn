@@ -72,7 +72,7 @@ conjurer_reborn_custom_entities_mounted_gun = "重机枪"
 conjurer_reborn_custom_entities_domino_blocks = "多米诺骨牌"
 conjurer_reborn_tp_carrot = "胡萝卜"
 conjurer_reborn_tp_carrot_desc =
-[[有魔法的陈年胡萝卜
+[[蕴含魔法的古老胡萝卜
 使用它可瞬间移动持有者，还有不要吃掉了
 ---
 左键单击传送一次，右键按下持续传送
@@ -493,3 +493,4 @@ conjurer_reborn_pickup_danger_tip = "警告：本模组无法移除此物品"
 conjurer_reborn_reset_IKnowWhatImDoing = "此操作不可撤销，再点击一次确认"
 conjurer_reborn_force_open_message = "Conjurer Reborn: 地图修改已关闭"
 conjurer_reborn_page_grid_no_items = "空空如也......"
+conjurer_reborn_enemies_not_in_progress = "不在进展中"

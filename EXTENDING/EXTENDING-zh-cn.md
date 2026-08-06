@@ -142,6 +142,7 @@ end
 -- my_new_enemies.lua
 --
 table.insert(NewOtherEnemies,{
+  name = "enemy_name",
   id = "enemy_id",
   from_id = "modid",
   tags = nil, -- 当前未使用，以后也很有可能不会使用

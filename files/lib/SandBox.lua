@@ -2,7 +2,7 @@
 ---@param fn function
 ---@return function
 ---@return table env
-local function NewSandBox(fn)
+function NewSandBoxFn(fn)
     local loadonce = {}
     local loaded = {}
     local env = {
@@ -56,4 +56,21 @@ local function NewSandBox(fn)
     return setfenv(fn, env), env
 end
 
-return NewSandBox
+---输入路径，返回沙盒环境下的函数和环境
+---@param path string
+---@return function?
+---@return table env
+function NewSandBoxFile(path)
+    local fn = loadfile(path)
+    if fn == nil then
+        return nil,{}
+    end
+    local resultFn = function(...)
+        local result = setfenv(fn, getfenv())(...)
+        do_mod_appends(path)
+        return result
+    end
+    return NewSandBoxFn(resultFn)
+end
+
+return NewSandBoxFn

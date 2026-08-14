@@ -3,112 +3,115 @@
 local ffi = require("ffi")
 
 ffi.cdef([[
-   	struct PinInCpp_PinIn_NULL;
-	typedef struct PinInCpp_PinIn_NULL* PinInCpp_PinIn;//PinInCpp_PinIn == std::shared_ptr<PinInCpp::PinIn> *
-	//需要在C++层面共享所有权，所以是套的智能指针，但是一定要记得回收这个智能指针，不然会内存泄漏
+    int SetDllDirectoryA(const char* lpPathName);
 
-	struct PinInCpp_TreeSearcher_NULL;
-	typedef struct PinInCpp_TreeSearcher_NULL* PinInCpp_TreeSearcher;//PinInCpp_TreeSearcher == PinInCpp::TreeSearcher * 
+       struct PinInCpp_PinIn_NULL;
+    typedef struct PinInCpp_PinIn_NULL* PinInCpp_PinIn;//PinInCpp_PinIn == std::shared_ptr<PinInCpp::PinIn> *
+    //需要在C++层面共享所有权，所以是套的智能指针，但是一定要记得回收这个智能指针，不然会内存泄漏
 
-    
-	enum PinInCpp_TreeSeracher_Keyboard {//不提供C情况下的自定义方案，因为那可能过于麻烦，预设的也足够好了
-		PinInCpp_NULLKeyboard,	//代表不改变Keyboard，特殊的枚举量
-		PinInCpp_QUANPIN,		//基础的全拼方案 PinIn类的默认方案
-		PinInCpp_DAQIAN,		//注音（大千）输入法方案
-		PinInCpp_XIAOHE,		//小鹤双拼方案
-		PinInCpp_ZIRANMA,		//自然码双拼方案
-		PinInCpp_SOUGOU,		//搜狗双拼方案
-		PinInCpp_ZHINENG_ABC,	//智能ABC双拼方案
-		PinInCpp_GUOBIAO,		//国标双拼方案
-		PinInCpp_MICROSOFT,		//微软双拼方案
-		PinInCpp_PINYINPP,		//拼音加加双拼方案
-		PinInCpp_ZIGUANG,		//紫光双拼方案
-	};
-	typedef enum PinInCpp_TreeSeracher_Keyboard PinInCpp_TreeSeracher_Keyboard;
+    struct PinInCpp_TreeSearcher_NULL;
+    typedef struct PinInCpp_TreeSearcher_NULL* PinInCpp_TreeSearcher;//PinInCpp_TreeSearcher == PinInCpp::TreeSearcher *
 
-	enum PinInCpp_TreeSeracher_Logic {
-		PinInCpp_BEGIN,
-		PinInCpp_CONTAIN,
-		PinInCpp_EQUAL,
-	};
-	typedef enum PinInCpp_TreeSeracher_Logic PinInCpp_TreeSeracher_Logic;
 
-	enum PinInCpp_DeserializeError {
-		PinInCpp_DeserNormal,
-		PinInCpp_FileNotOpen,
-		PinInCpp_DeserBinaryVersionInvalidException,
-		PinInCpp_DeserOutOfRange,
-		PinInCpp_DeserBadAlloc
-	};
-	typedef enum PinInCpp_DeserializeError PinInCpp_DeserializeError;
+    enum PinInCpp_TreeSeracher_Keyboard {//不提供C情况下的自定义方案，因为那可能过于麻烦，预设的也足够好了
+        PinInCpp_NULLKeyboard,    //代表不改变Keyboard，特殊的枚举量
+        PinInCpp_QUANPIN,        //基础的全拼方案 PinIn类的默认方案
+        PinInCpp_DAQIAN,        //注音（大千）输入法方案
+        PinInCpp_XIAOHE,        //小鹤双拼方案
+        PinInCpp_ZIRANMA,        //自然码双拼方案
+        PinInCpp_SOUGOU,        //搜狗双拼方案
+        PinInCpp_ZHINENG_ABC,    //智能ABC双拼方案
+        PinInCpp_GUOBIAO,        //国标双拼方案
+        PinInCpp_MICROSOFT,        //微软双拼方案
+        PinInCpp_PINYINPP,        //拼音加加双拼方案
+        PinInCpp_ZIGUANG,        //紫光双拼方案
+    };
+    typedef enum PinInCpp_TreeSeracher_Keyboard PinInCpp_TreeSeracher_Keyboard;
 
-	struct PinInCpp_Config {
-		PinInCpp_TreeSeracher_Keyboard keyboard;//返回的时候默认 PinInCpp_NULLKeyboard 因为我也没办法确定Keyboard是谁
-		char fZh2Z;//把他们当成bool用(
-		char fSh2S;
-		char fCh2C;
-		char fAng2An;
-		char fIng2In;
-		char fEng2En;
-		char fU2V;
-		char fFirstChar;
-	};
-	typedef struct PinInCpp_Config PinInCpp_Config;
+    enum PinInCpp_TreeSeracher_Logic {
+        PinInCpp_BEGIN,
+        PinInCpp_CONTAIN,
+        PinInCpp_EQUAL,
+    };
+    typedef enum PinInCpp_TreeSeracher_Logic PinInCpp_TreeSeracher_Logic;
 
-	//用PinInCpp_SearchResult_Free回收内存
-	struct PinInCpp_SearchResult {
-		size_t* ids;
-		size_t size;
-	};
-	typedef struct PinInCpp_SearchResult PinInCpp_SearchResult;
-	void PinInCpp_SearchResult_Free(PinInCpp_SearchResult result);
+    enum PinInCpp_DeserializeError {
+        PinInCpp_DeserNormal,
+        PinInCpp_FileNotOpen,
+        PinInCpp_DeserBinaryVersionInvalidException,
+        PinInCpp_DeserOutOfRange,
+        PinInCpp_DeserBadAlloc
+    };
+    typedef enum PinInCpp_DeserializeError PinInCpp_DeserializeError;
 
-	//依赖字典文件路径初始化。获取资源时需要检查空指针
-	PinInCpp_PinIn PinInCpp_PinIn_New(const char* path);
-	void PinInCpp_PinIn_Free(PinInCpp_PinIn pinin);
+    struct PinInCpp_Config {
+        PinInCpp_TreeSeracher_Keyboard keyboard;//返回的时候默认 PinInCpp_NULLKeyboard 因为我也没办法确定Keyboard是谁
+        char fZh2Z;//把他们当成bool用(
+        char fSh2S;
+        char fCh2C;
+        char fAng2An;
+        char fIng2In;
+        char fEng2En;
+        char fU2V;
+        char fFirstChar;
+    };
+    typedef struct PinInCpp_Config PinInCpp_Config;
 
-	//依赖序列化文件初始化，第三个参数承担返回值的工作
-	PinInCpp_DeserializeError PinInCpp_PinIn_Deserialize(const char* path, PinInCpp_TreeSeracher_Keyboard keyboard, PinInCpp_PinIn* pinin);
-	int PinInCpp_PinIn_Serialize(PinInCpp_PinIn pinin, const char* path);//返回值为真则写入成功
+    //用PinInCpp_SearchResult_Free回收内存
+    struct PinInCpp_SearchResult {
+        size_t* ids;
+        size_t size;
+    };
+    typedef struct PinInCpp_SearchResult PinInCpp_SearchResult;
+    void PinInCpp_SearchResult_Free(PinInCpp_SearchResult result);
 
-	//检查有效性
-	int PinInCpp_PinIn_Empty(PinInCpp_PinIn pinin);
+    //依赖字典文件路径初始化。获取资源时需要检查空指针
+    PinInCpp_PinIn PinInCpp_PinIn_New(const char* path);
+    void PinInCpp_PinIn_Free(PinInCpp_PinIn pinin);
 
-	//配置接口
-	PinInCpp_Config PinInCpp_PinIn_GetConfig(PinInCpp_PinIn pinin);
-	void PinInCpp_PinIn_ConfigCommit(PinInCpp_PinIn pinin, PinInCpp_Config cfg);
+    //依赖序列化文件初始化，第三个参数承担返回值的工作
+    PinInCpp_DeserializeError PinInCpp_PinIn_Deserialize(const char* path, PinInCpp_TreeSeracher_Keyboard keyboard, PinInCpp_PinIn* pinin);
+    int PinInCpp_PinIn_Serialize(PinInCpp_PinIn pinin, const char* path);//返回值为真则写入成功
 
-	//PinIn缓存控制接口
-	void PinInCpp_PinIn_PreCacheString(PinInCpp_PinIn pinin, const char* str);
-	void PinInCpp_PinIn_PreNullPinyinIdCache(PinInCpp_PinIn pinin);
-	int PinInCpp_PinIn_IsCharCacheEnabled(PinInCpp_PinIn pinin);
-	void PinInCpp_PinIn_SetCharCache(PinInCpp_PinIn pinin, int enable);
+    //检查有效性
+    int PinInCpp_PinIn_Empty(PinInCpp_PinIn pinin);
 
-	//获取资源时需要检查空指针
-	PinInCpp_TreeSearcher PinInCpp_TreeSearcher_NewPath(PinInCpp_TreeSeracher_Logic logic, const char* path);
-	PinInCpp_TreeSearcher PinInCpp_TreeSearcher_NewPinIn(PinInCpp_TreeSeracher_Logic logic, PinInCpp_PinIn pinin);
-	void PinInCpp_TreeSearcher_Free(PinInCpp_TreeSearcher pinin);
+    //配置接口
+    PinInCpp_Config PinInCpp_PinIn_GetConfig(PinInCpp_PinIn pinin);
+    void PinInCpp_PinIn_ConfigCommit(PinInCpp_PinIn pinin, PinInCpp_Config cfg);
 
-	//依赖序列化文件初始化，第三个参数承担返回值的工作
-	PinInCpp_DeserializeError PinInCpp_TreeSearcher_Deserialize(const char* path, PinInCpp_PinIn pinin, PinInCpp_TreeSearcher* tree);
-	int PinInCpp_TreeSearcher_Serialize(PinInCpp_TreeSearcher tree, const char* path);//返回值为真则写入成功
+    //PinIn缓存控制接口
+    void PinInCpp_PinIn_PreCacheString(PinInCpp_PinIn pinin, const char* str);
+    void PinInCpp_PinIn_PreNullPinyinIdCache(PinInCpp_PinIn pinin);
+    int PinInCpp_PinIn_IsCharCacheEnabled(PinInCpp_PinIn pinin);
+    void PinInCpp_PinIn_SetCharCache(PinInCpp_PinIn pinin, int enable);
 
-	//需要检查空指针，从搜索树上获取PinIn
-	PinInCpp_PinIn PinInCpp_TreeSearcher_GetPinIn(PinInCpp_TreeSearcher tree);
+    //获取资源时需要检查空指针
+    PinInCpp_TreeSearcher PinInCpp_TreeSearcher_NewPath(PinInCpp_TreeSeracher_Logic logic, const char* path);
+    PinInCpp_TreeSearcher PinInCpp_TreeSearcher_NewPinIn(PinInCpp_TreeSeracher_Logic logic, PinInCpp_PinIn pinin);
+    void PinInCpp_TreeSearcher_Free(PinInCpp_TreeSearcher pinin);
 
-	//搜索树的搜索API
-	size_t PinInCpp_TreeSearcher_PutString(PinInCpp_TreeSearcher tree, const char* str);//插入待搜索项
-	PinInCpp_SearchResult PinInCpp_TreeSearcher_ExecuteSearch(PinInCpp_TreeSearcher tree, const char* str);//获取结果列表，需要手动调用PinInCpp_SearchResultFree
-	size_t PinInCpp_TreeSearcher_GetStrSizeById(PinInCpp_TreeSearcher tree, size_t id);//使用PinInCpp_SearchResult里的id
-	int PinInCpp_TreeSearcher_PutToCharBuf(PinInCpp_TreeSearcher tree, size_t id, char* buf, size_t bufSize);//根据提供的缓冲区填充字符串，如果数据因为缓冲区大小被截断了，那么返回的是-1。完整的插入了则是0
+    //依赖序列化文件初始化，第三个参数承担返回值的工作
+    PinInCpp_DeserializeError PinInCpp_TreeSearcher_Deserialize(const char* path, PinInCpp_PinIn pinin, PinInCpp_TreeSearcher* tree);
+    int PinInCpp_TreeSearcher_Serialize(PinInCpp_TreeSearcher tree, const char* path);//返回值为真则写入成功
 
-	//搜索树的其他控制接口
-	void PinInCpp_TreeSearcher_StrPoolReserve(PinInCpp_TreeSearcher tree, size_t _Newcapacity);
-	void PinInCpp_TreeSearcher_Refresh(PinInCpp_TreeSearcher tree);//手动尝试刷新
-	void PinInCpp_TreeSearcher_ClearFreeList(PinInCpp_TreeSearcher tree);
-	void PinInCpp_TreeSearcher_ShrinkToFit(PinInCpp_TreeSearcher tree);
+    //需要检查空指针，从搜索树上获取PinIn
+    PinInCpp_PinIn PinInCpp_TreeSearcher_GetPinIn(PinInCpp_TreeSearcher tree);
+
+    //搜索树的搜索API
+    size_t PinInCpp_TreeSearcher_PutString(PinInCpp_TreeSearcher tree, const char* str);//插入待搜索项
+    PinInCpp_SearchResult PinInCpp_TreeSearcher_ExecuteSearch(PinInCpp_TreeSearcher tree, const char* str);//获取结果列表，需要手动调用PinInCpp_SearchResultFree
+    size_t PinInCpp_TreeSearcher_GetStrSizeById(PinInCpp_TreeSearcher tree, size_t id);//使用PinInCpp_SearchResult里的id
+    int PinInCpp_TreeSearcher_PutToCharBuf(PinInCpp_TreeSearcher tree, size_t id, char* buf, size_t bufSize);//根据提供的缓冲区填充字符串，如果数据因为缓冲区大小被截断了，那么返回的是-1。完整的插入了则是0
+
+    //搜索树的其他控制接口
+    void PinInCpp_TreeSearcher_StrPoolReserve(PinInCpp_TreeSearcher tree, size_t _Newcapacity);
+    void PinInCpp_TreeSearcher_Refresh(PinInCpp_TreeSearcher tree);//手动尝试刷新
+    void PinInCpp_TreeSearcher_ClearFreeList(PinInCpp_TreeSearcher tree);
+    void PinInCpp_TreeSearcher_ShrinkToFit(PinInCpp_TreeSearcher tree);
 ]])
-local PinInCpp = ffi.load("mods/conjurer_unsafe/files/module/PinIn4Cpp")
+ffi.C.SetDllDirectoryA("mods/conjurer_unsafe/files/module/")
+local PinInCpp = ffi.load("PinIn4Cpp")
 
 local function FreePinIn(cdata)
     PinInCpp.PinInCpp_PinIn_Free(cdata)

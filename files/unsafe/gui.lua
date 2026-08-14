@@ -696,6 +696,13 @@ function UI.ResetAllCanMove()
 	this.private.ResetAllCanMove = {}
 end
 
+---返回鼠标在屏幕上的坐标，是缩放后的
+---@return number x, number y
+function UI.GetMousePosHasScale()
+    local x, y = InputGetMousePosOnScreen()
+    return x / UI.GetScale(), y / UI.GetScale()
+end
+
 ---一个较为通用的让控件可以移动并设置的函数
 ---@param id string
 ---@param s_x number
@@ -2172,56 +2179,6 @@ function UI.GetScreenPosition(x, y)
 	local ax = (x - camera_x) / res_width * screen_width
 	local ay = (y - camera_y) / res_height * screen_height
 	return ax + screen_width * 0.5, ay + screen_height * 0.5
-end
-
----从给定的路径加载lua，并传递UI变量（this），目标代码只执行一次
----@param filename string
----@return any,string|nil
-function UI.dofile_gui_once(filename)
-    local cached = this.private.loadcache_once[filename]
-    if cached == nil then
-        local f, err = loadfile(filename)
-		if f == nil then
-			return f,err
-		end
-		local env = {this = UI}
-		setmetatable(env, { __index = _G }) --继承全局环境
-        local fn = setfenv(f, env)
-        this.private.loadcache_once[filename] = fn()
-        cached = this.private.loadcache_once[filename]
-		env.this = nil
-		for k,v in pairs(env)do
-			_G[k] = v
-		end
-		do_mod_appends(filename)
-    end
-	return cached
-end
-
----从给定的路径加载lua，并传递UI变量（this），目标代码可被执行多次
----@param filename string
----@return any,string|nil
-function UI.dofile_gui(filename)
-    local cached = this.private.loadcache[filename]
-    if cached == nil then
-        local f, err = loadfile(filename)
-        if f == nil then
-            return f, err
-        end
-		local env = {this = UI}
-		setmetatable(env, { __index = _G }) --继承全局环境
-        cached = setfenv(f, env)
-		this.private.loadcache[filename] = cached
-    end
-    local result = cached()
-    local env = getmetatable(result)
-    for k, v in pairs(env) do
-		if k ~= "this" then
-			_G[k] = v
-		end
-	end
-    do_mod_appends(filename)
-	return result
 end
 
 ---返回一个缩放参数，代表相对ui的位置与实际ui位置的倍率

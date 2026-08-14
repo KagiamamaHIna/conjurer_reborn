@@ -1,12 +1,4 @@
-if not ModIsEnabled("conjurer_reborn") then
-    function CurSettingGet(key)
-        return ModSettingGetNextValue("conjurer_reborn." .. key)
-    end
-else
-    function CurSettingGet(key)
-        return ModSettingGet("conjurer_reborn." .. key)
-    end
-end
+dofile_once("mods/conjurer_reborn/files/lib/CurSetting.lua")
 
 dofile_once("data/scripts/lib/utilities.lua")
 

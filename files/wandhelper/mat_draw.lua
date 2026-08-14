@@ -59,8 +59,7 @@ local function erase(UI, material)
 	-- 不要每次都新建那么多实体和组件，会严重降低性能
 	if not PrevErase then
         --与循环无关变量外置提高性能
-        local WashMode = GetEraserWashMode(UI)
-        if WashMode then --假如是WashMode
+        if eraser_mode == "WASH" then --假如是WashMode
             local vars = {
                 radius = 3,
                 eat_probability = 100,
@@ -192,7 +191,6 @@ end
 ---@param brush table
 local function DrawNormal(material, brush, rotation)
 	local reticle = EntityGetWithName("conjurer_reborn_brush_reticle")
-	local x, y = EntityGetTransform(reticle)
     local draw_vars = GetMatDrawVars(material, brush, rotation)
 	draw_vars["emitter_lifetime_frames"] = 6
 	EntityAddComponent2(reticle, "ParticleEmitterComponent", draw_vars)
@@ -232,11 +230,13 @@ end
 local function HandleDraw(UI, matid, brush, x, y, rotation)
 	local is_box2d_material = MatTable[matid].conjurer_unsafe_type == MatType.Box2d
 	if is_box2d_material and not brush.physics_supported then
-		return GamePrint("$conjurer_reborn_material_handle_draw_no_box2d")
+		GamePrint("$conjurer_reborn_material_handle_draw_no_box2d")
+		return
 	end
 
 	if brush.action then
-		return brush.action(matid, brush, x, y, rotation)
+		brush.action(matid, brush, x, y, rotation)
+		return
 	end
 
 	if is_box2d_material then
@@ -275,7 +275,8 @@ local function HandleRelease(matid, brush, x, y, rotation)
 	end
 
 	if brush.release_action then
-		return brush.release_action(matid, brush, x, y, rotation)
+		brush.release_action(matid, brush, x, y, rotation)
+		return
 	end
 
 	-- No other default release actions yet needed.
@@ -291,7 +292,7 @@ local LastRotation = 0
 local PrevDraw = false
 ---执行材料工具实体的操作
 ---@param UI Gui
-function MaterialToolEntityUpdate(UI)
+local function LegacyMaterialToolEntityUpdate(UI)
 	BrushFollowMouse(UI)
 	EraserFollowMouse(UI)
 
@@ -305,10 +306,10 @@ function MaterialToolEntityUpdate(UI)
         else
 			rotationMax = horizontal
 		end
-		if UI.UserData["BrushRotationType"] == nil then
+		if UI.UserData["BrushRotationType"] == nil then--没有角度初始化为0
 			UI.UserData["BrushRotationType"] = 0
 		end
-        if InputIsKeyJustDown(Key_q) then
+        if InputIsKeyJustDown(Key_q) then--按q左转
             if UI.UserData["BrushRotationType"] - 1 < 0 then
                 UI.UserData["BrushRotationType"] = rotationMax
             else
@@ -371,4 +372,294 @@ function MaterialToolEntityUpdate(UI)
 
 	PrevDraw = holding_m1
 	PrevErase = ACTION_HOLD_ERASE
+end
+
+---绘制普通材料
+---@param UI Gui
+---@param material string
+---@param x number
+---@param y number
+local function UnsafeDrawNormal(UI, material, x, y)
+	local brush = GetActiveBrush(UI)
+    x, y = GridSnap(x, y, GetBrushGridSize(UI))
+	local rotationType = UI.UserData["BrushRotationType"] or 0
+    x, y = PosInCenter(x, y, brush.UnsafeWidth, brush.UnsafeHeight, rotationType)
+	local matid = CellFactory_GetType(material)
+	local light = CurSettingGet("unsafe_brush_create_light")
+	if GetBurshMatOverwrite(UI) then
+		World.OverwriteCellsInArea(brush.UnsafeArea[rotationType], matid, x, y, true, light)
+    else
+    	World.CreateCellsInArea(brush.UnsafeArea[rotationType], matid, x, y, light)
+	end
+end
+
+---@param UI Gui
+---@param material string
+---@param x number
+---@param y number
+local function UnsafeDrawBox2D(UI, material, x, y)
+	local brush = GetActiveBrush(UI)
+    x, y = GridSnap(x, y, GetBrushGridSize(UI))
+	local rotationType = UI.UserData["BrushRotationType"] or 0
+    x, y = PosInCenter(x, y, brush.UnsafeWidth, brush.UnsafeHeight, rotationType)
+	local matid = CellFactory_GetType("conjurer_reborn_construction_steel")
+	local light = CurSettingGet("unsafe_brush_create_light")
+	if GetBurshMatOverwrite(UI) then
+		World.OverwriteCellsInArea(brush.UnsafeArea[rotationType], matid, x, y, true, light)
+    else
+    	World.CreateCellsInArea(brush.UnsafeArea[rotationType], matid, x, y, light)
+	end
+end
+
+---@param UI Gui
+---@param material string
+---@param brush table
+---@param x number
+---@param y number
+---@param rotation number
+local function UnsafeHandleDraw(UI, material, brush, x, y, rotation)
+    local is_box2d_material = MatTable[material].conjurer_unsafe_type == MatType.Box2d
+    if is_box2d_material and not brush.physics_supported then
+        GamePrint("$conjurer_reborn_material_handle_draw_no_box2d")
+		return
+    end
+
+    if brush.action then
+		brush.action(material, brush, x, y, rotation)
+        return
+    end
+
+    if is_box2d_material then
+        UnsafeDrawBox2D(UI, material, x, y)
+    elseif brush.raytrace_from_center then
+        DrawGrower(material, brush, x, y, rotation)
+    else
+        UnsafeDrawNormal(UI, material, x, y)
+    end
+end
+
+---@param UI Gui
+---@param material string
+local function UnsafeErase(UI, material, x, y)
+    local area = GetEraserArea(UI)
+    local chunk_count, chunk_size, total_size = GetEraserSize(UI)
+
+    local grid_size
+    if GetEraserUseBrushGrid(UI) then
+        grid_size = GetBrushGridSize(UI)
+    else
+        grid_size = GetEraserGridSize(UI)
+    end
+    x, y = GridSnap(x, y, grid_size)
+    x, y = PosInCenter(x, y, total_size, total_size)
+    local eraser_mode = GetEraserMode(UI)
+    local eraser_replace = GetEraserUseReplacer(UI)
+
+	local matid = CellFactory_GetType(material)
+    local grid = World.capi.get_grid_world()
+    local cremove_cell = World.capi.remove_cell
+    local ReplaceCell
+    if GetEraserPropertiesOnly(UI) then
+		local matptr = World.capi.get_material_ptr(matid)
+        ReplaceCell = function(cell)
+			cell.vtable.cell_conversion(cell, grid, matptr)
+        end
+    else
+        ReplaceCell = function(cell)
+            if MatNumIdToType(matid) == MatType.Box2d and cell.material_ptr.cell_type ~= CellType.SOLID then
+                return
+            end
+            cell.vtable.cell_overwrite(cell, grid, matid)
+        end
+    end
+	local function GetImpl()
+        if eraser_mode == "WASH" then
+            return function(cell)
+                cell.vtable.set_colour(cell, cell.vtable.get_not_colour(cell))
+            end
+        elseif eraser_mode == "ALL" then
+            if eraser_replace then
+                return function(cell)
+                    ReplaceCell(cell)
+                end
+            else
+                return function(cell, cx, cy)
+                    cremove_cell(grid, cell, cx, cy, true)
+                end
+            end
+        elseif eraser_mode == "SELECTED" then
+            if not eraser_replace then
+                return function(cell, cx, cy)
+					if cell.material_ptr.material_type == matid then
+	                    cremove_cell(grid, cell, cx, cy, true)
+					end
+                end
+            end
+        elseif eraser_mode == "NOT_SELECTED" then
+            if eraser_replace then
+                return function(cell) --替换不是它的材料，那不就是全替换了，因为自身不会被替换
+                    ReplaceCell(cell)
+                end
+            else
+                return function(cell, cx, cy)
+                    if cell.material_ptr.material_type ~= matid then
+                        cremove_cell(grid, cell, cx, cy, true)
+                    end
+                end
+            end
+		elseif GetMaterialTypeList()[eraser_mode] ~= nil then --材料类型模式
+            if eraser_replace then
+				return function(cell)
+                    if eraser_mode == MatType.Fire then
+                        cell.vtable.stop_burning(cell)
+                    end
+                    if MatNumIdToType(cell.material_ptr.material_type) == eraser_mode then
+                        ReplaceCell(cell)
+                    end
+                end
+            else
+                return function(cell, cx, cy)
+                    if eraser_mode == MatType.Fire then
+                        cell.vtable.stop_burning(cell)
+                    end
+                    if MatNumIdToType(cell.material_ptr.material_type) == eraser_mode then
+                        World.capi.remove_cell(grid, cell, cx, cy, true)
+                    end
+                end
+			end
+        end
+	end
+    local impl = GetImpl()
+	if impl ~= nil then
+		World.GetCellsInArea(area, x, y, impl)
+	end
+end
+
+---@param UI Gui
+---@param material string
+local function UnsafeHandleErase(UI, material, x, y)
+	--真的有可能会写更多新的其他功能吗？
+	UnsafeErase(UI, material, x, y)
+end
+
+local DrawLine = GetDrawLine()
+local EraseLine = GetDrawLine()
+---@param UI Gui
+local function UnsafeMaterialToolEntityUpdate(UI)
+	BrushFollowMouse(UI)
+	EraserFollowMouse(UI)
+
+    local brush = GetActiveBrush(UI)
+	
+	local brushObj = EntityObj(EntityGetWithName("conjurer_reborn_brush_reticle") or 0)
+    if brushObj.entity_id ~= 0 and (brush.can_rotation or brush.can_rotation_horizontal) then
+        local rotationMax
+        if brush.can_rotation then
+            rotationMax = any_rotation
+        else
+            rotationMax = horizontal
+        end
+        if UI.UserData["BrushRotationType"] == nil then
+            UI.UserData["BrushRotationType"] = 0
+        end
+        if InputIsKeyJustDown(Key_q) then
+            if UI.UserData["BrushRotationType"] - 1 < 0 then
+                UI.UserData["BrushRotationType"] = rotationMax
+            else
+                UI.UserData["BrushRotationType"] = UI.UserData["BrushRotationType"] - 1
+            end
+        elseif InputIsKeyJustDown(Key_e) then
+            if UI.UserData["BrushRotationType"] + 1 > rotationMax then
+                UI.UserData["BrushRotationType"] = 0
+            else
+                UI.UserData["BrushRotationType"] = UI.UserData["BrushRotationType"] + 1
+            end
+        end
+        local newRotation = UI.UserData["BrushRotationType"] * 90
+        if newRotation > 180 then
+            newRotation = newRotation - 360
+        end
+        if LastRotation ~= newRotation then
+            LastRotation = newRotation
+            RefreshBrushSprite(UI)
+            brushObj.attr.rotation = math.rad(newRotation)
+        end
+        --print(newRotation)
+    elseif brushObj.entity_id ~= 0 and brushObj.attr.rotation ~= 0 then --没有就检查并设置为0
+        RefreshBrushSprite(UI)
+        brushObj.attr.rotation = 0
+    end
+	
+	local holding_m1 = IsHoldingMouse1()
+	local ACTION_HOLD_DRAW = not brush.click_to_use and holding_m1
+	local ACTION_CLICK_DRAW = brush.click_to_use and HasClickedMouse1()
+	local ACTION_RELEASE_DRAW = (holding_m1 == false and PrevDraw == true)
+	local ACTION_HOLD_ERASE = IsHoldingMouse2()
+	local ACTION_RELEASE_ERASE = (ACTION_HOLD_ERASE == false and PrevErase == true)
+	local brush_grid_size = GetBrushGridSize(UI)
+
+	local mx, my = DEBUG_GetMouseWorld()
+
+	local bx, by = GridSnap(mx, my, brush_grid_size)
+    local material = GetActiveMaterial(UI)
+
+	local erase_grid_size
+    if GetEraserUseBrushGrid(UI) then
+        erase_grid_size = GetBrushGridSize(UI)
+    else
+        erase_grid_size = GetEraserGridSize(UI)
+    end
+	
+	local ex, ey = GridSnap(mx, my, erase_grid_size)
+	EraseLine(--前置让玩家可以移除+重建
+		function () return ACTION_HOLD_ERASE end,
+		function () return ex,ey end,
+		function (cx, cy) UnsafeHandleErase(UI, material, cx, cy) end,
+        function()
+			ActiveParticle("plasma_fading_pink", 16, 2)
+			if GetBinocularsActive(UI) then --如果处于自由视角，通过强制重置摄像机，使得画面会刷新显示新的材料
+        		local cx, cy = GameGetCameraPos()
+        		GameSetCameraPos(cx, cy)
+    		end
+        end
+	)
+
+	if ACTION_RELEASE_ERASE then
+		HandleEraseRelease()
+		CloseParticle()
+	end
+
+	DrawLine(
+		function () return ACTION_HOLD_DRAW or ACTION_CLICK_DRAW end,
+		function () return bx,by end,
+		function (cx, cy) UnsafeHandleDraw(UI, material, brush, cx, cy, math.deg(brushObj.attr.rotation)) end,
+        function()
+			ActiveParticle(material, 16, 2)
+			if GetBinocularsActive(UI) then --如果处于自由视角，通过强制重置摄像机，使得画面会刷新显示新的材料
+        		local cx, cy = GameGetCameraPos()
+        		GameSetCameraPos(cx, cy)
+    		end
+        end
+	)
+	
+	-- if ACTION_HOLD_DRAW or ACTION_CLICK_DRAW then
+    --     HandleDraw(UI, material, brush, bx, by, math.deg(brushObj.attr.rotation))
+    --     ActiveParticle(material, 16, 2)
+	-- end
+
+	if ACTION_RELEASE_DRAW then
+        HandleRelease(material, brush, bx, by, math.deg(brushObj.attr.rotation))
+		CloseParticle()
+	end
+
+	PrevDraw = holding_m1
+	PrevErase = ACTION_HOLD_ERASE
+end
+
+function MaterialToolEntityUpdate(UI)
+	if CurSettingGet("unsafe_brush") then
+        UnsafeMaterialToolEntityUpdate(UI)
+    else
+		LegacyMaterialToolEntityUpdate(UI)
+	end
 end

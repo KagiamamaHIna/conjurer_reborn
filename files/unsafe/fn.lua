@@ -848,3 +848,14 @@ function ChangeGamemode()
     file:write(xml)
     file:close()
 end
+
+---@param num number
+---@return integer
+function MathRound(num)
+    local flag = num < 0
+    local result = math.floor(math.abs(num) + 0.5)
+	if flag then
+		return -result
+	end
+	return result
+end

@@ -26,6 +26,123 @@ function filler_release_action(material, brush, x, y)
 	)
 end
 
+function unsafe_filler_action(material, brush, ix, iy)
+	local cmatid
+    if MatNumIdToType(CellFactory_GetType(material)) == MatType.Box2d then
+        cmatid = CellFactory_GetType("conjurer_reborn_construction_paste")
+    else
+        cmatid = CellFactory_GetType(material)
+    end
+	local world_ffi = World.capi
+	local cmatptr = world_ffi.get_material_ptr(cmatid)
+    local grid = world_ffi.get_grid_world()
+    local chunkMap = grid.vtable.get_chunk_map(grid)
+    local tpcell = world_ffi.get_cell(chunkMap, ix, iy)
+	local target = nil
+	if tpcell[0] ~= nil then
+        local cell = tpcell[0]
+		target = cell.material_ptr.material_type
+	end
+	if target == cmatid then--避免死循环
+		return
+	end
+    ---有几种情况，如果要填充的是空气，那么target是nil
+    ---如果要填充的是材料，则target是材料id
+    ---检测到不符合的时候返回假
+    ---返回一个检查目标单元是否和target单元类型一致的函数
+	---@return fun(x:integer,y:integer):boolean
+    local function getCellMatch()
+		if target then
+			return function (x, y)
+                --若目标材料不是空气，那么意味着get出空指针，毫无疑问是边界
+				--如果get出来不是空指针，检查
+				local pcell = world_ffi.get_cell(chunkMap, x, y)
+                if pcell[0] == nil then
+                    return false
+                end
+				return pcell[0].material_ptr.material_type == target
+			end
+        else
+            return function(x, y)
+                --若目标材料为空气，则获取空指针可能存在两种情况，一个是处于未加载区块，一个是处于加载区块
+                --get cell自身存在区块加载的判断，若先判断区块加载再get cell，如果获取出来的是材料，则多检查了一次
+				--所以先尝试get cell进行快速失败，避免可能的检查
+                local pcell = world_ffi.get_cell(chunkMap, x, y)
+                if pcell[0] ~= nil then
+                    return false
+                end
+                --发现检查出来是空指针，那么根据区块加载检查结果来决定是否有效
+                --因为如果区块是加载的，但获取的是空指针，那么意味着是空气
+				--如果区块不是加载的，则无效
+				return world_ffi.chunk_loaded(chunkMap, x, y)
+			end
+		end
+	end
+	local CellMatch = getCellMatch()
+    local stack = { ix, iy }
+
+	--扫描邻行并压栈的内部函数
+    local function scanLineForSeeds(ny, xLeft, xRight)
+        local spanAdded = false --标记当前连续的待填充片段是否已压栈
+		for i = xLeft,xRight do
+            if CellMatch(i, ny) then
+                if not spanAdded then
+					stack[#stack+1] = i
+					stack[#stack+1] = ny
+					spanAdded = true
+				end
+			else
+				spanAdded = false
+			end
+		end
+    end
+
+    while #stack > 0 do
+        local y = stack[#stack]
+		stack[#stack] = nil
+        local x = stack[#stack]
+		stack[#stack] = nil
+		
+        if not CellMatch(x, y) then
+            goto continue
+        end
+		
+        local xLeft = x
+        while CellMatch(xLeft - 1, y) do
+            xLeft = xLeft - 1
+        end
+		
+		local xRight = x;
+        while CellMatch(xRight + 1, y) do
+            xRight = xRight + 1
+		end
+        for i = xLeft, xRight do
+            local pcell = world_ffi.get_cell(chunkMap, i, y)
+			if pcell[0] == nil then
+                pcell[0] = world_ffi.construct_cell(grid, i, y, cmatptr, nil)
+            else
+				pcell[0].vtable.cell_overwrite(pcell[0], grid, cmatid)
+			end
+        end
+		scanLineForSeeds(y - 1, xLeft, xRight)
+		scanLineForSeeds(y + 1, xLeft, xRight)
+		::continue::
+	end
+end
+
+function unsafe_filler_release_action(material, brush, x, y)
+    if MatNumIdToType(CellFactory_GetType(material)) == MatType.Box2d then
+        ConvertMaterialOnAreaInstantly(
+            x - 1000, y - 1000,
+            2000, 2000,
+            CellFactory_GetType("conjurer_reborn_construction_paste"), CellFactory_GetType(material),
+            true,
+            false
+        )
+    end
+end
+
+
 --
 -- Line tool
 --

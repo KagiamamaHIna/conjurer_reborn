@@ -306,7 +306,17 @@ local function GetEraserCategories(UI)
                 text = "$conjurer_reborn_material_eraser_options_all",
 				mode = "ALL",
                 image = GetEraserSprites("ALL"),
-			},
+            },
+            {
+				id = "EraserPickerTypeWash",
+                text = "$conjurer_reborn_material_eraser_options_eraser_wash",
+				mode = "WASH",
+                image = GetEraserSprites("WASH"),
+                desc_fn = function()
+                    UI.VerticalSpacing(2)
+                    UI.Text(0, 0, "$conjurer_reborn_material_eraser_options_eraser_wash_desc")
+                end
+            },
             {
 				id = "EraserPickerTypeSelected",
 				text = "$conjurer_reborn_material_eraser_options_selected",
@@ -498,17 +508,23 @@ local function EraserPicker(UI)
 		if ReplaceClick then
 			SetEraserUseReplacer(UI, ReplaceFlag)
 		end
-        UI.GuiTooltip("$conjurer_reborn_material_eraser_options_eraser_replace_desc")
+        UI.BetterTooltipsNoCenter(function()
+            UI.Text(0, 0, "$conjurer_reborn_material_eraser_options_eraser_replace_desc")
+            if CurSettingGet("unsafe_brush") then
+                UI.Text(0, 0, "$conjurer_reborn_material_unsafe_handle_replace_no_box2d")
+            end
+	    end,-3000,10)
+
+        if GetEraserUseReplacer(UI) and CurSettingGet("unsafe_brush") then
+    		UI.VerticalSpacing(2)
+            local PorpFlag, PropClick = ConjurerCheckbox(UI, "EraserPropBtn", 8, 0, "$conjurer_reborn_material_eraser_options_properties_only")
+            UI.GuiTooltip("$conjurer_reborn_material_eraser_options_properties_only_desc")
+			if PropClick then
+				SetEraserPropertiesOnly(UI, PorpFlag)
+			end
+        end
 
 		UI.VerticalSpacing(2)
-        local WashFlag, WashClick = ConjurerCheckbox(UI, "EraserWashBtn", 0, 0, "$conjurer_reborn_material_eraser_options_eraser_wash")
-		if WashClick then
-			SetEraserWashMode(UI, WashFlag)
-		end
-        UI.GuiTooltip("$conjurer_reborn_material_eraser_options_eraser_wash_desc")
-
-		UI.VerticalSpacing(2)
-
 		--网格对齐模式
 		local UseBrushGrid, UseBrushClick = ConjurerCheckbox(UI, "EraserUseBrushBtn", 0, 0, "$conjurer_reborn_material_eraser_options_eraser_use_brush_grid", 0, true)
         if UseBrushClick then
@@ -587,14 +603,21 @@ local function BrushPicker(UI)
             DrawGridSlot(7, v.brushes, i)--每行七个，和原版conjurer一致
         end
         UI.VerticalSpacing(4)
+        if CurSettingGet("unsafe_brush") then
+            UI.NextZDeep(0)
+            local MatOverwriteFlag, MatOverwriteClick = ConjurerCheckbox(UI, "BrushMatOverwrite", 0, 0, "$conjurer_reborn_material_brushes_material_overwrite")
+            UI.GuiTooltip("$conjurer_reborn_material_brushes_material_overwrite_desc")
+			if MatOverwriteClick then
+				SetBurshMatOverwrite(UI, MatOverwriteFlag)
+			end
+            UI.VerticalSpacing(4)
+        end
         UI.NextZDeep(0) --最后一个那个滑条
-
 		local BrushSliderText = GameTextGet("$conjurer_reborn_material_brushes_grid")
 		local value = EasySlider(UI, "BrushPickerGridSlider", 0, 0, BrushSliderText, 1, 100, 1, 100, GetBrushGridSize(UI),nil,nil,function ()
 			UI.GuiTooltip(GameTextGet("$conjurer_reborn_material_brushes_grid_desc"))
 		end)
         SetBrushGridSize(UI, value)
-		
     end)
 	UI.NextZDeep(-100)
 	UI.DrawScrollContainer("BrushPickerBox", true, true, MatWandSpriteBG)
@@ -977,7 +1000,25 @@ local MainMatBtns = {
 ---绘制左边的主按钮
 ---@param UI Gui
 local function MatwandButtons(UI)
-    UI.BeginVertical(7, 65, true, 2,2)
+    if CurSettingGet("unsafe_brush") then
+        local fePause = GlobalsGetValue("conjurer_reborn.fe_enable", "1") ~= "0"
+        UI.BeginVertical(7, 65 - 12 - 2, true, 2, 2)
+        UI.NextZDeep(10)
+        local click = UI.ImageButton("EnableCellUpdate", 1, -2, fePause and "mods/conjurer_reborn/files/gfx/matwand_icons/icon_fe.png" or "mods/conjurer_reborn/files/gfx/matwand_icons/icon_fe_grey.png")
+        UI.BetterTooltipsNoCenter(function()
+            local begin = fePause and GameTextGet("$conjurer_reborn_picker_close") or GameTextGet("$conjurer_reborn_picker_open")
+            UI.Text(0, 0, begin .. GameTextGet("$conjurer_reborn_material_fe"))
+            UI.Text(0, 0, "$conjurer_reborn_material_fe_desc")
+        end, UI.GetZDeep() - 1000, 10)
+        if click then
+            ClickSound()
+            GlobalsSetValue("conjurer_reborn.fe_enable", not fePause and "1" or "0")
+            World.EnableCellUpdate(not fePause)
+        end
+        UI.VerticalSpacing(2)
+    else
+        UI.BeginVertical(7, 65, true, 2, 2)
+    end
 	GuiBeginAutoBox(UI.gui)--框住用的自动盒子
     for _, v in ipairs(MainMatBtns) do
         local image, bg = v.image_func(UI)

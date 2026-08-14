@@ -1,13 +1,4 @@
-if not ModIsEnabled("conjurer_reborn") then
-    function CurSettingGet(key)
-        return ModSettingGetNextValue("conjurer_reborn." .. key)
-    end
-else
-    function CurSettingGet(key)
-        return ModSettingGet("conjurer_reborn." .. key)
-    end
-end
-
+dofile_once("mods/conjurer_reborn/files/lib/CurSetting.lua")
 dofile_once("mods/conjurer_reborn/files/compatible/do_compatible.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/unsafe.lua")
 if not UnsafeTrueVer then--如果版本检查没通过
@@ -172,6 +163,9 @@ SrcModImageMakeEditable = ModImageMakeEditable
 local initFlag = false
 local GUIDatas = nil
 local GuiDofileError = nil
+
+---@type WorldClass
+World = nil
 function OnWorldPostUpdate()
     if not initFlag then
         if not ModIsEnabled("conjurer_reborn") then
@@ -183,6 +177,18 @@ function OnWorldPostUpdate()
         GUIDatas, GuiDofileError = dofile_once("mods/conjurer_reborn/files/unsafe_gui/update.lua")
         --加载流程
         ClearDofileOnceCache("mods/conjurer_reborn/files/unsafe/DataGenerator/GetDataWak.lua") --清除缓存，将datawak的数据交给lua销毁
+    end
+    if World then
+        local brush = EntityGetWithName("conjurer_reborn_brush_reticle")
+        if brush ~= 0 then
+            local bx, by = EntityGetTransform(brush)
+            local cell = World.GetCell(bx,by)
+            if cell == nil then
+                GlobalsSetValue("conjurer_reborn.checkmat_material_str_id", "air")
+            else
+                GlobalsSetValue("conjurer_reborn.checkmat_material_str_id", cell.data.name)
+            end
+        end
     end
     KeyListeningUpdate()
     if GUIDatas == nil then --获取失败就不获取了，打印错误
@@ -220,4 +226,70 @@ end
 
 function OnModPreInit()--模组init执行完成之后首先调用的
     dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/TechStatusMat.lua") --优先生成
+end
+
+function OnWorldInitialized()
+    if CurSettingGet("unsafe_brush") then
+        ---@type WorldClass
+        World = dofile_once("mods/conjurer_reborn/files/unsafe/WorldClass.lua")
+        if GlobalsGetValue("conjurer_reborn.fe_enable", "1") == "0" then
+            World.EnableCellUpdate(false)
+        end
+    end
+end
+
+--预解析
+function OnMagicNumbersAndWorldSeedInitialized()
+    if CurSettingGet("unsafe_brush") then
+        local function RotationArea(area, rtype, w, h)
+            local result = {}
+            local wmax = w - 1
+            local hmax = h - 1
+            for i = 1, #area, 2 do
+                local dx = area[i]
+                local dy = area[i + 1]
+                if rtype == 1 then
+                    result[i] = hmax - dy
+                    result[i + 1] = dx
+                elseif rtype == 2 then
+                    result[i] = wmax - dx
+                    result[i + 1] = hmax - dy
+                elseif rtype == 3 then
+                    result[i] = dy
+                    result[i + 1] = wmax - dx
+                end
+            end
+            return result
+        end
+        local Brushes = dofile_once("mods/conjurer_reborn/files/wandhelper/mat_brushes.lua")
+        for _,brush in ipairs(Brushes[1].brushes) do
+            local brushImgID, width, height = SrcModImageMakeEditable(brush.brush_file, math.huge, math.huge)
+            local area = {}
+            for x = 0, width - 1 do
+                for y = 0, height - 1 do
+                    local color = ModImageGetPixel(brushImgID, x, y)
+                    --给ABGR作为整数传进来太坏了。。。
+                    --这个神秘的数字是0xFF000000
+                    --但为什么我不在lua里直接用这个字面量呢？因为lua默认数字类型是浮点数，而nolla传进来是传的有符号整数
+                    --因为符号位是1，所以变成了一个负数
+                    --而lua因为是浮点数导致变成了正数
+                    if color ~= -16777216 then
+                        area[#area + 1] = x
+                        area[#area + 1] = y
+                    end
+                end
+            end
+            brush.UnsafeArea = {}
+            brush.UnsafeArea[0] = area
+            brush.UnsafeWidth = width
+            brush.UnsafeHeight = height
+            if brush.can_rotation_horizontal then--预旋转参数
+                brush.UnsafeArea[1] = RotationArea(area, 1, width, height)
+            elseif brush.can_rotation then
+                brush.UnsafeArea[1] = RotationArea(area, 1, width, height)
+                brush.UnsafeArea[2] = RotationArea(area, 2, width, height)
+                brush.UnsafeArea[3] = RotationArea(area, 3, width, height)
+            end
+        end
+    end
 end

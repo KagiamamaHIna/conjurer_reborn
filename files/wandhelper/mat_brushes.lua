@@ -239,7 +239,7 @@ local Growers = {
 local Tools = {
 	{
 		name = "$conjurer_reborn_material_tools_filler_tool",
-		desc = "$conjurer_reborn_material_tools_filler_tool_desc",
+		desc = CurSettingGet("unsafe_brush") and "$conjurer_reborn_material_tools_unasfe_filler_tool_desc" or "$conjurer_reborn_material_tools_filler_tool_desc",
 		offset_x = 5,
 		offset_y = 5,
 		reticle_file = "mods/conjurer_reborn/files/wands/matwand/brushes/filler_reticle.png",
@@ -247,8 +247,8 @@ local Tools = {
 		icon_file = "mods/conjurer_reborn/files/wands/matwand/brushes/filler_icon.png",
 		click_to_use = true,
 		physics_supported = true,
-		action = filler_action,
-		release_action = filler_release_action,
+		action = CurSettingGet("unsafe_brush") and unsafe_filler_action or filler_action,
+		release_action = CurSettingGet("unsafe_brush") and unsafe_filler_release_action or filler_release_action,
     },
 	{
         name = "$conjurer_reborn_material_tools_eyedropper_tool",
@@ -389,14 +389,12 @@ local Tools = {
 		release_action = dragger_release_action,
 	},
 }
-
-local f, err = loadfile("mods/conjurer_reborn/files/scripts/lists/new_brushes.lua")
+dofile_once("mods/conjurer_reborn/files/lib/SandBox.lua")
+local f, env = NewSandBoxFile("mods/conjurer_reborn/files/scripts/lists/new_brushes.lua")
 if f == nil then
-    print("conjurer_reborn:new_brushes.lua has error! err:",err)
+    print("conjurer_reborn:new_brushes.lua has error!")
 else
-	local env = {}
-	setmetatable(env, { __index = _G }) --继承全局环境
-    setfenv(f, env)()
+	f()
 	for _, v in pairs(env.BRUSHES or {}) do
 		Brushes[#Brushes + 1] = v
 	end

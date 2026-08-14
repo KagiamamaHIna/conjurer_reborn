@@ -77,8 +77,6 @@ conjurer_reborn_material_eraser_options_selected_desc,Erase ONLY the currently a
 conjurer_reborn_material_eraser_options_type_fire_desc,"Extinguish fires, assuming it's not too late...",,,,,,,,"可以灭火，假如还来得及......",,,,,,,,,,,,,,
 conjurer_reborn_material_eraser_options_eraser_replace,Replace mode,,,,,,,,替换模式,,,,,,,,,,,,,,
 conjurer_reborn_material_eraser_options_eraser_replace_desc,"Instead of erasing, existing materials will be\nreplaced with the currently selected one.\nNote: Does nothing with the 'selected material' filter.",,,,,,,,"现有材料将被替换为当前选定的材料，而不是擦除\n注：与 '选定材料' 过滤器一起启动时无效",,,,,,,,,,,,,,
-conjurer_reborn_material_eraser_options_eraser_wash,Wash mode,,,,,,,,清洗模式,,,,,,,,,,,,,,
-conjurer_reborn_material_eraser_options_eraser_wash_desc,Removes stains from terrain\nNote: 'Replace mode' and 'material filters' will be disabled when enabled,,,,,,,,移除地形上的前景纹理\n注：开启时替换模式和材料过滤均会失效,,,,,,,,,,,,,,
 conjurer_reborn_material_eraser_options_eraser_use_brush_grid,Use brush grid,,,,,,,,使用画刷网格对齐,,,,,,,,,,,,,,
 conjurer_reborn_material_eraser_options_eraser_use_brush_grid_desc,Use the same grid setting as brushes,,,,,,,,使用和画刷一样的网格对齐参数,,,,,,,,,,,,,,
 conjurer_reborn_material_eraser_options_size,Size,,,,,,,,大小,,,,,,,,,,,,,,
@@ -322,8 +320,8 @@ conjurer_reborn_setting_notice,",\n!   NOTICE!\n!\n!   If you experience problem
 conjurer_reborn_setting_general,General,,,,,,,,主要,,,,,,,,,,,,,,,
 conjurer_reborn_setting_zoom_level,Zoom level,,,,,,,,缩放级别,,,,,,,,,,,,,,,
 conjurer_reborn_setting_zoom_level_desc,"How much do you want to see? Heavily affects performance.\nWARNING:\nBig resolutions are glitchy, and probably not useful for anything but screenshots.",,,,,,,,"你想要看多大？\n警告：\n太大的分辨率有一些问题，它们可能除了截图之外没有什么用",,,,,,,,,,,,,,,
-conjurer_reborn_setting_zoom_level_noita,Noita (1x),,,,,,,,,,,,,,,,,,,,,,,
-conjurer_reborn_setting_zoom_level_conjurer,Conjurer (1.5x),,,,,,,,,,,,,,,,,,,,,,,
+conjurer_reborn_setting_zoom_level_noita,Noita (1x Noita),,,,,,,,,,,,,,,,,,,,,,,
+conjurer_reborn_setting_zoom_level_conjurer,Conjurer (1.5x Noita),,,,,,,,,,,,,,,,,,,,,,,
 conjurer_reborn_setting_zoom_level_huge,Big (2x Noita),,,,,,,,大 (2x Noita),,,,,,,,,,,,,,,
 conjurer_reborn_setting_zoom_level_fullhd,Full HD (4.5x Noita),,,,,,,,全高清 (4.5x Noita),,,,,,,,,,,,,,,
 conjurer_reborn_setting_progression,Global progression,,,,,,,,全局进展,,,,,,,,,,,,,,,
@@ -365,6 +363,10 @@ conjurer_reborn_bottom_hidden_btn_pos_right,Right,,,,,,,,右,,,,,,,
 conjurer_reborn_unsafe_options,Unsafe Setting,,,,,,,,不安全设置,,,,,,,
 conjurer_reborn_unsafe_options_load_conjurer,Unsafe automatically loads Conjurer in non-gamemode,,,,,,,,Unsafe主动以非游戏模式加载Conjurer,,,,,,,
 conjurer_reborn_unsafe_options_load_conjurer_desc,No need to manually enable Conjurer Reborn\nSimply enabling Unsafe is enough,,,,,,,,无需启用Conjurer Reborn\n只要启用unsafe即可,,,,,,,
+conjurer_reborn_unsafe_options_unsafe_brush,Advanced Brush,,,,,,,,高级画刷,,,,,,,
+conjurer_reborn_unsafe_options_unsafe_brush_desc,"Provides an improved drawing experience.\nDisabling this reverts to the legacy drawing feature.\nNoita updates may break this feature, in which case you can disable it for now.",,,,,,,,可以提供更好的绘制体验。\n关闭则使用旧版绘制功能。\nNoita更新可能会破坏这个功能，此时可以先关闭。,,,,,,,
+conjurer_reborn_unsafe_options_unsafe_brush_create_light,Glow effect for new materials,,,,,,,,新建材料的发光特效,,,,,,,
+conjurer_reborn_unsafe_options_unsafe_brush_create_light_desc,Like this effect?\nYou can now toggle it in the Advanced Brush!,,,,,,,,喜欢这个特效吗？\n高级画刷可以开关此功能了！,,,,,,,
 ]]
 
 dofile("data/scripts/lib/mod_settings.lua")
@@ -585,7 +587,7 @@ mod_settings =
                     { "throw",  "conjurer_reborn_setting_secondary_button_throw" },
 					{ "mouse2", "conjurer_reborn_setting_secondary_button_mouse2" }
 				}),
-				scope = MOD_SETTING_SCOPE_NEW_GAME,
+				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
 			})
 		},
     }),
@@ -715,6 +717,20 @@ mod_settings =
 				ui_description = "conjurer_reborn_unsafe_options_load_conjurer_desc",
 				value_default = false,
 				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
+            }),
+			Setting({
+				id = "unsafe_brush",
+				ui_name = "conjurer_reborn_unsafe_options_unsafe_brush",
+				ui_description = "conjurer_reborn_unsafe_options_unsafe_brush_desc",
+				value_default = true,
+				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
+            }),
+			Setting({
+				id = "unsafe_brush_create_light",
+				ui_name = "conjurer_reborn_unsafe_options_unsafe_brush_create_light",
+				ui_description = "conjurer_reborn_unsafe_options_unsafe_brush_create_light_desc",
+				value_default = false,
+				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),
 		}
     }),

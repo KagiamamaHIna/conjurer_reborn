@@ -6,6 +6,7 @@ local Brushes = dofile_once("mods/conjurer_reborn/files/wandhelper/mat_brushes.l
 local WorldGlobalGetNumber = Compose(tonumber, WorldGlobalGet)
 
 local EraserModeAll = "ALL"
+local EraserModeWash = "WASH"
 local EraserModeSelected = "SELECTED"
 local EraserModeNotSelected = "NOT_SELECTED"
 local EraserModeSolids = MatType.Solid
@@ -17,7 +18,8 @@ local EraserModeBox2D = MatType.Box2d
 
 local EraserSprites = {
 	[EraserModeAll] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_erase_solids.png",
-	--[EraserModeSelected] = "none, use active material",
+	[EraserModeWash] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_wash.png",
+    --[EraserModeSelected] = "none, use active material",
 	[EraserModeSolids] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_solid.png",
 	[EraserModeLiquids] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_liquid.png",
 	[EraserModePowder] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_sand.png",
@@ -36,6 +38,11 @@ local ReplacerPixelSprite = "mods/conjurer_reborn/files/gfx/replacer_pixel.png"
 ---@return integer
 ---@return integer
 function GridSnap(x, y, grid_size)
+    if grid_size == 1 then
+        x = math.modf(x)
+        y = math.modf(y)
+        return x, y
+    end
 	-- Snap to given grid
 	x = x - x % grid_size
 	y = y - y % grid_size
@@ -44,8 +51,29 @@ function GridSnap(x, y, grid_size)
 	x = x + grid_size / 2
 	y = y + grid_size / 2
 
-	-- Finally, snap to Noita's pixel grid
-	return math.floor(x), math.floor(y)
+    -- Finally, snap to Noita's pixel grid
+    x = math.modf(x)
+	y = math.modf(y)
+	return x, y
+end
+
+---@param x integer
+---@param y integer
+---@param w integer
+---@param h integer
+---@param rotationType integer?
+---@return integer x
+---@return integer y
+function PosInCenter(x, y, w, h, rotationType)
+	rotationType = rotationType or 0
+    if rotationType == 0 or rotationType == 2 then
+        x = math.modf(x - math.floor(w / 2 + 0.5))
+        y = math.modf(y - math.floor(h / 2 + 0.5))
+    elseif rotationType == 1 or rotationType == 3 then
+        x = math.modf(x - math.floor(h / 2 + 0.5))
+        y = math.modf(y - math.floor(w / 2 + 0.5))
+    end
+	return x, y
 end
 
 ---------------------------
@@ -119,6 +147,20 @@ end
 ---@return table
 function GetBrushesTable()
 	return Brushes
+end
+
+---设置画刷的 材料覆盖
+---@param UI Gui
+---@param enable boolean
+function SetBurshMatOverwrite(UI, enable)
+	WorldGlobalSetBool(UI, "MatwandBurshMatOverwrite", enable)
+end
+
+---返回画刷的 材料覆盖 是否启用
+---@param UI Gui
+---@return boolean
+function GetBurshMatOverwrite(UI)
+	return WorldGlobalGetBool(UI, "MatwandBurshMatOverwrite", false)
 end
 
 ---------------------------
@@ -251,25 +293,25 @@ end
 ---@param enable boolean
 function SetEraserUseReplacer(UI, enable)
     local status = GetEraserUseReplacer(UI)
-	if status == enable then
-		return
-	end
+    if status == enable then
+        return
+    end
     WorldGlobalSetBool(UI, "MatwandEraserReplace", enable)
-	RefreshEraserReticleSprite(UI)
+    RefreshEraserReticleSprite(UI)
 end
 
----返回橡皮擦的 擦洗模式 是否启用
+---设置 是否只替换属性
+---@param UI Gui
+---@param enable boolean
+function SetEraserPropertiesOnly(UI, enable)
+	WorldGlobalSetBool(UI, "MatwandPropertiesOnly", enable)
+end
+
+---返回橡皮擦的 是否只替换属性 是否启用
 ---@param UI Gui
 ---@return boolean
-function GetEraserWashMode(UI)
-	return WorldGlobalGetBool(UI, "EraserWashMode", false)
-end
-
----设置橡皮擦的 擦洗模式 是否启用
----@param UI Gui
----@param value boolean
-function SetEraserWashMode(UI, value)
-	WorldGlobalSetBool(UI, "EraserWashMode", value)
+function GetEraserPropertiesOnly(UI)
+	return WorldGlobalGetBool(UI, "MatwandPropertiesOnly", false)
 end
 
 ---返回当前选择的橡皮擦贴图
@@ -301,6 +343,25 @@ function GetEraserSize(UI)
 	local chunk_count = WorldGlobalGetNumber(UI, "MatwandEraserChunkCount", "2")
 	local total_size = chunk_count * chunk_size
 	return chunk_count, chunk_size, total_size
+end
+
+local EraserAreaCache = {}
+---@param UI Gui
+---@return integer[]
+function GetEraserArea(UI)
+    local chunk_count, chunk_size = GetEraserSize(UI)
+    if EraserAreaCache[chunk_count] then
+        return EraserAreaCache[chunk_count]
+    end
+    local temp = {}
+    for x = 0, chunk_count * chunk_size - 1 do
+        for y = 0, chunk_count * chunk_size - 1 do
+            temp[#temp + 1] = x
+            temp[#temp + 1] = y
+        end
+    end
+	EraserAreaCache[chunk_count] = temp
+	return temp
 end
 
 ---设置橡皮擦工具的大小
@@ -361,4 +422,16 @@ end
 ---@return string
 function GetEraserSprites(key)
 	return EraserSprites[key]
+end
+
+local MatNumIDToTypeTable = {}
+for k, v in pairs(GetMaterialTypeList()) do
+	for _,id in ipairs(v) do
+		MatNumIDToTypeTable[CellFactory_GetType(id)] = k
+	end
+end
+
+---@param matid integer
+function MatNumIdToType(matid)
+	return MatNumIDToTypeTable[matid]
 end

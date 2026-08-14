@@ -60,6 +60,7 @@ CellType = {
 ---@field name string str id
 ---@field ui_name string
 ---@field material_type integer id
+---@field id_2 integer id_2
 ---@field cell_type CellType
 ---@field wang_color integer
 ---@field gfx_glow integer
@@ -150,6 +151,7 @@ CellType = {
 ---@field audio_is_soft boolean
 ---@field show_in_creative_mode boolean
 ---@field is_just_particle_fx boolean
+---@field is_transformed boolean
 
 ---@return CellDataObj
 local function NewCelldataObj(celldata)

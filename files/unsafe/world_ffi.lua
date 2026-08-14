@@ -152,22 +152,23 @@ struct CellData {
     float wang_curvature;//+568
     int wang_noise_type;//+572
     struct std_vector_string tags;//+576
-    bool danger_fire;
-    bool danger_radioactive;
-    bool danger_poison;
-    bool danger_water;
-    char unknown13[24];
-    bool always_ignites_damagemodel;
-    bool ignore_self_reaction_warning;
-    char padding7[2];
-    char unknown14[12];
-    float audio_size_multiplier;
-    bool audio_is_soft;
-    char padding8[3];
-    char unknown15[8];
-    bool show_in_creative_mode;
-    bool is_just_particle_fx;
-    char padding9[2];
+    bool danger_fire;//+588
+    bool danger_radioactive;//+589
+    bool danger_poison;//+590
+    bool danger_water;//+591
+    char unknown13[24];//+592
+    bool always_ignites_damagemodel;//+616
+    bool ignore_self_reaction_warning;//+617
+    char padding7[2];//+618
+    char unknown14[12];//+620
+    float audio_size_multiplier;//+632
+    bool audio_is_soft;//+636
+    char padding8[3];//+637
+    char unknown15[8];//+640
+    bool show_in_creative_mode;//+648
+    bool is_just_particle_fx;//+649
+    bool is_transformed;//+650
+    char padding9[1];
     // struct grid_CosmeticParticleConfig *ParticleEffect;
 };
 

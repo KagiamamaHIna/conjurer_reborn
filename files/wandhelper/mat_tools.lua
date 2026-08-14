@@ -26,8 +26,13 @@ function filler_release_action(material, brush, x, y)
 	)
 end
 
+local flag = false
 function unsafe_filler_action(material, brush, ix, iy)
-    local cmatid
+    if flag then
+        return
+    end
+	flag = true
+	local cmatid
 	local smatid
     if MatNumIdToType(CellFactory_GetType(material)) == MatType.Box2d then
         cmatid = CellFactory_GetType("conjurer_reborn_construction_steel")
@@ -137,6 +142,7 @@ function unsafe_filler_action(material, brush, ix, iy)
 end
 
 function unsafe_filler_release_action(material, brush, x, y)
+	flag = false
     if MatNumIdToType(CellFactory_GetType(material)) == MatType.Box2d then
         ConvertMaterialOnAreaInstantly(
             x - 1000, y - 1000,

@@ -27,11 +27,14 @@ function filler_release_action(material, brush, x, y)
 end
 
 function unsafe_filler_action(material, brush, ix, iy)
-	local cmatid
+    local cmatid
+	local smatid
     if MatNumIdToType(CellFactory_GetType(material)) == MatType.Box2d then
-        cmatid = CellFactory_GetType("conjurer_reborn_construction_paste")
+        cmatid = CellFactory_GetType("conjurer_reborn_construction_steel")
+		smatid = CellFactory_GetType(material)
     else
         cmatid = CellFactory_GetType(material)
+		smatid = cmatid
     end
 	local world_ffi = World.capi
 	local cmatptr = world_ffi.get_material_ptr(cmatid)
@@ -41,9 +44,12 @@ function unsafe_filler_action(material, brush, ix, iy)
 	local target = nil
 	if tpcell[0] ~= nil then
         local cell = tpcell[0]
-		target = cell.material_ptr.material_type
+        target = cell.material_ptr.material_type
+		if cell.material_ptr.cell_type == CellType.SOLID then
+			cmatid = smatid
+		end
 	end
-	if target == cmatid then--避免死循环
+	if target == smatid or target == cmatid then--避免死循环
 		return
 	end
     ---有几种情况，如果要填充的是空气，那么target是nil
@@ -135,7 +141,7 @@ function unsafe_filler_release_action(material, brush, x, y)
         ConvertMaterialOnAreaInstantly(
             x - 1000, y - 1000,
             2000, 2000,
-            CellFactory_GetType("conjurer_reborn_construction_paste"), CellFactory_GetType(material),
+            CellFactory_GetType("conjurer_reborn_construction_steel"), CellFactory_GetType(material),
             true,
             false
         )

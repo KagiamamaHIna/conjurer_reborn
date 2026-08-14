@@ -825,6 +825,8 @@ local function MatPicker(UI)
 	
 		SpawnMatContainers("MatwandGetPotion", "get_potion.png", "data/entities/items/pickup/potion.xml", 1000, "$conjurer_reborn_matwand_get_potion")
 		UI.VerticalSpacing(1)
+		SpawnMatContainers("MatwandGetConicalFlask", "get_conical_flask.png", "data/entities/items/pickup/potion_aggressive.xml", 500, "$conjurer_reborn_matwand_get_conical_flask")
+        UI.VerticalSpacing(1)
 		SpawnMatContainers("MatwandGetJar", "get_jar.png", "data/entities/items/pickup/jar.xml", 1000, "$conjurer_reborn_matwand_get_jar")
 		UI.VerticalSpacing(1)
 		SpawnMatContainers("MatwandGetPowder", "get_powder.png", "data/entities/items/pickup/powder_stash.xml", 1500, "$conjurer_reborn_matwand_get_powder")

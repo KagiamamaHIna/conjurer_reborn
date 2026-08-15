@@ -196,7 +196,7 @@ struct Cell_vtable {
     bool (__thiscall *can_stand_on)(struct Cell*);//+44
     struct CellData* (__thiscall *get_material)(void *);//+48
     struct Colour (__thiscall *cell_conversion)(struct Cell*, struct GridWorld*, struct CellData*);//+52 单元转换，这不会让box2d失效
-    void* (__thiscall *field14_0x38_get_unkbox2d_ptr)(struct Cell*);//+56 box2d之外的材料返回空指针，很有可能和box2d有关
+    void* (__thiscall *get_physics_bridge)(struct Cell*);//+56 box2d之外的材料返回空指针，很有可能和box2d有关
     int (__thiscall *field15_0x3c)(struct Cell*, int frame, int unk10000);//+60 根据第三个参数更改为静态的神秘函数，第二个参数似乎是帧，和liquid_sticks_to_ceiling有关，应该没用
     void* field16_0x40;//+64 可能和上个函数有关，未知用途
     void* field17_0x44;//+68
@@ -240,7 +240,7 @@ struct Cell_vtable {
     bool (__thiscall *can_stand_on)(struct Cell*);//+44
     struct CellData* (__thiscall *get_material)(void *);//+48
     void (__thiscall *cell_conversion)(struct Cell*, struct GridWorld*, struct CellData*);//+52 单元转换，这不会让box2d失效
-    void* (__thiscall *field14_0x38_get_unkbox2d_ptr)(struct Cell*);//+56 box2d之外的材料返回空指针，很有可能和box2d有关
+    void* (__thiscall *get_physics_bridge)(struct Cell*);//+56 box2d之外的材料返回空指针，很有可能和box2d有关
     int (__thiscall *field15_0x3c)(struct Cell*, int frame, int unk10000);//+60 根据第三个参数更改为静态的神秘函数，第二个参数似乎是帧，和liquid_sticks_to_ceiling有关，应该没用
     void* field16_0x40;//+64 可能和上个函数有关，未知用途
     void* field17_0x44;//+68

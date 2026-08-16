@@ -695,6 +695,13 @@ local function EntOptions(UI)
         if GoldClick then
             SetDropGold(GoldFlag)
         end
+
+		UI.VerticalSpacing(2)
+        local CorpseFlag, CorpseClick = ConjurerCheckbox(UI, "EntWandSpawnCorpse", 0, 0, "$conjurer_reborn_entwand_options_spawn_corpse", nil ,true)
+		UI.GuiTooltip("$conjurer_reborn_entwand_options_spawn_corpse_desc")
+        if CorpseClick then
+            SetEntitySpawnCorpse(CorpseFlag)
+        end
     end)
 	
 	UI.DrawScrollContainer("EntOptionsBox", true, true, EntWandSpriteBG)

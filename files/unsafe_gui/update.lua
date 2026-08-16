@@ -597,4 +597,15 @@ UI.MiscEventFn["ImmunityUpdate"] = function ()
 	end
 end
 
+UI.MiscEventFn["AppendEnemy"] = function ()
+	for _,enemy in ipairs(EntityGetWithTag("mortal") or {})do
+		if not EntityHasTag(enemy, "conjurer_enemy_flag") then
+            EntityAddTag(enemy, "conjurer_enemy_flag")
+            EntityAddComponent2(enemy, "LuaComponent", {
+				script_death="mods/conjurer_reborn/files/scripts/enemy_death.lua"
+			})
+		end
+	end
+end
+
 return {UI.DispatchMessage, UI.Destroy}

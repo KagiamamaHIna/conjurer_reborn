@@ -21,6 +21,11 @@ local BIOMES = {
         biome_filename = "mods/conjurer_reborn/files/biomes/hellscape.xml",
         height_index = "0",
         color = "ffab4d00",
+    },
+    {
+        biome_filename = "mods/conjurer_reborn/files/biomes/empty.xml",
+        height_index = "0",
+        color = "ff48E312",
     }
 }
 -- DESOLATE HELLSCAPE????

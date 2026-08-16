@@ -221,6 +221,8 @@ conjurer_reborn_matwand_get_conical_flask = "点击获得当前选中材料的�
 conjurer_reborn_matwand_get_desc = "滚动[鼠标滚轮]更改材料数量(+-1, 按住[CTRL]是+-10)\n按下[鼠标右键]重置"
 conjurer_reborn_matwand_get_desc2 = "[SHIFT]+[鼠标左键]获得不会发生反应的容器"
 conjurer_reborn_no_reaction = " (没有材料反应)"
+conjurer_reborn_matwand_clear_eraser = "更清晰的橡皮擦"
+conjurer_reborn_matwand_clear_eraser_desc = "让橡皮擦变得更容易看清\n这个开关是跨世界的"
 
 --实体法杖相关
 conjurer_reborn_entwand_entity_picker = "实体选择"
@@ -268,7 +270,9 @@ conjurer_reborn_entwand_options_delete_multiple_desc = "删除在光标小范围
 conjurer_reborn_entwand_options_not_delete_bg_fg = "不以背景/前景的视觉效果作为目标"
 conjurer_reborn_entwand_options_not_delete_bg_fg_desc = "防止删除背景和前景实体"
 conjurer_reborn_entwand_options_gold_drop = "掉落黄金"
-conjurer_reborn_entwand_options_gold_drop_desc = "实体死亡后是否掉落黄金"
+conjurer_reborn_entwand_options_gold_drop_desc = "生物死亡后是否掉落黄金"
+conjurer_reborn_entwand_options_spawn_corpse = "产生尸体"
+conjurer_reborn_entwand_options_spawn_corpse_desc = "生物死亡后是否产生尸体"
 
 --编辑法杖相关
 conjurer_reborn_editwand_move_btn = "按下[鼠标左键]移动实体"
@@ -331,6 +335,7 @@ conjurer_reborn_power_dim_aavikko = "荒漠"
 conjurer_reborn_power_dim_lumi = "雪原"
 conjurer_reborn_power_dim_markameri = "远洋"
 conjurer_reborn_power_dim_pahamaa = "恶地"
+conjurer_reborn_power_dim_tyhjyys = "虚空"
 conjurer_reborn_power_dim_peculiar_ountainside = "初始之地"
 conjurer_reborn_power_dim_ng_plus = "被诅咒的领域 - 新游戏+"
 conjurer_reborn_power_dim_ng_plus_level = "将进入新游戏$0+"

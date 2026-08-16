@@ -1,0 +1,32 @@
+<Biome>
+  <Topology 
+    name="_EMPTY_"
+    lua_script="mods/conjurer_reborn/files/biomes/common.lua"
+
+    noise_type="SIN_CAPPED_SIMPLEX"
+
+    mGradientAddNoise="1" 
+    mGradientEndY="1024" 
+    mGradientHighNoise="234.057" 
+    mGradientLowNoise="-292.571" 
+    mGradientNoiseScale="0.00128571" 
+    mGradientStartY="-1024" 
+
+    mInsidePerlinClamped="0" 
+    mInsidePerlinScaleMax="2" 
+    mInsidePerlinScaleMin="0.057143" 
+    mInsidePerlinScaleX="0.9999" 
+    mInsidePerlinScaleY="0.9999" 
+    mInsidePerlinScaled="1" 
+    mInsidePerlinSquared="0" 
+
+    mMultiplierGradient="0.871429" 
+    >
+  </Topology>
+
+  <Materials 
+    name="empty" 
+     >
+  </Materials>
+
+</Biome>

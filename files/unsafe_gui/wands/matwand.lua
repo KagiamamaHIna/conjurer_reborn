@@ -524,6 +524,13 @@ local function EraserPicker(UI)
 			end
         end
 
+        UI.VerticalSpacing(2)
+        local ClearEraserFlag, ClearEraserClick = ConjurerCheckbox(UI, "ClearEraserBtn", 0, 0, "$conjurer_reborn_matwand_clear_eraser", nil , GetClearEraserMode(UI))
+		if ClearEraserClick then
+			SetClearEraserMode(UI, ClearEraserFlag)
+		end
+        UI.GuiTooltip("$conjurer_reborn_matwand_clear_eraser_desc")
+
 		UI.VerticalSpacing(2)
 		--网格对齐模式
 		local UseBrushGrid, UseBrushClick = ConjurerCheckbox(UI, "EraserUseBrushBtn", 0, 0, "$conjurer_reborn_material_eraser_options_eraser_use_brush_grid", 0, true)

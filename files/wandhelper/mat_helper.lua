@@ -345,25 +345,6 @@ function GetEraserSize(UI)
 	return chunk_count, chunk_size, total_size
 end
 
-local EraserAreaCache = {}
----@param UI Gui
----@return integer[]
-function GetEraserArea(UI)
-    local chunk_count, chunk_size = GetEraserSize(UI)
-    if EraserAreaCache[chunk_count] then
-        return EraserAreaCache[chunk_count]
-    end
-    local temp = {}
-    for x = 0, chunk_count * chunk_size - 1 do
-        for y = 0, chunk_count * chunk_size - 1 do
-            temp[#temp + 1] = x
-            temp[#temp + 1] = y
-        end
-    end
-	EraserAreaCache[chunk_count] = temp
-	return temp
-end
-
 ---设置橡皮擦工具的大小
 ---@param UI Gui
 ---@param value number
@@ -375,6 +356,26 @@ function SetEraserSize(UI, value)
     WorldGlobalSet(UI, "MatwandEraserChunkCount", value)
 	RefreshEraserReticleSprite(UI)
 end
+
+---获得橡皮擦工具范围大小等参数
+---@param UI Gui
+---@return boolean
+function GetClearEraserMode(UI)
+	return ModSettingGet("conjurer_reborn_clear_eraser") or false
+end
+
+---设置橡皮擦工具的大小
+---@param UI Gui
+---@param value boolean
+function SetClearEraserMode(UI, value)
+    local count = GetClearEraserMode(UI)
+	if count == value then
+		return
+	end
+    ModSettingSet("conjurer_reborn_clear_eraser", value)
+	RefreshEraserReticleSprite(UI)
+end
+
 
 ---刷新橡皮擦实体贴图
 ---@param UI Gui
@@ -412,9 +413,34 @@ function RefreshEraserReticleSprite(UI)
 		ComponentSetValue2(SpriteComponent, "offset_x", corner[1] + offset)
 		ComponentSetValue2(SpriteComponent, "offset_y", corner[2] + offset)
 		ComponentSetValue2(SpriteComponent, "image_file", image)
-
+		if GetClearEraserMode(UI) then
+			ComponentSetValue2(SpriteComponent, "alpha", 1)
+            ComponentSetValue2(SpriteComponent, "additive", false)
+        else
+			ComponentSetValue2(SpriteComponent, "alpha", 0.5)
+            ComponentSetValue2(SpriteComponent, "additive", true)
+		end
 		EntityRefreshSprite(reticle, SpriteComponent)
 	end
+end
+
+local EraserAreaCache = {}
+---@param UI Gui
+---@return integer[]
+function GetEraserArea(UI)
+    local chunk_count, chunk_size = GetEraserSize(UI)
+    if EraserAreaCache[chunk_count] then
+        return EraserAreaCache[chunk_count]
+    end
+    local temp = {}
+    for x = 0, chunk_count * chunk_size - 1 do
+        for y = 0, chunk_count * chunk_size - 1 do
+            temp[#temp + 1] = x
+            temp[#temp + 1] = y
+        end
+    end
+    EraserAreaCache[chunk_count] = temp
+    return temp
 end
 
 ---根据类型返回一个对应的贴图路径

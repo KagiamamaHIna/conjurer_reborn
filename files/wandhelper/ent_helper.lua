@@ -389,3 +389,19 @@ end
 function GetEnemyFileIndex(UI, id)
 	return UI.UserData["EntWandEnemyFileIndex" .. id] or 1--没有就默认1
 end
+
+---返回实体是否应该生成尸体
+---@return boolean
+function GetEntitySpawnCorpse()
+	return GlobalsGetValue("conjurer_reborn_animals_spawn_corpse", "1") == "1"
+end
+
+---设置实体法杖是否忽略背景和前景
+---@param value boolean
+function SetEntitySpawnCorpse(value)
+	local text = "0"
+	if value then
+		text = "1"
+	end
+	GlobalsSetValue("conjurer_reborn_animals_spawn_corpse", text)
+end

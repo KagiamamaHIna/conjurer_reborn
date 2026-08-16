@@ -357,6 +357,9 @@ conjurer_reborn_matwand_get_powder = "Click to get the currently selected materi
 conjurer_reborn_matwand_get_conical_flask = "Click to get the currently selected material's conical flask ($0%)"
 conjurer_reborn_matwand_get_desc = "[MOUSE-WHEEL] to change material quantity(+-1, Hold [CTRL] is +-10)\n[RIGHT-CLICK] reset"
 conjurer_reborn_matwand_get_desc2 = "[SHIFT] + [LEFT-CLICK] to get containers that don't reactions"
+conjurer_reborn_no_reaction = " (No material reaction)"
+conjurer_reborn_matwand_clear_eraser = "Clearer Eraser"
+conjurer_reborn_matwand_clear_eraser_desc = "Makes the eraser easier to see\nThis toggle persist across worlds"
 
 --entwand
 conjurer_reborn_entwand_entity_picker = "Entity Picker"
@@ -405,7 +408,8 @@ conjurer_reborn_entwand_options_not_delete_bg_fg = "Don't target bg/fg visuals"
 conjurer_reborn_entwand_options_not_delete_bg_fg_desc = "Prevents you from deleting background & foreground entities."
 conjurer_reborn_entwand_options_gold_drop = "Gold drops"
 conjurer_reborn_entwand_options_gold_drop_desc = "If creatures should drop gold upon death or not."
-conjurer_reborn_no_reaction = " (No material reaction)"
+conjurer_reborn_entwand_options_spawn_corpse = "Spawn Corpse"
+conjurer_reborn_entwand_options_spawn_corpse_desc = "If creatures should spawn corpse upon death or not."
 
 --editwand
 conjurer_reborn_editwand_move_btn = "[LEFT-CLICK] to move entities"
@@ -468,6 +472,7 @@ conjurer_reborn_power_dim_aavikko = "Aavikko"
 conjurer_reborn_power_dim_lumi = "Lumi"
 conjurer_reborn_power_dim_markameri = "Märkämeri"
 conjurer_reborn_power_dim_pahamaa = "Pahamaa"
+conjurer_reborn_power_dim_tyhjyys = "Tyhjyys"
 conjurer_reborn_power_dim_peculiar_ountainside = "Peculiar Mountainside"
 conjurer_reborn_power_dim_ng_plus = "Cursed Realms of 'NG the Plus'"
 conjurer_reborn_power_dim_ng_plus_level = "Will enter NG $0+"

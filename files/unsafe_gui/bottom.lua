@@ -70,6 +70,12 @@ local function RenderWorldMenu(UI)
 			image = "mods/conjurer_reborn/files/gfx/power_icons/worlds/hell.png",
 			action = CreateDimensionalPortal("hell", "world_conjurer",
 				"mods/conjurer_reborn/files/biomes/biome_map_hellscape.png"),
+        },
+		{
+			name = "$conjurer_reborn_power_dim_tyhjyys",
+			image = "mods/conjurer_reborn/files/gfx/power_icons/worlds/void.png",
+			action = CreateDimensionalPortal("void", "world_conjurer",
+				"mods/conjurer_reborn/files/biomes/biome_map_void.png"),
 		},
 	}
 	local noita_worlds = {

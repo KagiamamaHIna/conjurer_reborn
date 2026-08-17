@@ -463,7 +463,7 @@ conjurer_reborn_editwand_show_hitboxes = "Show hitboxes"
 --power(bottom btns)
 conjurer_reborn_power_tran_dim = "Trans-Dimensional Travel"
 conjurer_reborn_power_tran_dim_desc_right = "[RIGHT-CLICK] to instantly teleport to the world"
-conjurer_reborn_power_world_seed_input = "Enter to set the seed for the new world\nNothing is randomised every time"
+conjurer_reborn_power_world_seed_input = "Enter to set the seed for the new world\nNothing is randomised every time\n[TAB] Fill current world seed"
 conjurer_reborn_power_world_seed_roll = "Click roll a new seed!"
 conjurer_reborn_power_dim_portal = "UNSTABLE TRANS-DIMENSIONAL PORTAL"
 conjurer_reborn_power_dim_tasamaa = "Tasamaa"
@@ -594,6 +594,7 @@ conjurer_reborn_power_east = "$0 East World"
 conjurer_reborn_power_west = "$0 West World"
 conjurer_reborn_open_fullbright = "Right-click to open All-seeing eye"
 conjurer_reborn_close_fullbright = "Right-click to close All-seeing eye"
+conjurer_reborn_power_herd_relation = "Relation to current herd: $0"
 
 --tunewand
 conjurer_reborn_tunewand_status_effect = "Status Effect"

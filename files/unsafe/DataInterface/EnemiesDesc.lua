@@ -1,7 +1,15 @@
 EnemiesDesc = {
-    fungus_tiny = {
+    slimeshooter_boss_limbs = {
         text = "$conjurer_reborn_enemies_not_in_progress", -- 这里可以使用本地化Key
         argb = "FFAB0000"                                  -- #ff4500ff rgba颜色
+    },
+    boss_centipede_minion = {
+        text = "$conjurer_reborn_enemies_not_in_progress",
+        argb = "FFAB0000"
+    },
+    fungus_tiny = {
+        text = "$conjurer_reborn_enemies_not_in_progress",
+        argb = "FFAB0000"
     },
     plague_rats_rat = {
         text = "$conjurer_reborn_enemies_not_in_progress",

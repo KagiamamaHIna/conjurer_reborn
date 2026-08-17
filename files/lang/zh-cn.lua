@@ -326,7 +326,7 @@ conjurer_reborn_editwand_show_hitboxes = "受击碰撞箱"
 --底部按钮列表相关
 conjurer_reborn_power_tran_dim = "维度旅行"
 conjurer_reborn_power_tran_dim_desc_right = "[鼠标右键]立刻传送到目标世界"
-conjurer_reborn_power_world_seed_input = "输入以设置新世界的种子\n什么都没有则是每次都随机"
+conjurer_reborn_power_world_seed_input = "输入以设置新世界的种子\n什么都没有则是每次都随机\n[TAB]填充当前世界种子"
 conjurer_reborn_power_world_seed_roll = "点击获得一个新种子！"
 conjurer_reborn_power_dim_portal = "不稳定的维度旅行传送门"
 conjurer_reborn_power_dim_tasamaa = "超平坦"
@@ -457,6 +457,7 @@ conjurer_reborn_power_east = "$0 东世界"
 conjurer_reborn_power_west = "$0 西世界"
 conjurer_reborn_open_fullbright = "按 鼠标右键 打开全视之眼"
 conjurer_reborn_close_fullbright = "按 鼠标右键 关闭全视之眼"
+conjurer_reborn_power_herd_relation = "对当前阵营关系：$0"
 
 --调谐法杖相关
 conjurer_reborn_tunewand_status_effect = "状态效果"

@@ -1,5 +1,25 @@
 NewOtherEnemies = {
     {
+        name = "$animal_slimeshooter_boss_limbs",
+        id = "slimeshooter_boss_limbs",
+        from_id = "Noita",
+        png = "mods/conjurer_reborn/files/gfx/animal_icons/slimeshooter_boss_limbs.png",
+        herd_id = "boss_limbs",
+        files = {
+            "data/entities/animals/boss_limbs/slimeshooter_boss_limbs.xml"
+        }
+    },
+    {
+        name = "$animal_boss_centipede_minion",
+        id = "boss_centipede_minion",
+        from_id = "Noita",
+        png = "mods/conjurer_reborn/files/gfx/animal_icons/boss_centipede_minion.png",
+        herd_id = "slimes",
+        files = {
+            "data/entities/animals/boss_centipede/boss_centipede_minion.xml"
+        }
+    },
+    {
         name = "$animal_fungus_tiny",
         id = "fungus_tiny",
         from_id = "Noita",

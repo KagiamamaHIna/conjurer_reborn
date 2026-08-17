@@ -202,6 +202,9 @@ local function RenderWorldMenu(UI)
     if InputInfo.right_clicked then
         UI.TextInputRestore("PowerWorldSeedGet")
     end
+	if InputIsKeyJustDown(Key_TAB) then
+		UI.SetInputText("PowerWorldSeedGet", StatsGetValue("world_seed") or "1")--如果用0作为默认值，在dev版中会崩溃，虽然很有可能是不可达分支
+	end
     local roll = "mods/conjurer_reborn/files/gfx/power_icons/world_seed_roll.png"
     local rollHeight = GuiGetImageDimensions(UI.gui, roll, 1)
 	UI.NextZDeep(0)
@@ -459,6 +462,7 @@ local function RenderHerdMenu(UI, WidgetInfo)
 	local ListSize = #HERDS
 	local Rows = math.ceil(ListSize / RowSize)--计算行数
     local LastRowSize = ListSize - ((Rows - 1) * RowSize) --求最后一行大小
+	local playerHerd = GetPlayerHerd()
     UI.BeginHorizontal(HerdX, y, true, 1, 1)
 	GuiBeginAutoBox(UI.gui)
 	local LastInfo
@@ -468,14 +472,17 @@ local function RenderHerdMenu(UI, WidgetInfo)
             change_player_herd(HERDS[i].name)
 			ClickSound()
         end
-		LastInfo = UI.WidgetInfoTable()
-		UI.GuiTooltip(HERDS[i].display.."\nID:"..HERDS[i].name)
+        LastInfo = UI.WidgetInfoTable()
+		local tooltip = HERDS[i].display .. "\nID: " .. HERDS[i].name
+		if playerHerd then
+			tooltip = tooltip .. "\n" .. GameTextGet("$conjurer_reborn_power_herd_relation", GetHerdRelation(StringToHerdId(HERDS[i].name), playerHerd))
+		end
+		UI.GuiTooltip(tooltip)
 	end
 	local offset_x = -(LastInfo.x - HerdX + LastInfo.width)
 	local HeightCount = 2
 	local HeightGap = 20
 	local size = ListSize - LastRowSize
-
 	while true do--动态排列，下到上调用，实现自动框布局，计算偏移避免自动布局影响（因为自动框想要定位必须开自动布局，绑死的
         if HeightCount > Rows then
             break
@@ -489,8 +496,12 @@ local function RenderHerdMenu(UI, WidgetInfo)
                 change_player_herd(HERDS[i].name)
 				ClickSound()
             end
-			Info = UI.WidgetInfoTable()
-			UI.GuiTooltip(HERDS[i].display.."\nID: "..HERDS[i].name)
+            Info = UI.WidgetInfoTable()
+            local tooltip = HERDS[i].display .. "\nID: " .. HERDS[i].name
+			if playerHerd then
+				tooltip = tooltip .. "\n" .. GameTextGet("$conjurer_reborn_power_herd_relation", GetHerdRelation(StringToHerdId(HERDS[i].name), playerHerd))
+			end
+			UI.GuiTooltip(tooltip)
         end
 		offset_x = offset_x - Info.width - 1
 		UI.LayoutEnd()

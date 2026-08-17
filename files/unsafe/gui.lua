@@ -208,11 +208,13 @@ function UI.tooltips(callback, z, xOffset, yOffset, NoYAutoMove, YMoreOffset)
 
         GuiZSet(gui, z)
 
-        GuiIdPushString(gui, "TooltipsAlpha")
-        GuiAnimateBegin(gui)
-        GuiAnimateAlphaFadeIn(gui, tooltipID, 0.08, 0.1, false)
-        GuiAnimateScaleIn(gui, tooltipID, 0.08, false)
-        GuiIdPop(gui)
+        if CurSettingGet("tooltip_animation") then
+            GuiIdPushString(gui, "TooltipsAlpha")
+            GuiAnimateBegin(gui)
+            GuiAnimateAlphaFadeIn(gui, tooltipID, 0.08, 0.1, false)
+            GuiAnimateScaleIn(gui, tooltipID, 0.08, false)
+            GuiIdPop(gui)
+        end
 
         GuiLayoutBeginLayer(gui)
         GuiLayoutBeginVertical(gui, (x + xOffset + width), (y + yOffset), true)
@@ -223,7 +225,9 @@ function UI.tooltips(callback, z, xOffset, yOffset, NoYAutoMove, YMoreOffset)
         GuiLayoutEnd(gui)
         GuiLayoutEndLayer(gui)
 
-        GuiAnimateEnd(gui)
+        if CurSettingGet("tooltip_animation") then
+            GuiAnimateEnd(gui)
+        end
     end
 end
 
@@ -326,13 +330,15 @@ function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, ri
 		end
 
         GuiZSet(gui, z)
-		if DrawAnimate or IsDrawAni then
-			GuiAnimateBegin(gui)
-			GuiIdPushString(gui,"BetterTooltipsNoCenterAlpha")
-			GuiAnimateAlphaFadeIn(gui, tooltipID,0.08, 0.1, false)
-			GuiAnimateScaleIn(gui, tooltipID, 0.08, false)
-			GuiIdPop(gui)
-		end
+        if DrawAnimate or IsDrawAni then
+            if CurSettingGet("tooltip_animation") then
+                GuiAnimateBegin(gui)
+                GuiIdPushString(gui, "BetterTooltipsNoCenterAlpha")
+                GuiAnimateAlphaFadeIn(gui, tooltipID, 0.08, 0.1, false)
+                GuiAnimateScaleIn(gui, tooltipID, 0.08, false)
+                GuiIdPop(gui)
+            end
+        end
 
         GuiLayoutBeginLayer(gui)
         GuiLayoutBeginVertical(gui, (x + xOffset), (y + yOffset), true)
@@ -342,8 +348,10 @@ function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, ri
 		GuiEndAutoBoxNinePiece(gui)
 		GuiLayoutEnd(gui)
         GuiLayoutEndLayer(gui)
-		if DrawAnimate or IsDrawAni then
-			GuiAnimateEnd(gui)
+        if DrawAnimate or IsDrawAni then
+            if CurSettingGet("tooltip_animation") then
+			    GuiAnimateEnd(gui)
+            end
 		end
 	end
 end
@@ -428,12 +436,14 @@ function UI.BetterTooltips(callback, z, xOffset, yOffset, leftMargin, rightMargi
 		end
         GuiZSet(gui, z)
 
-        GuiAnimateBegin(gui)
+        if CurSettingGet("tooltip_animation") then
+            GuiAnimateBegin(gui)
 
-		GuiIdPushString(gui,"BetterTooltipsAlpha")
-        GuiAnimateAlphaFadeIn(gui, tooltipID,0.08, 0.1, false)
-		GuiAnimateScaleIn(gui, tooltipID,0.08, false)
-		GuiIdPop(gui)
+            GuiIdPushString(gui, "BetterTooltipsAlpha")
+            GuiAnimateAlphaFadeIn(gui, tooltipID, 0.08, 0.1, false)
+            GuiAnimateScaleIn(gui, tooltipID, 0.08, false)
+            GuiIdPop(gui)
+        end
 
         GuiLayoutBeginLayer(gui)
         GuiLayoutBeginVertical(gui, (x + xOffset), (y + yOffset), true)
@@ -444,8 +454,9 @@ function UI.BetterTooltips(callback, z, xOffset, yOffset, leftMargin, rightMargi
 		GuiLayoutEnd(gui)
         GuiLayoutEndLayer(gui)
 
-		GuiAnimateEnd(gui)
-
+        if CurSettingGet("tooltip_animation") then
+            GuiAnimateEnd(gui)
+        end
 	end
 end
 

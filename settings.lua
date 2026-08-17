@@ -367,6 +367,8 @@ conjurer_reborn_unsafe_options_unsafe_brush,Advanced Brush,,,,,,,,高级画刷,,
 conjurer_reborn_unsafe_options_unsafe_brush_desc,"Provides an improved drawing experience.\nDisabling this reverts to the legacy drawing feature.\nNoita updates may break this feature, in which case you can disable it for now.",,,,,,,,可以提供更好的绘制体验。\n关闭则使用旧版绘制功能。\nNoita更新可能会破坏这个功能，此时可以先关闭。,,,,,,,
 conjurer_reborn_unsafe_options_unsafe_brush_create_light,Glow effect for new materials,,,,,,,,新建材料的发光特效,,,,,,,
 conjurer_reborn_unsafe_options_unsafe_brush_create_light_desc,Like this effect?\nYou can now toggle it in the Advanced Brush!,,,,,,,,喜欢这个特效吗？\n高级画刷可以开关此功能了！,,,,,,,
+conjurer_reborn_visuals_and_audio,Visuals & Audio,,,,,,,,视觉与音效,,,,,,,
+conjurer_reborn_tooltip_animation,Tooltip animation,,,,,,,,悬浮窗动画,,,,,,,
 ]]
 
 dofile("data/scripts/lib/mod_settings.lua")
@@ -513,6 +515,32 @@ mod_settings =
 				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
             }),
 			Setting({
+				id = "split_search_text",
+                ui_name = "conjurer_reborn_split_search_text",
+				ui_description = "conjurer_reborn_split_search_text_tip",
+				value_default = false,
+				scope = MOD_SETTING_SCOPE_RUNTIME,
+            }),
+			Setting({
+				id = "disable_inf_chaos_poly",
+				ui_name = "conjurer_reborn_inf_chaos_poly",
+				ui_description = "conjurer_reborn_inf_chaos_poly_desc",
+				value_default = false,
+				scope = MOD_SETTING_SCOPE_RUNTIME,
+            }),
+		}
+    }),
+	Setting({
+		category_id = "visuals_and_audio",
+		ui_name = "conjurer_reborn_visuals_and_audio",
+        settings = {
+			Setting({
+				id = "tooltip_animation",
+				ui_name = "conjurer_reborn_tooltip_animation",
+				value_default = true,
+				scope = MOD_SETTING_SCOPE_RUNTIME,
+            }),
+			Setting({
 				id = "click_sound",
 				ui_name = "conjurer_reborn_setting_click_sound",
 				value_default = true,
@@ -541,16 +569,9 @@ mod_settings =
 				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),
 			Setting({
-				id = "split_search_text",
-                ui_name = "conjurer_reborn_split_search_text",
-				ui_description = "conjurer_reborn_split_search_text_tip",
-				value_default = false,
-				scope = MOD_SETTING_SCOPE_RUNTIME,
-            }),
-			Setting({
-				id = "regen_mat_img_every_time",
-                ui_name = "conjurer_reborn_mat_img_regen_every_time",
-				value_default = false,
+				id = "rebirth_blinded",
+				ui_name = "conjurer_reborn_rebirth_blinded",
+				value_default = true,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),
 			Setting({
@@ -559,20 +580,7 @@ mod_settings =
 				value_default = true,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),
-			Setting({
-				id = "disable_inf_chaos_poly",
-				ui_name = "conjurer_reborn_inf_chaos_poly",
-				ui_description = "conjurer_reborn_inf_chaos_poly_desc",
-				value_default = false,
-				scope = MOD_SETTING_SCOPE_RUNTIME,
-            }),
-			Setting({
-				id = "rebirth_blinded",
-				ui_name = "conjurer_reborn_rebirth_blinded",
-				value_default = true,
-				scope = MOD_SETTING_SCOPE_RUNTIME,
-            }),
-		}
+		},
     }),
     Setting({
 		category_id = "control_settings",
@@ -717,6 +725,12 @@ mod_settings =
 				ui_description = "conjurer_reborn_unsafe_options_load_conjurer_desc",
 				value_default = false,
 				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
+            }),
+			Setting({
+				id = "regen_mat_img_every_time",
+                ui_name = "conjurer_reborn_mat_img_regen_every_time",
+				value_default = false,
+				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),
 			Setting({
 				id = "unsafe_brush",

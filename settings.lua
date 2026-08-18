@@ -369,6 +369,7 @@ conjurer_reborn_unsafe_options_unsafe_brush_create_light,Glow effect for new mat
 conjurer_reborn_unsafe_options_unsafe_brush_create_light_desc,Like this effect?\nYou can now toggle it in the Advanced Brush!,,,,,,,,喜欢这个特效吗？\n高级画刷可以开关此功能了！,,,,,,,
 conjurer_reborn_visuals_and_audio,Visuals & Audio,,,,,,,,视觉与音效,,,,,,,
 conjurer_reborn_tooltip_animation,Tooltip animation,,,,,,,,悬浮窗动画,,,,,,,
+conjurer_reborn_options_kalma_inversion,Kalma's Call Inversion,,,,,,,,死亡之兆反转,,,,,,,
 ]]
 
 dofile("data/scripts/lib/mod_settings.lua")
@@ -525,6 +526,12 @@ mod_settings =
 				id = "disable_inf_chaos_poly",
 				ui_name = "conjurer_reborn_inf_chaos_poly",
 				ui_description = "conjurer_reborn_inf_chaos_poly_desc",
+				value_default = false,
+				scope = MOD_SETTING_SCOPE_RUNTIME,
+            }),
+			Setting({
+				id = "kalma_inversion",
+				ui_name = "conjurer_reborn_options_kalma_inversion",
 				value_default = false,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),

@@ -1285,13 +1285,18 @@ local main_menu_items = {
 		end,
 	},
 	{
-		name = "$conjurer_reborn_power_kalma",
+		name_func = function ()
+			return CurSettingGet("kalma_inversion") and "$conjurer_reborn_power_kalma" or "$conjurer_reborn_power_kalma_inversion"
+		end,
         image = "mods/conjurer_reborn/files/gfx/power_icons/kalma.png",
 		tip_func = function(UI)
             return ActiveFn == RenderProtection and "$conjurer_reborn_close_edit_kalma" or "$conjurer_reborn_open_edit_kalma"
 		end,
         action = ToggleKalma,
-		get_active = function(UI)
+        get_active = function(UI)
+			if not CurSettingGet("kalma_inversion") then
+				return not GetKalma(UI)
+			end
 			return GetKalma(UI)
         end,
 		right_action = function (UI)
@@ -1366,8 +1371,12 @@ function BottomBtnDraw(UI)
 	UI.BeginHorizontal(BottomBoxX, UI.ScreenHeight - 21.5, true)
 	GuiBeginAutoBox(UI.gui) --框住用的自动盒子
 	for _, v in ipairs(main_menu_items) do
-		UI.NextZDeep(0)
-		local BtnText = GameTextGet(v.name)
+        UI.NextZDeep(0)
+        local name = v.name
+		if v.name_func then
+			name = v.name_func(UI)
+		end
+		local BtnText = GameTextGet(name)
 		if v.get_active then --其实相当于picker了）
 			local active = v.get_active(UI)
 			if not active then
@@ -1385,7 +1394,7 @@ function BottomBtnDraw(UI)
 		if v.image_func then --如果有图标函数就调用获取
 			image = v.image_func(UI)
 		end
-		local left, right = UI.ImageButton(v.name, 0, 0, image)
+		local left, right = UI.ImageButton(name, 0, 0, image)
         if left then
             v.action(UI)
             ClickSound()

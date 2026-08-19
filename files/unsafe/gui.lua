@@ -360,14 +360,15 @@ end
 ---@param text string
 ---@param description string?
 ---@param xOffset number?
-UI.GuiTooltip = function(text, description, xOffset)
+UI.GuiTooltip = function(text, description, xOffset, isRightxOffset)
     xOffset = Default(xOffset, 0)
+    isRightxOffset = Default(isRightxOffset, 0)
     UI.BetterTooltipsNoCenter(function(flag, inputX, leftOrRight, OffsetW, OffsetH)
         text = GameTextGetTranslatedOrNot(text)
         for _, v in ipairs(split(text, '\n')) do
             local x = 0
             if leftOrRight then
-                x = -inputX - UI.TextDimensions(v) - 10 + xOffset
+                x = -inputX - UI.TextDimensions(v) - 10 + xOffset + isRightxOffset
             end
             GuiText(this.public.gui, x, 0, v)
         end
@@ -376,7 +377,7 @@ UI.GuiTooltip = function(text, description, xOffset)
             for _, v in ipairs(split(description, '\n')) do
                 local x = 0
                 if leftOrRight then
-                    x = -inputX - UI.TextDimensions(v) - 10 + xOffset
+                    x = -inputX - UI.TextDimensions(v) - 10 + xOffset + isRightxOffset
                 end
                 GuiText(this.public.gui, x, 0, v)
             end

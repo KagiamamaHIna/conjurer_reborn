@@ -349,9 +349,9 @@ function SameWidthSlider(UI, id, Align, x, y, text, value_min, value_max, value_
 			numberStr = tostring(number)
 		end
 	end
-	if format ~= "" then
-		numberStr = format
-	end
+    if format ~= "" then
+        numberStr = format
+    end
     if hover then
         UI.NextOption(GUI_OPTION.Layout_NoLayouting)
         UI.NextZDeep(0)
@@ -361,31 +361,46 @@ function SameWidthSlider(UI, id, Align, x, y, text, value_min, value_max, value_
 		if TextInfo.x > UI.ScreenWidth * 0.5 then--大于半屏后的偏移
             offset_x = offset_x + textWitdh + width + 6 + Align - textWitdh
 		end
-		if tooltip then
-			UI.BetterTooltipsNoCenter(function()--强制绘制悬浮窗
-				UI.Text(0,0,tooltip)
-			end, -3000, offset_x, nil, nil, nil, true, nil, nil, true)
-		end
+        if tooltip then
+            UI.BetterTooltipsNoCenter(function(flag, inputX, leftOrRight, OffsetW, OffsetH) --强制绘制悬浮窗
+                text = GameTextGetTranslatedOrNot(tooltip)
+                for _, v in ipairs(split(text, '\n')) do
+                    local tooltipx = 0
+                    if leftOrRight then
+                        tooltipx = -inputX - UI.TextDimensions(v) - offset_x
+                    end
+                    UI.Text(tooltipx, 0, v)
+                end
+            end, -3000, offset_x, nil, nil, nil, true, nil, nil, true)
+        end
 	end
     UI.NextZDeep(0)
 	local result
     if isDecimals then
-		local flag = false
-		if UI.GetSliderValue(id) == nil then
-			flag = true
-		end
+        local flag = false
+        if UI.GetSliderValue(id) == nil then
+            flag = true
+        end
         result = UI.Slider(id, x + Align - textWitdh, y + 1, "", value_min, value_max, value_default, 0.01, format, width)
-		if flag and savedValue then
-			UI.SetSliderValue(id, savedValue)
-		end
-	else
-		result = EasySlider(UI, id, x + Align - textWitdh, y+1, "", value_min, value_max, value_default, width, savedValue, format, isDecimals
-			, function ()
-			    if tooltip then
-					UI.GuiTooltip(tooltip)
-				end
-			end)
-	end
+        if tooltip then
+            UI.GuiTooltip(tooltip, nil, nil, -textWitdh - (Align - textWitdh))
+        end
+        if flag and savedValue then
+            UI.SetSliderValue(id, savedValue)
+        end
+        GuiAnimateBegin(UI.gui) --帮助滑条能完整的显示文本
+        GuiAnimateAlphaFadeIn(UI.gui, UI.NewID(id .. "ANI2"), 0, 0, false)
+        UI.Text(0, 0, numberStr)
+        GuiAnimateEnd(UI.gui)
+    else
+        result = EasySlider(UI, id, x + Align - textWitdh, y + 1, "", value_min, value_max, value_default, width,
+            savedValue, format, isDecimals
+            , function()
+            if tooltip then
+                UI.GuiTooltip(tooltip, nil, nil, -textWitdh - (Align - textWitdh))
+            end
+        end)
+    end
 	
 
 	UI.LayoutEnd()

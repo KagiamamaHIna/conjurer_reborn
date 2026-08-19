@@ -130,8 +130,14 @@ local function RefreshSwitchWand()
 	if ItemSwitch and ActiveTable and CurrentActive ~= -1 then --最后决定切换等操作
 		ItemSwitch = false
 		ActiveTable.release()
-		ActiveTable = nil
+        ActiveTable = nil
 	end
+end
+
+local function SwitchWand(index)
+    SwitchActive(MainBtns[index])
+    ActiveImage = MainBtns[index].image
+    ItemSwitch = false
 end
 
 UI.MainTickFn["Main"] = function()
@@ -240,21 +246,13 @@ UI.MainTickFn["Main"] = function()
 
 	local shift = InputIsKeyDown(Key_LSHIFT) or InputIsKeyDown(Key_RSHIFT)
 	if shift and InputIsKeyJustDown(Key_1) and not UI.UserData["HasInputBoxHover"] then --shift+数字键快捷键切换
-		SwitchActive(MainBtns[1])
-		ActiveImage = MainBtns[1].image
-		ItemSwitch = false
+		SwitchWand(1)
 	elseif shift and InputIsKeyJustDown(Key_2) and not UI.UserData["HasInputBoxHover"] then
-		SwitchActive(MainBtns[2])
-		ActiveImage = MainBtns[2].image
-		ItemSwitch = false
+		SwitchWand(2)
 	elseif shift and InputIsKeyJustDown(Key_3) and not UI.UserData["HasInputBoxHover"] then
-		SwitchActive(MainBtns[3])
-		ActiveImage = MainBtns[3].image
-        ItemSwitch = false
+		SwitchWand(3)
 	elseif shift and InputIsKeyJustDown(Key_4) and not UI.UserData["HasInputBoxHover"] then
-		SwitchActive(MainBtns[4])
-		ActiveImage = MainBtns[4].image
-		ItemSwitch = false
+		SwitchWand(4)
 	end
 
 	local inventory2 = EntityGetFirstComponent(player, "Inventory2Component") --滚轮切换
@@ -268,17 +266,13 @@ UI.MainTickFn["Main"] = function()
 			if index < 1 then
 				index = 4
 			end
-			SwitchActive(MainBtns[index])
-			ActiveImage = MainBtns[index].image
-			ItemSwitch = false
+			SwitchWand(index)
 		elseif InputIsMouseButtonJustDown(Mouse_wheel_down) then
 			local index = item_index + 1
 			if index > 4 then
 				index = 1
 			end
-			SwitchActive(MainBtns[index])
-			ActiveImage = MainBtns[index].image
-			ItemSwitch = false
+			SwitchWand(index)
 		end
 	end
 

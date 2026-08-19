@@ -343,7 +343,7 @@ function UI.BetterTooltipsNoCenter(callback, z, xOffset, yOffset, leftMargin, ri
         GuiLayoutBeginLayer(gui)
         GuiLayoutBeginVertical(gui, (x + xOffset), (y + yOffset), true)
 		GuiBeginAutoBox(gui)
-        callback()
+        callback(false, xOffset, leftOrRight, OffsetW, OffsetH)
 		GuiZSetForNextWidget(gui, z + 1)
 		GuiEndAutoBoxNinePiece(gui)
 		GuiLayoutEnd(gui)
@@ -362,17 +362,28 @@ end
 ---@param xOffset number?
 UI.GuiTooltip = function(text, description, xOffset)
     xOffset = Default(xOffset, 0)
-    UI.BetterTooltipsNoCenter(function()
+    UI.BetterTooltipsNoCenter(function(flag, inputX, leftOrRight, OffsetW, OffsetH)
+        text = GameTextGetTranslatedOrNot(text)
         for _, v in ipairs(split(text, '\n')) do
-            GuiText(this.public.gui, 0, 0, v)
+            local x = 0
+            if leftOrRight then
+                x = -inputX - UI.TextDimensions(v) - 10 + xOffset
+            end
+            GuiText(this.public.gui, x, 0, v)
         end
 		if description ~= nil and description ~= "" then
-			for _,v in ipairs(split(description, '\n')) do
-                GuiText(this.public.gui, 0, 0, v)
+            description = GameTextGetTranslatedOrNot(description)
+            for _, v in ipairs(split(description, '\n')) do
+                local x = 0
+                if leftOrRight then
+                    x = -inputX - UI.TextDimensions(v) - 10 + xOffset
+                end
+                GuiText(this.public.gui, x, 0, v)
             end
 		end
-	end,-3000,10 + xOffset)
+	end,-20000,10 + xOffset)
 end
+
 
 local BTooltipCache = {}
 ---组件悬浮窗提示,应当在一个组件后面使用

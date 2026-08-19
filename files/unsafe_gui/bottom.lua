@@ -1386,9 +1386,9 @@ function BottomBtnDraw(UI)
 				BtnText = GameTextGet("$conjurer_reborn_picker_close") .. BtnText
 			end
 		end
+		local tip
 		if v.tip_func then
-			local tip = v.tip_func(UI)
-			BtnText = BtnText .. "\n" .. tip
+			tip = v.tip_func(UI)
 		end
 		local image = v.image
 		if v.image_func then --如果有图标函数就调用获取
@@ -1403,7 +1403,7 @@ function BottomBtnDraw(UI)
             v.right_action(UI)
 			ClickSound()
 		end
-		UI.GuiTooltip(BtnText)
+		UI.GuiTooltip(BtnText, tip)
 	end
 	UI.NextZDeep(-99)
 	GuiEndAutoBoxNinePiece(UI.gui, 1, 0, 0, false, 0, SpriteBG, SpriteBG)

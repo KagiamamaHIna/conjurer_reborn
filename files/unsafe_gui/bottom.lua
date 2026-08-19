@@ -245,7 +245,7 @@ local function RenderTeleportMenu(UI)
                 if death_x == nil then
                     return
                 end
-				UI.Text(0,0,"$conjurer_reborn_power_memorize_back")
+				return "$conjurer_reborn_power_memorize_back"
 			end,
 			image = "mods/conjurer_reborn/files/gfx/power_icons/tower.png",
 			action = function()
@@ -296,16 +296,12 @@ local function RenderTeleportMenu(UI)
             v.right_action(UI)
 			ClickSound()
 		end
-		local tip = GameTextGet(v.name)
-        if v.desc then
-            tip = tip .. "\n" .. GameTextGet(v.desc)
-        end
-		UI.BetterTooltipsNoCenter(function()
-            UI.Text(0, 0, tip)
-			if v.desc_fn then
-				v.desc_fn(UI)
-			end
-    	end, UI.GetZDeep() - 1000, 10, 3)
+        local tip = GameTextGet(v.name)
+		local desc = v.desc
+		if v.desc_fn then
+			desc = v.desc_fn(UI)
+		end
+        UI.GuiTooltip(tip, desc)
 	end
 	UI.LayoutEnd()
 	UI.NextZDeep(-1000)

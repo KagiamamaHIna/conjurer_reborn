@@ -32,6 +32,7 @@ table.insert(ALL_ENTITIES, {
       id = "My Entity Id", --Optional
       name="My Entity",
       desc="Voluntary tooltip description",
+      desc2="description2",  --Optional
       image="path/to/my/entity_icon.png",  -- This should be a 16*16px icon
       path="path/to/my/entity.xml",
       spawn_func=function(x, y)

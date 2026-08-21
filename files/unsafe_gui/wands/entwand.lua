@@ -274,18 +274,20 @@ end
 
 ---绘制天赋的悬浮窗文本
 ---@param UI Gui
----@param name string
----@param desc string
----@param id string
-local function OtherTooltipText(UI, name, desc, id)
-    UI.Text(0, 0, name)           --本地化名称显示
-    if id then
+---@param item table
+local function OtherTooltipText(UI, item)
+    UI.Text(0, 0, item.name)           --本地化名称显示
+    if item.id then
         UI.NextColor(127, 127, 127, 255) --id显示
-        UI.Text(0, 0, id)
+        UI.Text(0, 0, item.id)
     end
-    if desc then
-        UI.Text(0, 0, desc) --描述显示
+    if item.desc then
+        UI.Text(0, 0, item.desc) --描述显示
     end
+	if item.desc2 then
+        UI.VerticalSpacing(2)
+		UI.Text(0, 0, item.desc2) --描述显示
+	end
 end
 
 local favItems
@@ -373,7 +375,7 @@ local function DrawFav(UI)
             else
                 left, right = UI.ImageButton("FavEntIconOther" .. item.name .. index, 0, 0, item.image)
 				UI.BetterTooltipsNoCenter(function()
-                    OtherTooltipText(UI, item.name, item.desc, item.id)
+                    OtherTooltipText(UI, item)
 				end, UI.GetZDeep() - 1000, 10, 3)
             end
         else
@@ -571,7 +573,7 @@ local function EntPicker(UI)
             else
                 left, right = UI.ImageButton("EntIconOther" .. item.name .. index, 0, 0, item.image)
 				UI.BetterTooltipsNoCenter(function()
-                    OtherTooltipText(UI, item.name, item.desc, item.id)
+                    OtherTooltipText(UI, item)
                 end, UI.GetZDeep() - 1000, 10, 3)
             end
             if left then
@@ -756,7 +758,7 @@ local MainEntBtns = {
             elseif type == EntityType.Perk then
 				PerkTooltipText(UI, item)
 			else--都不符合
-                OtherTooltipText(UI, item.name, item.desc, item.id)
+                OtherTooltipText(UI, item)
 			end
 		end
     },

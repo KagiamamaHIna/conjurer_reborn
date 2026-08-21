@@ -30,6 +30,7 @@ table.insert(ALL_ENTITIES, {
       id = "My Entity Id", --可选项
       name="My Entity",
       desc="Voluntary tooltip description",
+      desc2="description2",  --可选项
       image="path/to/my/entity_icon.png",  -- 这必须是16x16px的图标
       path="path/to/my/entity.xml",
       spawn_func=function(x, y)

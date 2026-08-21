@@ -27,6 +27,7 @@ table.insert(ALL_ENTITIES, {
   icon_off="path/to/category_icon_off.png",  --灰色的图标，用于表示未选中状态
   entities={
     {
+      id = "My Entity Id", --可选项
       name="My Entity",
       desc="Voluntary tooltip description",
       image="path/to/my/entity_icon.png",  -- 这必须是16x16px的图标

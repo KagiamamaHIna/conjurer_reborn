@@ -449,6 +449,11 @@ PROPS = {
     image="mods/conjurer_reborn/files/gfx/prop_icons/torch_hang_unlit.png",
   },
   {
+    name="Chain torch blue",
+    path="data/entities/props/physics/chain_torch_blue.xml",
+    image="mods/conjurer_reborn/files/gfx/prop_icons/torch_hang_unlit.png",
+  },
+  {
     name="Physics chain torch blue",
     path="data/entities/props/physics_chain_torch_blue.xml",
     image="mods/conjurer_reborn/files/gfx/prop_icons/torch_hang_unlit.png",

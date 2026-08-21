@@ -75,9 +75,15 @@ function GuiText(gui, x, y, text, scale, font, font_is_pixel_font)
 
         --布局之外绘制，使得文本正常显示
         GuiOptionsAddForNextWidget(gui,GUI_OPTION.Layout_NoLayouting)
-        OldGuiText(gui, TrueX - (newWidth - srcWidth), TrueY, SafeText, UnpackNoNil({scale, font, font_is_pixel_font}))
+        OldGuiText(gui, TrueX - (newWidth - srcWidth), TrueY, SafeText, UnpackNoNil({ scale, font, font_is_pixel_font }))
     else--不含nil的解包，尽量兼容参数数的传递
-        return OldGuiText(UnpackNoNil({gui, x, y, text, scale, font, font_is_pixel_font}))
+        local translation = GameTextGetTranslatedOrNot(text)
+        --解析套娃
+        if translation ~= "" and translation:byte(1,1) == DollarASCII then
+            GuiText(gui, x, y, translation, scale, font, font_is_pixel_font)
+        else
+            return OldGuiText(UnpackNoNil({gui, x, y, text, scale, font, font_is_pixel_font}))
+        end
     end
 end
 

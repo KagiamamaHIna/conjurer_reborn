@@ -29,6 +29,7 @@ table.insert(ALL_ENTITIES, {
   icon_off="path/to/category_icon_off.png",  -- The greyed-out unselected variant
   entities={
     {
+      id = "My Entity Id", --Optional
       name="My Entity",
       desc="Voluntary tooltip description",
       image="path/to/my/entity_icon.png",  -- This should be a 16*16px icon

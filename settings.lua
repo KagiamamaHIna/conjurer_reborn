@@ -343,8 +343,8 @@ conjurer_reborn_setting_get_carrot_desc,"Did you lose your carrot?\nIf you still
 conjurer_reborn_setting_get_carrot_desc_error,"But you're not in the run!",,,,,,,,但是你还没进入游戏！,,,,,,,,,,,,,,,
 conjurer_reborn_setting_get_carrot_desc_no_conjurer,"But you're not in the conjurer's world right now!",,,,,,,,但是你现在不在conjurer的世界中！,,,,,,,,,,,,,,,
 conjurer_reborn_setting_quick_mat_display,Display material info when selecting material quickly,,,,,,,,快捷选中材料时显示材料数据,,,,,,,,,,,,,,,
-conjurer_reborn_split_search_text,Space Split Multi-Item Search,,,,,,,,空格分割多项目搜索,,,,,,,
-conjurer_reborn_split_search_text_tip,Inserting spaces between text allows you to search for more than one thing at once.,,,,,,,,在文本之间插入空格可以同时搜索多个内容,,,,,,,
+conjurer_reborn_split_search_text,Match All Keywords,,,,,,,,匹配所有关键词,,,,,,,
+conjurer_reborn_split_search_text_tip,"Search multiple keywords separated by spaces (AND logic).",,,,,,,,按空格分隔多词进行“与”逻辑搜索。,,,,,,,
 conjurer_reborn_mat_img_regen_every_time,Re-generate material image every time,,,,,,,,每次都重新生成材料贴图,,,,,,,
 conjurer_reborn_reset_matwand_fav,Reset material favorite,,,,,,,,重置材料收藏,,,,,,,,,,,,,,,
 conjurer_reborn_reset_matwand_fav_desc,Reset the favorite of the Staff of Material Mastery,,,,,,,,重置材料法杖的收藏,,,,,,,,,,,,,,,
@@ -516,10 +516,10 @@ mod_settings =
 				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
             }),
 			Setting({
-				id = "split_search_text",
+				id = "split_search_text2",
                 ui_name = "conjurer_reborn_split_search_text",
 				ui_description = "conjurer_reborn_split_search_text_tip",
-				value_default = false,
+				value_default = true,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),
 			Setting({

@@ -13,7 +13,7 @@ local function SearchList(list, keyword, score_min, callback)
         return list
     end
     local SearchItemList
-    if CurSettingGet("split_search_text") then
+    if CurSettingGet("split_search_text2") then
 		SearchItemList = split(string.lower(keyword), " ")
     else
         SearchItemList = { string.lower(keyword) }
@@ -31,11 +31,15 @@ local function SearchList(list, keyword, score_min, callback)
 		local score
 		for _, ikeyword in ipairs(SearchItemList) do
             local new_score = callback(v, ikeyword)
-			if score == nil then
+            if score == nil then
                 score = new_score
             elseif new_score and new_score > score then
-				score = new_score
-			end
+                score = new_score
+            end
+            if score == 0 or new_score == 0 then
+                score = 0
+                break
+            end
 		end
         if score == nil or not (score > score_min) then --返回nil代表这次无效或分数小于需求的时候直接下一次循环
             goto continue

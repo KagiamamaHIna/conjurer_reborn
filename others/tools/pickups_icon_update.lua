@@ -1,4 +1,4 @@
---万恶的gbk编码
+--shit gbk
 local data = "D:/新建文件夹/解包/备份/原版"
 package.path = package.path .. ";../../files/scripts/lists/?.lua"
 
@@ -45,8 +45,6 @@ function serialize_table(tbl, indent)
     return result
 end
 
---table.print(StatusIDTable)
-
-local r_file = io.open("respawn_result.lua", "w")--写入文件
+local r_file = io.open("respawn_result.lua", "w")
 r_file:write("PICKUPS = {\n"..serialize_table(PICKUPS,"").."}")
 r_file:close()

@@ -272,6 +272,22 @@ local function PerkTooltipText(UI, id)
 	UI.Text(0,0,modName)
 end
 
+---绘制天赋的悬浮窗文本
+---@param UI Gui
+---@param name string
+---@param desc string
+---@param id string
+local function OtherTooltipText(UI, name, desc, id)
+    UI.Text(0, 0, name)           --本地化名称显示
+    if id then
+        UI.NextColor(127, 127, 127, 255) --id显示
+        UI.Text(0, 0, id)
+    end
+    if desc then
+        UI.Text(0, 0, desc) --描述显示
+    end
+end
+
 local favItems
 local favStr = ModSettingGet(ModID .. "EntWandFav")
 if favStr == nil then
@@ -356,7 +372,9 @@ local function DrawFav(UI)
                 NoHasItem = true
             else
                 left, right = UI.ImageButton("FavEntIconOther" .. item.name .. index, 0, 0, item.image)
-                UI.GuiTooltip(GetNameOrKey(item.name))
+				UI.BetterTooltipsNoCenter(function()
+                    OtherTooltipText(UI, item.name, item.desc, item.id)
+				end, UI.GetZDeep() - 1000, 10, 3)
             end
         else
 			NoHasItem = true
@@ -504,7 +522,20 @@ local function EntPicker(UI)
                 end
             else
                 local lowerName = GetNameOrKey(item.name):lower()
-				score = Cpp.AbsPartialPinyinRatio(lowerName, keyword)
+                score = Cpp.AbsPartialPinyinRatio(lowerName, keyword)
+                if item.id then
+                    local newScore = Cpp.AbsPartialPinyinRatio(item.id:lower(), keyword)
+                    if newScore > score then
+                        score = newScore
+                    end
+                end
+				local flag, EnName = pcall(GetEnName, item.name)
+				if flag and EnName then
+					local newScore = Cpp.AbsPartialPinyinRatio(EnName:lower(), keyword)
+					if newScore > score then
+						score = newScore
+					end
+				end
 			end
 			return score
         end)
@@ -539,11 +570,9 @@ local function EntPicker(UI)
                 end, UI.GetZDeep() - 1000, 10, 3)
             else
                 left, right = UI.ImageButton("EntIconOther" .. item.name .. index, 0, 0, item.image)
-                local tip = GetNameOrKey(item.name)
-				if item.desc then
-					tip = tip .. "\n" .. GetNameOrKey(item.desc)
-				end
-				UI.GuiTooltip(tip)
+				UI.BetterTooltipsNoCenter(function()
+                    OtherTooltipText(UI, item.name, item.desc, item.id)
+                end, UI.GetZDeep() - 1000, 10, 3)
             end
             if left then
                 local true_index = ALL_ENTITIES[SwitchIndex].conjurer_reborn_index_table[item]
@@ -727,7 +756,7 @@ local MainEntBtns = {
             elseif type == EntityType.Perk then
 				PerkTooltipText(UI, item)
 			else--都不符合
-				UI.Text(0,0, item.name)
+                OtherTooltipText(UI, item.name, item.desc, item.id)
 			end
 		end
     },

@@ -11,6 +11,9 @@ if not ModIsEnabled("conjurer_reborn") then--为了顺序无关
                 if value ~= nil then
                     ModSettingSet(key, value)
                 end
+                if ModSettingGet(key) == nil and s.value_default ~= nil then
+                    ModSettingSet(key, s.value_default)
+                end
                 if s.scope == env.MOD_SETTING_SCOPE_RUNTIME then
                     AutoUpdateSetting[s.id] = true
                 end

@@ -7,7 +7,7 @@ PICKUPS = {
 	{
 		name = "Evil eye",
 		path = "data/entities/items/pickup/evil_eye.xml",
-		image = "mods/conjurer_reborn/files/gfx/pickup_icons/orb_red.png",
+		image = "mods/conjurer_reborn/files/gfx/pickup_icons/evil_eye.png",
 	},
 	{
 		name = "Musicstone",
@@ -23,16 +23,16 @@ PICKUPS = {
 		name = "Physics gold orb greed",
 		path = "data/entities/items/pickup/physics_gold_orb_greed.xml",
 		image = "mods/conjurer_reborn/files/gfx/pickup_icons/orb_greed.png",
+    },
+	{
+		name = "Physics die",
+		path = "data/entities/items/pickup/physics_die.xml",
+		image = "mods/conjurer_reborn/files/gfx/pickup_icons/die_pips.png",
 	},
 	{
 		name = "Physics greed die",
 		path = "data/entities/items/pickup/physics_greed_die.xml",
 		image = "mods/conjurer_reborn/files/gfx/pickup_icons/greed_die_pips.png",
-	},
-	{
-		name = "Runestone metal",
-		path = "data/entities/items/pickup/runestones/runestone_metal.xml",
-		image = "mods/conjurer_reborn/files/gfx/pickup_icons/runestone_metal.png",
 	},
 	{
 		name = "Stonestone",
@@ -327,14 +327,9 @@ PICKUPS = {
 		image = "mods/conjurer_reborn/files/gfx/pickup_icons/jar.png",
 	},
 	{
-		name = "Physics die",
-		path = "data/entities/items/pickup/physics_die.xml",
-		image = "mods/conjurer_reborn/files/gfx/pickup_icons/die_pips.png",
-	},
-	{
 		name = "Powder stash",
 		path = "data/entities/items/pickup/powder_stash.xml",
-		image = "mods/conjurer_reborn/files/gfx/pickup_icons/powder_stash.png",
+		image = "mods/conjurer_reborn/files/gfx/pickup_icons/material_pouch.png",
 	},
 	{
 		name = "Potion",
@@ -385,6 +380,11 @@ PICKUPS = {
 		name = "Potion water",
 		path = "data/entities/items/pickup/potion_water.xml",
 		image = "mods/conjurer_reborn/files/gfx/pickup_icons/potion.png",
+    },
+	{
+		name = "Runestone metal",
+		path = "data/entities/items/pickup/runestones/runestone_metal.xml",
+		image = "mods/conjurer_reborn/files/gfx/pickup_icons/runestone_metal.png",
 	},
 	{
 		name = "Runestone disc",
@@ -834,17 +834,17 @@ PICKUPS = {
 	{
 		name = "Wand of Swiftness",
 		path = "data/entities/items/wands/wand_good/wand_good_1.xml",
-		image = "mods/conjurer_reborn/files/gfx/pickup_icons/wand_good_1.png",
+		image = "mods/conjurer_reborn/files/gfx/pickup_icons/good_01.png",
 	},
 	{
 		name = "Wand of Destruction",
 		path = "data/entities/items/wands/wand_good/wand_good_2.xml",
-		image = "mods/conjurer_reborn/files/gfx/pickup_icons/wand_good_2.png",
+		image = "mods/conjurer_reborn/files/gfx/pickup_icons/good_02.png",
 	},
 	{
 		name = "Wand of Multitudes",
 		path = "data/entities/items/wands/wand_good/wand_good_3.xml",
-		image = "mods/conjurer_reborn/files/gfx/pickup_icons/wand_good_3.png",
+		image = "mods/conjurer_reborn/files/gfx/pickup_icons/good_03.png",
     },
 	{
 		name = "Orb 00",

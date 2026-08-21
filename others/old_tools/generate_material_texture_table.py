@@ -14,7 +14,7 @@ IMAGE_SIZE = (16, 16)
 
 
 def lua_path(filename):
-    return "mods/raksa/files/gfx/material_icons/%s" % filename
+    return "mods/conjurer_reborn/files/gfx/material_icons/%s" % filename
 
 
 def save_path(filename):

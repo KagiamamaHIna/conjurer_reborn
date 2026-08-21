@@ -13,7 +13,7 @@ IMAGE_SIZE = (16, 16)
 
 
 def mod_path(destination, filename):
-    return "mods/raksa/files/%s/%s" % (destination, filename)
+    return "mods/conjurer_reborn/files/%s/%s" % (destination, filename)
 
 
 def save_path(path, filename):

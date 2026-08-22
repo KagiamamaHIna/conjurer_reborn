@@ -1,5 +1,5 @@
 # Conjurer Reborn
-This is an unofficial version of [Conjurer](https://github.com/ryyst/conjurer), authorized by the original creators.
+This is an unofficial version of [Conjurer](https://github.com/ryyst/conjurer), authorized by the original creator.
 
 Conjurer Reborn requires the [Conjurer Reborn Unsafe](https://github.com/KagiamamaHIna/conjurer_unsafe) mod as a prerequisite; otherwise, full functionality cannot be loaded.
 

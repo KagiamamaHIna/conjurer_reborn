@@ -218,6 +218,32 @@ local function SpawnEntity(UI)
 	end
 end
 
+---@param UI Gui
+---@param sprite string
+---@param name string
+---@param id string
+---@param leftOrRight boolean
+---@param inputX number
+local function EyedropperTooltip(UI, sprite, name, id, leftOrRight, inputX)
+    local sx = 0
+    local nx = 0
+    local ix = 0
+    if leftOrRight then
+        sx = -inputX - UI.ImgDimension(sprite)
+        nx = -inputX - UI.TextDimensions(name)
+		if id then
+			ix = -inputX - UI.TextDimensions(id)
+		end
+    end
+    UI.Image("EyedropperEntityImage", sx, 0, sprite)
+	UI.VerticalSpacing(2)
+    UI.Text(nx, 0, name)
+    if id then
+        UI.NextColor(127, 127, 127, 255)     --id显示
+        UI.Text(ix, 0, id)
+    end
+end
+
 ---选中实体的操作
 ---@param UI Gui
 ---@param x number
@@ -235,7 +261,8 @@ local function EyedropperEntity(UI, x, y)
 	local entobj = EntityObj(HOVERED_ENTITY)
 	local filename = entobj:GetFilename()
     local Sprite
-	local desc
+    local desc
+	local eyedropperEntityId
     local MetaData = {}
 	
     if EnemyFileToMeta[filename] then
@@ -243,7 +270,8 @@ local function EyedropperEntity(UI, x, y)
         Sprite = EnemyTable[id].png
         MetaData.type = EntityType.Enemy
         MetaData.id = id
-		MetaData.key = EnemyFileToMeta[filename].key
+        MetaData.key = EnemyFileToMeta[filename].key
+		eyedropperEntityId = id
 		desc = EnemyTable[id].name
     end
 	
@@ -255,6 +283,7 @@ local function EyedropperEntity(UI, x, y)
                 Sprite = SpellTable[spellid].sprite
                 MetaData.type = EntityType.Spell
                 MetaData.id = spellid
+				eyedropperEntityId = spellid
 				desc = SpellTable[spellid].name
 			end
 		end
@@ -269,7 +298,8 @@ local function EyedropperEntity(UI, x, y)
 			if PerkTable[c.attr.value_string] then
                 Sprite = PerkTable[c.attr.value_string].perk_icon
 				MetaData.type = EntityType.Perk
-				MetaData.id = c.attr.value_string
+                MetaData.id = c.attr.value_string
+				eyedropperEntityId = MetaData.id
 				desc = PerkTable[c.attr.value_string].ui_name
 				break
 			end
@@ -281,17 +311,20 @@ local function EyedropperEntity(UI, x, y)
 		local metadata = OtherFileToMeta[filename]
         Sprite = ALL_ENTITIES[metadata.c_index].entities[metadata.key].image
         desc = ALL_ENTITIES[metadata.c_index].entities[metadata.key].name
+		if ALL_ENTITIES[metadata.c_index].entities[metadata.key].id then
+			eyedropperEntityId = ALL_ENTITIES[metadata.c_index].entities[metadata.key].id
+		end
         MetaData = metadata
 	end
 
 	if Sprite == nil then
 		return
 	end
-	local mousex, mousey = UI.GetScreenPosition(x, y)
-    UI.Image("EyedropperEntityImage", mousex + 2, mousey + 2, Sprite)
-	local _, imageHeight = GuiGetImageDimensions(UI.gui, Sprite, 1)
-    UI.Text(mousex + 2, mousey + 2 + imageHeight, desc)
-
+    local mousex, mousey = UI.GetScreenPosition(x, y)
+	UI.PosTooltipsNoCenter(mousex + 2, mousey + 2, -1000, function (_, xOffset, leftOrRight)
+		EyedropperTooltip(UI,Sprite, desc, eyedropperEntityId, leftOrRight, xOffset)
+	end)
+	
 	if InputIsMouseButtonJustUp(Mouse_middle) then
         local c_index
         local key

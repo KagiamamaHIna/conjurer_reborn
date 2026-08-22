@@ -688,7 +688,7 @@ local MainTuneBtns = {
                 local name = "action_" .. string.lower(id)
                 GameAddFlagRun("new_" .. name)
                 local path = "mods/conjurer_reborn/vfiles/enemies/" .. name .. ".xml"
-                VisualFileSet(path, "<Entity></Entity>")
+                VirtualFileSet(path, "<Entity></Entity>")
                 local eid = EntityLoad(path)
                 StatsLogPlayerKill(eid)--用于记录玩家使用
                 EntityKill(eid)
@@ -702,7 +702,7 @@ local MainTuneBtns = {
             for id, _ in pairs(GetEnemyData()) do
                 GameAddFlagRun("new_kill_" .. id)
                 local path = "mods/conjurer_reborn/vfiles/enemies/" ..id ..".xml"
-                VisualFileSet(path ,"<Entity></Entity>")
+                VirtualFileSet(path ,"<Entity></Entity>")
                 local eid = EntityLoad(path)
                 StatsLogPlayerKill(eid)
                 EntityKill(eid)
@@ -710,7 +710,7 @@ local MainTuneBtns = {
             for _, id in ipairs(IgnoreEnemies or {}) do
                 GameAddFlagRun("new_kill_" .. id)
                 local path = "mods/conjurer_reborn/vfiles/enemies/" .. id .. ".xml"
-                VisualFileSet(path, "<Entity></Entity>")
+                VirtualFileSet(path, "<Entity></Entity>")
                 local eid = EntityLoad(path)
                 StatsLogPlayerKill(eid)
                 EntityKill(eid)

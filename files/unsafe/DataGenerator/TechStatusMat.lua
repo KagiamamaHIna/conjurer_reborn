@@ -15,9 +15,9 @@ for i, v in ipairs(status_effects) do
     if v.ui_icon and ModDoesFileExist(v.ui_icon) then
         local ImageId, w, h = SrcModImageMakeEditable(v.ui_icon, math.huge, math.huge)
         if w ~= 16 and h ~= 16 then
-            local path = "mods/conjurer_reborn/visual_status_icon_" .. v.id:lower() .. ".png"
+            local path = "mods/conjurer_reborn/virtual_status_icon_" .. v.id:lower() .. ".png"
             StatusIconTable[v.id] = path
-            local VisualImageId = SrcModImageMakeEditable(path, 16, 16)
+            local VirtualImageId = SrcModImageMakeEditable(path, 16, 16)
             local posw = math.floor(8 - w / 2)
             local posh = math.floor(8 - h / 2)
             for x=0,w-1 do
@@ -25,7 +25,7 @@ for i, v in ipairs(status_effects) do
                     local newX = x + posw
                     local newY = y + posh
                     if not (newX >= 16 or newY >= 16 or newX < 0 or newY < 0) then
-                        ModImageSetPixel(VisualImageId, newX, newY, ModImageGetPixel(ImageId, x, y))
+                        ModImageSetPixel(VirtualImageId, newX, newY, ModImageGetPixel(ImageId, x, y))
                     end
                 end
             end
@@ -66,6 +66,6 @@ for i, v in ipairs(status_effects) do
     TechMat:add_child(matXml)
     ::continue::
 end
-VisualFileSet("mods/conjurer_reborn/visual_materials.xml", tostring(TechMat))
-VisualFileSet("mods/conjurer_reborn/visual_ignore_mats.lua", "return {"..SerializeTable(IgnoreTechTable).."}")
-SrcModMaterialsFileAdd("mods/conjurer_reborn/visual_materials.xml")
+VirtualFileSet("mods/conjurer_reborn/virtual_materials.xml", tostring(TechMat))
+VirtualFileSet("mods/conjurer_reborn/virtual_ignore_mats.lua", "return {"..SerializeTable(IgnoreTechTable).."}")
+SrcModMaterialsFileAdd("mods/conjurer_reborn/virtual_materials.xml")

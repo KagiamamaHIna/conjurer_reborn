@@ -107,4 +107,113 @@ NewOtherEnemies = {
             "data/entities/buildings/lasergun.xml"
         }
     },
+    {
+        name = "$animal_scorpion",
+        id = "scorpion_watchtower",
+        from_id = "Noita",
+        png = "data/ui_gfx/animal_icons/scorpion.png",
+        files = {
+            "data/entities/animals/scorpion_watchtower.xml"
+        }
+    },
+    {
+        name = "$conjurer_reborn_arrow_trap",
+        id = "arrowtrap_left",
+        from_id = "Noita",
+        herd = "trap",
+        png = "mods/conjurer_reborn/files/gfx/animal_icons/arrowtrap_left.png",
+        files = {
+            "data/entities/buildings/arrowtrap_left.xml"
+        }
+    },
+    {
+        name = "$conjurer_reborn_arrow_trap",
+        id = "arrowtrap_right",
+        from_id = "Noita",
+        herd = "trap",
+        png = "mods/conjurer_reborn/files/gfx/animal_icons/arrowtrap_right.png",
+        files = {
+            "data/entities/buildings/arrowtrap_right.xml"
+        }
+    },
+    {
+        name = "$conjurer_reborn_acid_trap",
+        id = "spittrap_left",
+        from_id = "Noita",
+        herd = "trap",
+        png = "mods/conjurer_reborn/files/gfx/animal_icons/spittrap_left.png",
+        files = {
+            "data/entities/buildings/spittrap_left.xml"
+        }
+    },
+    {
+        name = "$conjurer_reborn_acid_trap",
+        id = "spittrap_right",
+        from_id = "Noita",
+        herd = "trap",
+        png = "mods/conjurer_reborn/files/gfx/animal_icons/spittrap_right.png",
+        files = {
+            "data/entities/buildings/spittrap_right.xml"
+        }
+    },
+    {
+        name = "$conjurer_reborn_fire_trap",
+        id = "firetrap_left",
+        from_id = "Noita",
+        herd = "trap",
+        png = "mods/conjurer_reborn/files/gfx/animal_icons/firetrap_left.png",
+        files = {
+            "data/entities/buildings/firetrap_left.xml"
+        }
+    },
+    {
+        name = "$conjurer_reborn_fire_trap",
+        id = "firetrap_right",
+        from_id = "Noita",
+        herd = "trap",
+        png = "mods/conjurer_reborn/files/gfx/animal_icons/firetrap_right.png",
+        files = {
+            "data/entities/buildings/firetrap_right.xml"
+        }
+    },
+    {
+        name = "$conjurer_reborn_thunder_trap",
+        id = "thundertrap_left",
+        from_id = "Noita",
+        herd = "trap",
+        png = "mods/conjurer_reborn/files/gfx/animal_icons/thundertrap_left.png",
+        files = {
+            "data/entities/buildings/thundertrap_left.xml"
+        }
+    },
+    {
+        name = "$conjurer_reborn_thunder_trap",
+        id = "thundertrap_right",
+        from_id = "Noita",
+        herd = "trap",
+        png = "mods/conjurer_reborn/files/gfx/animal_icons/thundertrap_right.png",
+        files = {
+            "data/entities/buildings/thundertrap_right.xml"
+        }
+    },
+    {
+        name = "$conjurer_reborn_walleye",
+        id = "walleye",
+        from_id = "Noita",
+        herd = "ghost",
+        png = "mods/conjurer_reborn/files/gfx/animal_icons/walleye.png",
+        files = {
+            "data/entities/buildings/walleye.xml"
+        }
+    },
+    {
+        name = "$conjurer_reborn_wallmouth",
+        id = "wallmouth",
+        from_id = "Noita",
+        herd = "ghost",
+        png = "mods/conjurer_reborn/files/gfx/animal_icons/wallmouth.png",
+        files = {
+            "data/entities/buildings/wallmouth.xml"
+        }
+    },
 }

@@ -237,6 +237,65 @@ function UI.tooltips(callback, z, xOffset, yOffset, NoYAutoMove, YMoreOffset)
     end
 end
 
+---@param x number
+---@param y number
+---@param zdeep number?
+---@param callback function
+function UI.PosTooltipsNoCenter(x, y, zdeep, callback)
+    x = Default(x, 0)
+    y = Default(y, 0)
+    zdeep = Default(zdeep, 0)
+    local gui = this.public.gui
+
+    GuiAnimateBegin(gui)
+    GuiAnimateAlphaFadeIn(gui, UI.NewID("Alpha你肯定看不见我对吧2222"), 0, 0, false)
+    GuiLayoutBeginLayer(gui)
+    GuiLayoutBeginVertical(gui, x, y, true)
+    GuiBeginAutoBox(gui)
+    callback(true)
+    UI.NextZDeep(zdeep - 1)
+    GuiEndAutoBoxNinePiece(gui)
+    GuiLayoutEnd(gui)
+    GuiLayoutEndLayer(gui)
+    GuiAnimateEnd(gui)
+    local _,_,_,_,_,OffsetW,OffsetH = GuiGetPreviousWidgetInfo(gui)
+
+    local xOffset = 0
+    local yOffset = 0
+    local leftOrRight
+    if x > this.public.ScreenWidth / 2 then
+        xOffset = -(OffsetW - 10 + xOffset)
+        leftOrRight = true
+    else
+        xOffset = xOffset
+        leftOrRight = false
+    end
+
+    if not leftOrRight and x + OffsetW + 10 + 5 > this.public.ScreenWidth then --右超出
+        xOffset = -((x + OffsetW) - this.public.ScreenWidth + 5)
+    end
+
+    if leftOrRight and x + xOffset < 0 then --左超出
+        x = 5
+        xOffset = 0
+    end
+
+    if y + yOffset - 10 < 0 then --上超出
+        yOffset = 0
+        y = 10
+    end
+    if y + yOffset + OffsetH > this.public.ScreenHeight then
+        y = y + (this.public.ScreenHeight - (y + yOffset + OffsetH))
+    end
+
+    GuiLayoutBeginLayer(gui)
+    GuiLayoutBeginVertical(gui, (x + xOffset), (y + yOffset), true)
+    callback(false, xOffset, leftOrRight, OffsetW, OffsetH)
+	UI.NextZDeep(zdeep - 1)
+	GuiLayoutEnd(gui)
+    GuiLayoutEndLayer(gui)
+end
+
 local BTooltipsNC = {}
 local BTNCDraw = false
 local BTNCHasAlways = false
@@ -1917,13 +1976,13 @@ function UI.DrawHorizontalScroll(id)
     end
 end
 
----设置下一个的zdeep，值越大越下面
+---设置下一个的zdeep，值越大越上面
 ---@param deep integer
 function UI.NextZDeep(deep)
 	GuiZSetForNextWidget(UI.gui,this.private.ZDeep - deep)
 end
 
----设置最近绘制的控件的zdeep，值越大越下面
+---设置最近绘制的控件的zdeep，值越大越上面
 ---@param deep integer
 function UI.CurrentZDeep(deep)
 	GuiZSet(UI.gui,this.private.ZDeep - deep)

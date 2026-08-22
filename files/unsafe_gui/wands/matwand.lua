@@ -946,6 +946,32 @@ local function DrawFav(UI)
 	end)
 end
 
+---@param UI Gui
+---@param sprite string
+---@param name string
+---@param id string
+---@param leftOrRight boolean
+---@param inputX number
+local function EyedropperTooltip(UI, sprite, name, id, leftOrRight, inputX)
+    local sx = 0
+    local nx = 0
+    local ix = 0
+    if leftOrRight then
+        sx = -inputX - UI.ImgDimension(sprite)
+        nx = -inputX - UI.TextDimensions(name)
+		if id then
+			ix = -inputX - UI.TextDimensions(id)
+		end
+    end
+    UI.Image("EyedropperEntityImage", sx, 0, sprite)
+	UI.VerticalSpacing(2)
+    UI.Text(nx, 0, name)
+    if id then
+        UI.NextColor(127, 127, 127, 255)     --id显示
+        UI.Text(ix, 0, id)
+    end
+end
+
 ---绘制悬浮材料文本提示
 ---@param UI Gui
 local function MatText(UI)
@@ -957,10 +983,9 @@ local function MatText(UI)
         local id = GlobalsGetValue("conjurer_reborn.checkmat_material_str_id")
         x, y = UI.GetScreenPosition(x, y)
         local path = string.format("mods/conjurer_unsafe/cache/MatIcon/%s.png", id)
-		GuiZSetForNextWidget(UI.gui,3000)
-        UI.Image("EyedropperMatImage", x + 2, y + 2, path)
-		GuiZSetForNextWidget(UI.gui,3000)
-		UI.Text(x, y+22, id)
+        UI.PosTooltipsNoCenter(x + 2, y + 2, -1000, function (_, xOffset, leftOrRight)
+		    EyedropperTooltip(UI, path, GetMaterial(id).attr.ui_name, id, leftOrRight, xOffset)
+	    end)
 	end
 end
 

@@ -157,13 +157,14 @@ function OnPlayerSpawned(player)
     RestoreInput()
 end
 
-VisualFileSet = ModTextFileSetContent
+VirtualFileSet = ModTextFileSetContent
 SrcModMaterialsFileAdd = ModMaterialsFileAdd
 SrcModImageMakeEditable = ModImageMakeEditable
 local initFlag = false
 local GUIDatas = nil
 local GuiDofileError = nil
 
+local ignore_mats
 ---@type WorldClass
 World = nil
 function OnWorldPostUpdate()
@@ -179,6 +180,9 @@ function OnWorldPostUpdate()
         ClearDofileOnceCache("mods/conjurer_reborn/files/unsafe/DataGenerator/GetDataWak.lua") --清除缓存，将datawak的数据交给lua销毁
     end
     if World then
+        if ignore_mats == nil then
+            ignore_mats = dofile_once("mods/conjurer_reborn/virtual_ignore_mats.lua")
+        end
         local brush = EntityGetWithName("conjurer_reborn_brush_reticle")
         if brush ~= 0 then
             local bx, by = EntityGetTransform(brush)
@@ -186,7 +190,12 @@ function OnWorldPostUpdate()
             if cell == nil then
                 GlobalsSetValue("conjurer_reborn.checkmat_material_str_id", "air")
             else
-                GlobalsSetValue("conjurer_reborn.checkmat_material_str_id", cell.data.name)
+                local name = cell.data.name
+                if ignore_mats[name] then
+                    GlobalsSetValue("conjurer_reborn.checkmat_material_str_id", "air")
+                else
+                    GlobalsSetValue("conjurer_reborn.checkmat_material_str_id", name)
+                end
             end
         end
     end

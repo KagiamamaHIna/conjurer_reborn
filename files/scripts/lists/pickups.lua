@@ -535,6 +535,13 @@ PICKUPS = {
         desc = "$item_description_potion",
 		image = "data/ui_gfx/items/potion.png",
 		path = "data/entities/items/pickup/potion_water.xml",
+    },
+	{
+		id = "potion_milk",
+		name = "$item_potion_with_material",
+        desc = "$item_description_potion",
+		image = "data/ui_gfx/items/potion.png",
+		path = "data/entities/items/pickup/potion_milk.xml",
 	},
 	{
 		id = "runestone_metal",

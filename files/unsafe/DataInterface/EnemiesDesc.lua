@@ -43,4 +43,48 @@ EnemiesDesc = {
         text = "$conjurer_reborn_enemies_not_in_progress",
         argb = "FFAB0000"
     },
+    scorpion_watchtower = {
+        text = "$conjurer_reborn_enemies_not_in_progress",
+        argb = "FFAB0000"
+    },
+    arrowtrap_left = {
+        text = "$conjurer_reborn_enemies_not_in_progress",
+        argb = "FFAB0000"
+    },
+    arrowtrap_right = {
+        text = "$conjurer_reborn_enemies_not_in_progress",
+        argb = "FFAB0000"
+    },
+    spittrap_left = {
+        text = "$conjurer_reborn_enemies_not_in_progress",
+        argb = "FFAB0000"
+    },
+    spittrap_right = {
+        text = "$conjurer_reborn_enemies_not_in_progress",
+        argb = "FFAB0000"
+    },
+    firetrap_left = {
+        text = "$conjurer_reborn_enemies_not_in_progress",
+        argb = "FFAB0000"
+    },
+    firetrap_right = {
+        text = "$conjurer_reborn_enemies_not_in_progress",
+        argb = "FFAB0000"
+    },
+    thundertrap_left = {
+        text = "$conjurer_reborn_enemies_not_in_progress",
+        argb = "FFAB0000"
+    },
+    thundertrap_right = {
+        text = "$conjurer_reborn_enemies_not_in_progress",
+        argb = "FFAB0000"
+    },
+    walleye = {
+        text = "$conjurer_reborn_enemies_not_in_progress",
+        argb = "FFAB0000"
+    },
+    wallmouth = {
+        text = "$conjurer_reborn_enemies_not_in_progress",
+        argb = "FFAB0000"
+    },
 }

@@ -353,11 +353,6 @@ end
 
 UI.MiscEventFn["SettingOtherUpdate"] = function ()
     local player = GetPlayerObj()
-    if GlobalsGetValue("conjurer_reborn_get_carrot") == "1" and player then
-        local x, y = player:GetTransform()
-        EntityLoad("mods/conjurer_reborn/files/wands/carrot/entity.xml", x, y)
-        GlobalsSetValue("conjurer_reborn_get_carrot", "0")
-    end
 	
     if GetConjurerCheckBoxStatus("SetIngestCheckbox") and player and player.comp_all.IngestionComponent then
 		local IngestNumStr = WorldGlobalGet(UI, "GlobalSetIngestSizeInput", "0")

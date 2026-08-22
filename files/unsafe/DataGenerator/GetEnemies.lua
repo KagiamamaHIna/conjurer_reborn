@@ -205,6 +205,46 @@ for i=#OrderedListId,1,-1 do--如果不存在就移除不存在敌人
 	end
 end
 
+
+for _, v in ipairs(NewOtherEnemies) do
+    if EnemiesTable[v.id] == nil then
+        OrderedListId[#OrderedListId + 1] = v.id
+        EnemiesTable[v.id] = v
+		EnemiesTable[v.id].is_new_other = true
+    else --相同id敌人路径合并与去重
+        local templist = {}
+        local hasFile = {}
+        for _, f in ipairs(v.files) do
+            if hasFile[f] == nil then
+                hasFile[f] = true
+                templist[#templist + 1] = f
+            end
+        end
+        for _, f in ipairs(EnemiesTable[v.id].files) do
+            if hasFile[f] == nil then
+                hasFile[f] = true
+                templist[#templist + 1] = f
+            end
+        end
+        EnemiesTable[v.id].files = templist
+    end
+	v.id = nil
+end
+NewOtherEnemies = nil
+
+--进行一次去重，用于避免模组通过data覆盖原版文件导致的相同路径
+for _, v in pairs(EnemiesTable) do
+    local templist = {}
+    local hasFile = {}
+    for _, f in ipairs(v.files) do
+        if hasFile[f] == nil then
+            hasFile[f] = true
+            templist[#templist + 1] = f
+        end
+    end
+	v.files = templist
+end
+
 local slashNum = string.byte('/')
 ---获取路径层级
 ---@param str string
@@ -244,13 +284,6 @@ for _, v in pairs(EnemiesTable) do
 	::continue::
 end
 
-for _,v in ipairs(NewOtherEnemies)do
-    OrderedListId[#OrderedListId + 1] = v.id
-    EnemiesTable[v.id] = v
-	v.id = nil
-end
-NewOtherEnemies = nil
-
 local KeyToEnemy = {}
 for i,v in ipairs(OrderedListId)do
 	KeyToEnemy[v] = i
@@ -273,9 +306,15 @@ for k,v in pairs(ExtraEnemiesFile)do
 	::continue::
 end
 
-for k,v in pairs(EnemiesDesc)do
-	if EnemiesTable[k] then
-		EnemiesTable[k].conjurer_reborn_custom_desc = v
+for k, v in pairs(EnemiesDesc) do
+	if v.is_new_other_draw == nil then
+        if EnemiesTable[k] then
+            EnemiesTable[k].conjurer_reborn_custom_desc = v
+        end
+    else
+		if v.is_new_other_draw and EnemiesTable[k].is_new_other then
+            EnemiesTable[k].conjurer_reborn_custom_desc = v
+		end
 	end
 end
 EnemiesDesc = nil

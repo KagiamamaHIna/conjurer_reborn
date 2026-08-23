@@ -314,133 +314,133 @@ local conjurer_reborn_reset_entwand_fav_confirm = false
 mod_settings_version = 1
 mod_settings =
 {
-    Setting({
+    Setting{
 		category_id = "general_settings",
 		ui_name = "general",
 		settings = {
-			Setting({
+			Setting{
 				id = "zoom_level",
 				ui_name = "zoom_level",
 				ui_description = "zoom_level_desc",
 				value_default = "conjurer",
-				values = ValueList({
+				values = ValueList{
 					{ "conjurer", "zoom_level_conjurer" },
 					{ "noita", "zoom_level_noita" },
                     { "huge",     "zoom_level_huge" },
 					{ "fullhd", "zoom_level_fullhd" },
-				}),
+				},
 				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
-            }),
-			Setting({
+            },
+			Setting{
 				id = "progression",
 				ui_name = "progression",
 				ui_description = "progression_desc",
 				value_default = false,
 				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
-            }),
-			Setting({
+            },
+			Setting{
 				id = "split_search_text2",
                 ui_name = "split_search_text",
 				ui_description = "split_search_text_tip",
 				value_default = true,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
-            }),
-			Setting({
+            },
+			Setting{
 				id = "disable_inf_chaos_poly",
 				ui_name = "inf_chaos_poly",
 				ui_description = "inf_chaos_poly_desc",
 				value_default = false,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
-            }),
-			Setting({
+            },
+			Setting{
 				id = "kalma_inversion",
 				ui_name = "kalma_inversion",
 				value_default = false,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
-            }),
+            },
 		}
-    }),
-	Setting({
+    },
+	Setting{
 		category_id = "visuals_and_audio",
 		ui_name = "visuals_and_audio",
         settings = {
-			Setting({
+			Setting{
 				id = "tooltip_animation",
 				ui_name = "tooltip_animation",
 				value_default = true,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
-            }),
-			Setting({
+            },
+			Setting{
 				id = "click_sound",
 				ui_name = "click_sound",
 				value_default = true,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
-            }),
-			Setting({
+            },
+			Setting{
 				id = "bottom_pos",
 				ui_name = "bottom_pos",
 				value_default = "bottom_center",
-				values = ValueList({
+				values = ValueList{
 					{ "bottom_center", "bottom_bottom_center" },
                     { "bottom_right",  "bottom_bottom_right" },
                     { "bottom_left",   "bottom_bottom_left" },
 					{ "no_display", "bottom_no_display" },
-				}),
+				},
 				scope = MOD_SETTING_SCOPE_RUNTIME,
-            }),
-			Setting({
+            },
+			Setting{
 				id = "bottom_hidden_pos",
 				ui_name = "bottom_hidden_btn_pos",
 				value_default = "left",
-				values = ValueList({
+				values = ValueList{
 					{ "left", "bottom_hidden_btn_pos_left" },
                     { "right",  "bottom_hidden_btn_pos_right" },
-				}),
+				},
 				scope = MOD_SETTING_SCOPE_RUNTIME,
-            }),
-			Setting({
+            },
+			Setting{
 				id = "rebirth_blinded",
 				ui_name = "rebirth_blinded",
 				value_default = true,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
-            }),
-			Setting({
+            },
+			Setting{
 				id = "quick_display_mat",
 				ui_name = "quick_mat_display",
 				value_default = true,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
-            }),
+            },
 		},
-    }),
-    Setting({
+    },
+    Setting{
 		category_id = "control_settings",
 		ui_name = "controls",
 		settings = {
-			Setting({
+			Setting{
 				id = "secondary_button",
 				ui_name = "secondary_button",
 				ui_description = "secondary_button_desc",
 				value_default = "mouse2",
-                values = ValueList({
+                values = ValueList{
                     { "throw",  "secondary_button_throw" },
 					{ "mouse2", "secondary_button_mouse2" }
-				}),
+				},
 				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
-			})
+			}
 		},
-    }),
-	Setting({
+    },
+	Setting{
 		category_id = "conjurer_other",
 		ui_name = "other",
         settings = {
-			Setting({
+			Setting{
 				id = "game_print_gui_error",
 				ui_name = "game_print_gui_error",
 				ui_description = "",
                 value_default = true,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
-            }),
-			Setting({
+            },
+			Setting{
 				id = "vertical_page_column_max",
 				ui_name = "vertical_page_column_max",
 				ui_description = "vertical_page_column_max_desc",
@@ -448,8 +448,8 @@ mod_settings =
 				value_min = 1,
 				value_max = 18,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
-            }),
-			Setting({
+            },
+			Setting{
 				id = "reset_matwand_fav",
 				ui_name = "",
 				ui_description = "",
@@ -484,8 +484,8 @@ mod_settings =
 
 					GuiIdPop(gui)
 				end
-            }),
-			Setting({
+            },
+			Setting{
 				id = "reset_entwand_fav",
 				ui_name = "",
 				ui_description = "",
@@ -520,48 +520,48 @@ mod_settings =
 
 					GuiIdPop(gui)
 				end
-			})
+			}
         },
-    }),
-	Setting({
+    },
+	Setting{
 		category_id = "unsafe_settings",
 		ui_name = "unsafe",
 		settings = {
-			Setting({
+			Setting{
 				id = "unsafe_load_conjurer",
 				ui_name = "unsafe_load_conjurer",
 				ui_description = "unsafe_load_conjurer_desc",
 				value_default = false,
 				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
-            }),
-			Setting({
+            },
+			Setting{
 				id = "regen_mat_img_every_time",
                 ui_name = "mat_img_regen_every_time",
 				value_default = false,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
-            }),
-			Setting({
+            },
+			Setting{
 				id = "unsafe_brush",
 				ui_name = "unsafe_brush",
 				ui_description = "unsafe_brush_desc",
 				value_default = true,
 				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
-            }),
-			Setting({
+            },
+			Setting{
 				id = "unsafe_brush_create_light",
 				ui_name = "unsafe_brush_create_light",
 				ui_description = "unsafe_brush_create_light_desc",
 				value_default = false,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
-            }),
+            },
 		}
-    }),
+    },
 		
-	Setting({
+	Setting{
 		category_id = "control_settings",
 		ui_name = "notice",
 		settings = {},
-	}),
+	},
 }
 
 

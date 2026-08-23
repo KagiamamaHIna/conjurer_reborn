@@ -946,6 +946,7 @@ local function DrawFav(UI)
 	end)
 end
 
+local rightXOffset = 1
 ---@param UI Gui
 ---@param sprite string
 ---@param name string
@@ -957,10 +958,10 @@ local function EyedropperTooltip(UI, sprite, name, id, leftOrRight, inputX)
     local nx = 0
     local ix = 0
     if leftOrRight then
-        sx = -inputX - UI.ImgDimension(sprite)
-        nx = -inputX - UI.TextDimensions(name)
+        sx = -inputX - UI.ImgDimension(sprite) - rightXOffset
+        nx = -inputX - UI.TextDimensions(name) - rightXOffset
 		if id then
-			ix = -inputX - UI.TextDimensions(id)
+			ix = -inputX - UI.TextDimensions(id) - rightXOffset
 		end
     end
     UI.Image("EyedropperEntityImage", sx, 0, sprite)

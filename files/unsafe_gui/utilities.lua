@@ -1,18 +1,6 @@
 dofile_once("mods/conjurer_reborn/files/unsafe/unsafe.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 
--- local old_DEBUG_GetMouseWorld = DEBUG_GetMouseWorld
--- function DEBUG_GetMouseWorld()
---     local x, y = old_DEBUG_GetMouseWorld()
---     if x < 0 then
---         x = x - 1
---     end
---     if y < 0 then
---         y = y - 1
---     end
--- 	return x,y
--- end
-
 function ClickSound()
 	if CurSettingGet("click_sound") then
 		GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", GameGetCameraPos())

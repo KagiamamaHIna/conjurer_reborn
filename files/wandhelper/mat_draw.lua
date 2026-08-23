@@ -3,6 +3,17 @@ dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetAllData.lua")
 local MatTable = GetMaterialData()
 local MatTypeList = GetMaterialTypeList()
 
+local function MatwandGetPos()
+    local x,y = DEBUG_GetMouseWorld()
+    if x < 0 then
+        x = x - 1
+    end
+    if y < 0 then
+        y = y - 1
+    end
+    return x,y
+end
+
 ---------------------------
 --		 橡皮擦API		  --
 ---------------------------
@@ -19,7 +30,7 @@ local function EraserFollowMouse(UI)
 		else
 			grid_size = GetEraserGridSize(UI)
 		end
-		local mx, my = DEBUG_GetMouseWorld()
+		local mx, my = MatwandGetPos()
 		local x, y = GridSnap(mx, my, grid_size)
 		EntitySetTransform(eraser, x, y)
 	end
@@ -180,7 +191,7 @@ local function BrushFollowMouse(UI)
 	local brush = EntityGetWithName("conjurer_reborn_brush_reticle")
 	if brush then
 		local grid_size = GetBrushGridSize(UI)
-		local mx, my = DEBUG_GetMouseWorld()
+		local mx, my = MatwandGetPos()
 		local x, y = GridSnap(mx, my, grid_size)
 		EntitySetTransform(brush, x, y)
 	end
@@ -345,7 +356,7 @@ local function LegacyMaterialToolEntityUpdate(UI)
 	local ACTION_RELEASE_ERASE = (ACTION_HOLD_ERASE == false and PrevErase == true)
 	local brush_grid_size = GetBrushGridSize(UI)
 
-	local mx, my = DEBUG_GetMouseWorld()
+	local mx, my = MatwandGetPos()
 
 	local bx, by = GridSnap(mx, my, brush_grid_size)
 
@@ -598,7 +609,7 @@ local function UnsafeMaterialToolEntityUpdate(UI)
 	local ACTION_RELEASE_ERASE = (ACTION_HOLD_ERASE == false and PrevErase == true)
 	local brush_grid_size = GetBrushGridSize(UI)
 
-	local mx, my = DEBUG_GetMouseWorld()
+	local mx, my = MatwandGetPos()
 
 	local bx, by = GridSnap(mx, my, brush_grid_size)
     local material = GetActiveMaterial(UI)

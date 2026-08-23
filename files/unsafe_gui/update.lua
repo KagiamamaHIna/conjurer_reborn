@@ -16,6 +16,15 @@ dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/editwand.lua") --编辑
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/tunewand.lua") --编辑法杖
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/bottom.lua")         --底部按钮
 
+local old_DEBUG_GetMouseWorld = DEBUG_GetMouseWorld
+function DEBUG_GetMouseWorld()
+    local x, y = UI.GetMouseInWorld()
+	if x == nil then
+		return old_DEBUG_GetMouseWorld()
+	end
+	return x,y
+end
+
 ---@type table|nil
 local ActiveTable
 

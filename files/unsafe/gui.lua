@@ -133,7 +133,10 @@ local this = {
 		ResetAllCanMove = nil,
 		LastScreenWidth = -1,
         LastScreenHeight = -1,
-		TextInputHeight = 0
+		TextInputHeight = 0,
+
+        RawScreenWidth = -1,
+        RawScreenHeight = -1
 	},
 	public = {
 		ScreenWidth = -1, --当前屏宽
@@ -2269,6 +2272,26 @@ function UI.GetScreenPosition(x, y)
 	return ax + screen_width * 0.5, ay + screen_height * 0.5
 end
 
+---@return number? x
+---@return number? y
+function UI.GetMouseInWorld()
+    if this.private.RawScreenWidth == -1 then
+        return nil
+    end
+    local x, y = InputGetMousePosOnScreen()
+    local screen_width = this.private.RawScreenWidth
+    local screen_height = this.private.RawScreenHeight
+    local resolution_width = tonumber(MagicNumbersGetValue("VIRTUAL_RESOLUTION_X"))
+    local resolution_height = resolution_width * screen_height / screen_width
+    local camera_x, camera_y = GameGetCameraPos()
+    local bounds_width, bounds_height = select(3, GameGetCameraBounds())
+    x = x / screen_width * resolution_width + camera_x - bounds_width * 0.5 -
+        tonumber(MagicNumbersGetValue("VIRTUAL_RESOLUTION_OFFSET_X"))
+    y = y / screen_height * resolution_height + camera_y - bounds_height * 0.5 -
+        tonumber(MagicNumbersGetValue("VIRTUAL_RESOLUTION_OFFSET_Y"))
+    return x, y
+end
+
 ---返回一个缩放参数，代表相对ui的位置与实际ui位置的倍率
 ---@return number
 function UI.GetScale()
@@ -2300,6 +2323,8 @@ function UI.DispatchMessage()
 	if this.public.ScreenWidth ~= this.private.LastScreenWidth or this.public.ScreenHeight ~= this.private.LastScreenHeight then
         local GetScaleGui = GuiCreate()
         local SrcW, SrcH = GuiGetScreenDimensions(GetScaleGui)
+        this.private.RawScreenWidth = SrcW
+        this.private.RawScreenHeight = SrcH
         GuiDestroy(GetScaleGui)
         this.private.Scale = SrcH / this.public.ScreenHeight
         this.private.LastScreenWidth = this.public.ScreenWidth

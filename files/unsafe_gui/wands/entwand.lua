@@ -272,7 +272,7 @@ local function PerkTooltipText(UI, id)
 	UI.Text(0,0,modName)
 end
 
----绘制天赋的悬浮窗文本
+---绘制其他类型时的的悬浮窗文本
 ---@param UI Gui
 ---@param item table
 local function OtherTooltipText(UI, item)

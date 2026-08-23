@@ -294,7 +294,7 @@ end
 local function ValueListInit(t)
     TableListener(t, function(key, value)
 		if key == 1 then--第一个是内部键
-			return key
+			return value
 		end
 		return GetTextOrKey(value)
 	end)

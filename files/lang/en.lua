@@ -1,7 +1,7 @@
 ---@diagnostic disable: lowercase-global
 
 ---matwand mat tooltip offest
-conjurer_reborn_mat_tooltip_offset = "72"--only number
+conjurer_reborn_mat_tooltip_offset = "74"--only number
 
 --conjurer reborn's check information
 conjurer_reborn_unsafe_ver_error = "[Conjurer Reborn] requires [Conjurer Reborn Unsafe] version: v$0, but you currently have v$1 installed!"

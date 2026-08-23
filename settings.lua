@@ -1,61 +1,208 @@
-local LocalText = [[lang_id,en,ru,pt-br,es-es,de,fr-fr,it,pl,zh-cn,jp,ko,,NOTES – use \n for newline,max length,,,,,,,,,,占位符，用于表示每一格对应的语言
-setting_notice,",\n!   NOTICE!\n!\n!   If you experience problems using [Restart with enabled mods active]\n!   it is advised to rather just [Save & Quit] and [Continue].\n!\n!   Quick restart is known to mess up at least the following:\n!     1. Selected zoom level\n!     2. The tower background\n!     3. Custom Staff GUI\n`",,,,,,,,"/\n!   注意事项！\n!\n!   如果你在使用[以已启用模组生效的状态重新启动](快捷重启)时遇到问题\n!   那么建议使用[保存并退出]然后[继续]的方法避免问题\n!\n!   须知，快捷重启可能会导致以下功能出现问题：\n!     1. 选定的缩放级别\n!     2. 背景贴图\n!     3. 自定义的GUI\n\",,,,,,,,,,,,,,,
-setting_general,General,,,,,,,,主要,,,,,,,,,,,,,,,
-setting_zoom_level,Zoom level,,,,,,,,缩放级别,,,,,,,,,,,,,,,
-setting_zoom_level_desc,"How much do you want to see? Heavily affects performance.\nWARNING:\nBig resolutions are glitchy, and probably not useful for anything but screenshots.",,,,,,,,"你想要看多大？\n警告：\n太大的分辨率有一些问题，它们可能除了截图之外没有什么用",,,,,,,,,,,,,,,
-setting_zoom_level_noita,Noita (1x Noita),,,,,,,,,,,,,,,,,,,,,,,
-setting_zoom_level_conjurer,Conjurer (1.5x Noita),,,,,,,,,,,,,,,,,,,,,,,
-setting_zoom_level_huge,Big (2x Noita),,,,,,,,大 (2x Noita),,,,,,,,,,,,,,,
-setting_zoom_level_fullhd,Full HD (4.5x Noita),,,,,,,,全高清 (4.5x Noita),,,,,,,,,,,,,,,
-setting_progression,Global progression,,,,,,,,全局进展,,,,,,,,,,,,,,,
-setting_progression_desc,"Do you want to enable global Noita progression?\nWARNING:\nWhen this is enabled spawning any creatures, spells or perks will count towards\nyour global progress screen, which can ruin a lot of the fun. Be absolutely sure\nbefore enabling this. [Reset all progress] is the only undo there is.",,,,,,,,"你想要影响你当前游戏的进展吗？\n警告：\n启用此功能后，任何法术，生物，天赋的使用都将计入你的全局进展中，\n这可能会破坏很多乐趣。请三思而后行。\n[重置所有进展]是唯一的撤销办法",,,,,,,,,,,,,,,
-setting_controls,Controls,,,,,,,,控制,,,,,,,,,,,,,,,
-setting_secondary_button,Secondary button scheme,,,,,,,,辅助按键方案,,,,,,,,,,,,,,,
-setting_secondary_button_desc,"Which button do you want to use for erasing/removing action?\nUseful if your mouse2 is taken by something else specific, or you're using a controller.",,,,,,,,"如果你的鼠标右键被其他特定操作占用了，\n或者你使用的是其他控制器设备，那么你想要哪个键进行擦除/删除操作？",,,,,,,,,,,,,,,
-setting_secondary_button_throw,Throw,,,,,,,,投掷键,,,,,,,,,,,,,,,
-setting_secondary_button_mouse2,Mouse2,,,,,,,,鼠标右键,,,,,,,,,,,,,,,
-setting_bottom_pos,Bottom button position,,,,,,,,底部按钮位置,,,,,,,,,,,,,,,
-setting_bottom_bottom_center,Bottom Center,,,,,,,,底部中心,,,,,,,,,,,,,,,
-setting_bottom_bottom_right,Bottom Right,,,,,,,,右下角,,,,,,,,,,,,,,,
-setting_bottom_bottom_left,Bottom Left (Not recommended),,,,,,,,左下角(不推荐),,,,,,,,,,,,,,,
-setting_bottom_no_display,No Display,,,,,,,,不显示,,,,,,,,,,,,,,,
-setting_click_sound,Button click sound,,,,,,,,按钮点击音效,,,,,,,,,,,,,,,
-setting_other,Other,,,,,,,,其他,,,,,,,,,,,,,,,
-setting_quick_mat_display,Display material info when selecting material quickly,,,,,,,,快捷选中材料时显示材料数据,,,,,,,,,,,,,,,
-split_search_text,Match All Keywords,,,,,,,,匹配所有关键词,,,,,,,
-split_search_text_tip,"Search multiple keywords separated by spaces (AND logic).",,,,,,,,按空格分隔多词进行“与”逻辑搜索。,,,,,,,
-mat_img_regen_every_time,Re-generate material image every time,,,,,,,,每次都重新生成材料贴图,,,,,,,
-reset_matwand_fav,Reset material favorite,,,,,,,,重置材料收藏,,,,,,,,,,,,,,,
-reset_matwand_fav_desc,Reset the favorite of the Staff of Material Mastery,,,,,,,,重置材料法杖的收藏,,,,,,,,,,,,,,,
-reset_entwand_fav,Reset entity favorite,,,,,,,,重置实体收藏,,,,,,,,,,,,,,,
-reset_entwand_fav_desc,Reset the favorite of the Staff of Illusions,,,,,,,,重置幻象魔杖的收藏,,,,,,,,,,,,,,,
-reset_IKnowWhatImDoing,"This action cannot be undone, click again to confirm",,,,,,,,此操作不可撤销，再点击一次确认,,,,,,,
-inf_chaos_poly,Potential Permanent Chaotic Polymorphine,,,,,,,,潜在的永久混沌变形,,,,,,,
-inf_chaos_poly_desc,Note: This cannot salvage player affected by Permanent Chaotic Polymorphine.,,,,,,,,注意：这无法挽回已经被永久混沌变形的玩家,,,,,,,
-rebirth_blinded,Blinded effect after rebirth,,,,,,,,重生后的致盲效果,,,,,,,
-game_print_gui_error,In-game print GUI error,,,,,,,,游戏内打印GUI错误,,,,,,,
-vertical_page_column_max,Favorite Bar Single Column Size,,,,,,,,收藏栏单列大小,,,,,,,
-vertical_page_column_max_desc,How many items can be displayed in one column?,,,,,,,,一列可以显示多少个？,,,,,,,
-bottom_hidden_btn_pos,Bottom hidden button position,,,,,,,,底部隐藏按钮位置,,,,,,,
-bottom_hidden_btn_pos_left,Left,,,,,,,,左,,,,,,,
-bottom_hidden_btn_pos_right,Right,,,,,,,,右,,,,,,,
-unsafe_options,Unsafe Setting,,,,,,,,不安全设置,,,,,,,
-unsafe_options_load_conjurer,Unsafe automatically loads Conjurer in non-gamemode,,,,,,,,Unsafe主动以非游戏模式加载Conjurer,,,,,,,
-unsafe_options_load_conjurer_desc,No need to manually enable Conjurer Reborn\nSimply enabling Unsafe is enough,,,,,,,,无需启用Conjurer Reborn\n只要启用unsafe即可,,,,,,,
-unsafe_options_unsafe_brush,Advanced Brush,,,,,,,,高级画刷,,,,,,,
-unsafe_options_unsafe_brush_desc,"Provides an improved drawing experience.\nDisabling this reverts to the legacy drawing feature.\nNoita updates may break this feature, in which case you can disable it for now.",,,,,,,,可以提供更好的绘制体验。\n关闭则使用旧版绘制功能。\nNoita更新可能会破坏这个功能，此时可以先关闭。,,,,,,,
-unsafe_options_unsafe_brush_create_light,Glow effect for new materials,,,,,,,,新建材料的发光特效,,,,,,,
-unsafe_options_unsafe_brush_create_light_desc,Like this effect?\nYou can now toggle it in the Advanced Brush!,,,,,,,,喜欢这个特效吗？\n高级画刷可以开关此功能了！,,,,,,,
-visuals_and_audio,Visuals & Audio,,,,,,,,视觉与音效,,,,,,,
-tooltip_animation,Tooltip animation,,,,,,,,悬浮窗动画,,,,,,,
-options_kalma_inversion,Kalma's Call Inversion,,,,,,,,死亡之兆反转,,,,,,,
-]]
+---Multiline text
+---@param list string[]
+---@return string
+local function MT(list)
+	return table.concat(list, "\n")
+end
+
+local i18n = {
+    ["en"] = {
+        notice =
+            MT {
+                ",",
+                "!   NOTICE!",
+                "!",
+                "!   If you experience problems using [Restart with enabled mods active]",
+                "!   it is advised to rather just [Save & Quit] and [Continue].",
+                "!",
+                "!   Quick restart is known to mess up at least the following:",
+                "!     1. Selected zoom level",
+                "!     2. The tower background",
+                "!     3. Custom Staff GUI",
+				"`"
+            },
+        general = "General",
+        zoom_level = "Zoom level",
+        zoom_level_desc =
+		    MT {
+                "How much do you want to see? Heavily affects performance.",
+                "WARNING:",
+                "Big resolutions are glitchy, and probably not useful for anything but screenshots.",
+            },
+        zoom_level_noita = "Noita (1x Noita)",
+        zoom_level_conjurer = "Conjurer (1.5x Noita)",
+        zoom_level_huge = "Big (2x Noita)",
+        zoom_level_fullhd = "Full HD (4.5x Noita)",
+        progression = "Global progression",
+		progression_desc =
+		    MT {
+                "Do you want to enable global Noita progression?",
+                "WARNING:",
+                "When this is enabled spawning any creatures, spells or perks will count towards",
+                "your global progress screen, which can ruin a lot of the fun. Be absolutely sure",
+                "before enabling this. [Reset all progress] is the only undo there is.",
+            },
+        controls = "Controls",
+        secondary_button = "Secondary button scheme",
+		secondary_button_desc =
+			MT {
+                "Which button do you want to use for erasing/removing action?",
+				"Useful if your mouse2 is taken by something else specific, or you're using a controller.",
+            },
+        secondary_button_throw = "Throw",
+        secondary_button_mouse2 = "Mouse2",
+        bottom_pos = "Bottom button position",
+        bottom_bottom_center = "Bottom Center",
+        bottom_bottom_right = "Bottom Right",
+        bottom_bottom_left = "Bottom Left (Not recommended)",
+        bottom_no_display = "No Display",
+        click_sound = "Button click sound",
+        other = "Other",
+        quick_mat_display = "Display material info when selecting material quickly",
+        split_search_text = "Match All Keywords",
+        split_search_text_tip = "Search multiple keywords separated by spaces (AND logic).",
+		mat_img_regen_every_time = "Re-generate material image every time",
+        reset_matwand_fav = "Reset material favorite",
+        reset_matwand_fav_desc = "Reset the favorite of the Staff of Material Mastery",
+        reset_entwand_fav = "Reset entity favorite",
+        reset_entwand_fav_desc = "Reset the favorite of the Staff of Illusions",
+        reset_IKnowWhatImDoing = "This action cannot be undone, click again to confirm",
+        inf_chaos_poly = "Potential Permanent Chaotic Polymorphine",
+        inf_chaos_poly_desc = "Note: This cannot salvage player affected by Permanent Chaotic Polymorphine",
+        rebirth_blinded = "Blinded effect after rebirth",
+		game_print_gui_error = "In-game print GUI error",
+        vertical_page_column_max = "Favorite Bar Single Column Size",
+        vertical_page_column_max_desc = "How many items can be displayed in one column?",
+        bottom_hidden_btn_pos = "Bottom hidden button position",
+        bottom_hidden_btn_pos_left = "Left",
+        bottom_hidden_btn_pos_right = "Right",
+        unsafe = "Unsafe Setting",
+        unsafe_load_conjurer = "Unsafe automatically loads Conjurer in non-gamemode",
+        unsafe_load_conjurer_desc = "No need to manually enable Conjurer Reborn\nSimply enabling Unsafe is enough",
+		unsafe_brush = "Advanced Brush",
+        unsafe_brush_desc =
+            MT {
+				"Provides an improved drawing experience.",
+				"Disabling this reverts to the legacy drawing feature.",
+				"Noita updates may break this feature, in which case you can disable it for now."
+            },
+        unsafe_brush_create_light = "Glow effect for new materials",
+		unsafe_brush_create_light_desc =
+            MT {
+				"Like this effect?",
+				"You can now toggle it in the Advanced Brush!"
+            },
+        visuals_and_audio = "Visuals & Audio",
+        tooltip_animation = "Tooltip animation",
+		kalma_inversion = "Kalma's Call Inversion"
+    },
+    ["zh-cn"] = {
+		notice =
+            MT {
+                "/",
+				"!   注意事项！",
+				"!",
+				"!   如果你在使用[以已启用模组生效的状态重新启动](快捷重启)时遇到问题",
+				"!   那么建议使用[保存并退出]然后[继续]的方法避免问题",
+				"!",
+				"!   须知，快捷重启可能会导致以下功能出现问题：",
+				"!     1. 选定的缩放级别",
+				"!     2. 背景贴图",
+				"!     3. 自定义的GUI",
+				"\\"
+            },
+        general = "主要",
+        zoom_level = "缩放级别",
+        zoom_level_desc =
+		    MT {
+                "你想要看多大？",
+				"警告：",
+				"太大的分辨率有一些问题，它们可能除了截图之外没有什么用",
+            },
+        zoom_level_huge = "大 (2x Noita)",
+        zoom_level_fullhd = "全高清 (4.5x Noita)",
+        progression = "全局进展",
+		progression_desc =
+		    MT {
+                "你想要影响你当前游戏的进展吗？",
+				"警告：",
+				"启用此功能后，任何法术，生物，天赋的使用都将计入你的全局进展中，",
+				"这可能会破坏很多乐趣。请三思而后行。",
+				"[重置所有进展]是唯一的撤销办法"
+            },
+        controls = "控制",
+        secondary_button = "辅助按键方案",
+		secondary_button_desc =
+			MT {
+                "如果你的鼠标右键被其他特定操作占用了，",
+				"或者你使用的是其他控制器设备，那么你想要哪个键进行擦除/删除操作？",
+            },
+        secondary_button_throw = "投掷键",
+        secondary_button_mouse2 = "鼠标右键",
+        bottom_pos = "底部按钮位置",
+        bottom_bottom_center = "底部中心",
+        bottom_bottom_right = "右下角",
+        bottom_bottom_left = "左下角(不推荐)",
+        bottom_no_display = "不显示",
+        click_sound = "按钮点击音效",
+        other = "其他",
+        quick_mat_display = "快捷选中材料时显示材料数据",
+        split_search_text = "匹配所有关键词",
+        split_search_text_tip = "按空格分隔多词进行“与”逻辑搜索。",
+		mat_img_regen_every_time = "每次都重新生成材料贴图",
+        reset_matwand_fav = "重置材料收藏",
+        reset_matwand_fav_desc = "重置材料法杖的收藏",
+        reset_entwand_fav = "重置实体收藏",
+        reset_entwand_fav_desc = "重置幻象魔杖的收藏",
+        reset_IKnowWhatImDoing = "此操作不可撤销，再点击一次确认",
+        inf_chaos_poly = "潜在的永久混沌变形",
+        inf_chaos_poly_desc = "注意：这无法挽回已经被永久混沌变形的玩家",
+        rebirth_blinded = "重生后的致盲效果",
+		game_print_gui_error = "游戏内打印GUI错误",
+        vertical_page_column_max = "收藏栏单列大小",
+        vertical_page_column_max_desc = "一列可以显示多少个？",
+        bottom_hidden_btn_pos = "底部隐藏按钮位置",
+        bottom_hidden_btn_pos_left = "左",
+        bottom_hidden_btn_pos_right = "右",
+        unsafe = "不安全设置",
+        unsafe_load_conjurer = "Unsafe主动以非游戏模式加载Conjurer",
+        unsafe_load_conjurer_desc = "无需启用Conjurer Reborn\n只要启用unsafe即可",
+		unsafe_brush = "高级画刷",
+        unsafe_brush_desc =
+            MT {
+				"可以提供更好的绘制体验。",
+				"关闭则使用旧版绘制功能。",
+				"Noita更新可能会破坏这个功能，此时可以先关闭。"
+            },
+        unsafe_brush_create_light = "新建材料的发光特效",
+		unsafe_brush_create_light_desc =
+            MT {
+				"喜欢这个特效吗？",
+				"高级画刷可以开关此功能了！"
+            },
+        visuals_and_audio = "视觉与音效",
+        tooltip_animation = "悬浮窗动画",
+		kalma_inversion = "死亡之兆反转"
+	}
+}
+---@param key string
+---@param lang string
+local function i18nGet(key, lang)
+    local current = i18n[lang]
+	if current == nil or current[key] == nil then
+        local result = i18n["en"][key]
+        if result == nil then
+            return key
+        end
+        return result
+	end
+	return current[key]
+end
 
 dofile("data/scripts/lib/mod_settings.lua")
 
 local csv = dofile_once("mods/conjurer_unsafe/csv.lua")
 
-local currentLang = csv(LocalText)
 local CurrentMap = {}
 local gameLang = csv(ModTextFileGetContent("data/translations/common.csv"))
 function LoadLang()
@@ -89,12 +236,7 @@ local function GetText(key) --获取文本
 	if GameKey == nil then
 		GameKey = "en"
 	end
-	local result = currentLang.get(key, GameKey) or ""
-	result = string.gsub(result, [[\n]], "\n")
-    if result == nil or result == "" then
-		result = currentLang.get(key, "en")
-	end
-	return result
+	return i18nGet(key, GameKey) or ""
 end
 
 ---监听访问
@@ -174,25 +316,25 @@ mod_settings =
 {
     Setting({
 		category_id = "general_settings",
-		ui_name = "setting_general",
+		ui_name = "general",
 		settings = {
 			Setting({
 				id = "zoom_level",
-				ui_name = "setting_zoom_level",
-				ui_description = "setting_zoom_level_desc",
+				ui_name = "zoom_level",
+				ui_description = "zoom_level_desc",
 				value_default = "conjurer",
 				values = ValueList({
-					{ "conjurer", "setting_zoom_level_conjurer" },
-					{ "noita", "setting_zoom_level_noita" },
-                    { "huge",     "setting_zoom_level_huge" },
-					{ "fullhd", "setting_zoom_level_fullhd" },
+					{ "conjurer", "zoom_level_conjurer" },
+					{ "noita", "zoom_level_noita" },
+                    { "huge",     "zoom_level_huge" },
+					{ "fullhd", "zoom_level_fullhd" },
 				}),
 				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
             }),
 			Setting({
 				id = "progression",
-				ui_name = "setting_progression",
-				ui_description = "setting_progression_desc",
+				ui_name = "progression",
+				ui_description = "progression_desc",
 				value_default = false,
 				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
             }),
@@ -212,7 +354,7 @@ mod_settings =
             }),
 			Setting({
 				id = "kalma_inversion",
-				ui_name = "options_kalma_inversion",
+				ui_name = "kalma_inversion",
 				value_default = false,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),
@@ -230,19 +372,19 @@ mod_settings =
             }),
 			Setting({
 				id = "click_sound",
-				ui_name = "setting_click_sound",
+				ui_name = "click_sound",
 				value_default = true,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),
 			Setting({
 				id = "bottom_pos",
-				ui_name = "setting_bottom_pos",
+				ui_name = "bottom_pos",
 				value_default = "bottom_center",
 				values = ValueList({
-					{ "bottom_center", "setting_bottom_bottom_center" },
-                    { "bottom_right",  "setting_bottom_bottom_right" },
-                    { "bottom_left",   "setting_bottom_bottom_left" },
-					{ "no_display", "setting_bottom_no_display" },
+					{ "bottom_center", "bottom_bottom_center" },
+                    { "bottom_right",  "bottom_bottom_right" },
+                    { "bottom_left",   "bottom_bottom_left" },
+					{ "no_display", "bottom_no_display" },
 				}),
 				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),
@@ -264,7 +406,7 @@ mod_settings =
             }),
 			Setting({
 				id = "quick_display_mat",
-				ui_name = "setting_quick_mat_display",
+				ui_name = "quick_mat_display",
 				value_default = true,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),
@@ -272,16 +414,16 @@ mod_settings =
     }),
     Setting({
 		category_id = "control_settings",
-		ui_name = "setting_controls",
+		ui_name = "controls",
 		settings = {
 			Setting({
 				id = "secondary_button",
-				ui_name = "setting_secondary_button",
-				ui_description = "setting_secondary_button_desc",
+				ui_name = "secondary_button",
+				ui_description = "secondary_button_desc",
 				value_default = "mouse2",
                 values = ValueList({
-                    { "throw",  "setting_secondary_button_throw" },
-					{ "mouse2", "setting_secondary_button_mouse2" }
+                    { "throw",  "secondary_button_throw" },
+					{ "mouse2", "secondary_button_mouse2" }
 				}),
 				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
 			})
@@ -289,7 +431,7 @@ mod_settings =
     }),
 	Setting({
 		category_id = "conjurer_other",
-		ui_name = "setting_other",
+		ui_name = "other",
         settings = {
 			Setting({
 				id = "game_print_gui_error",
@@ -383,12 +525,12 @@ mod_settings =
     }),
 	Setting({
 		category_id = "unsafe_settings",
-		ui_name = "unsafe_options",
+		ui_name = "unsafe",
 		settings = {
 			Setting({
 				id = "unsafe_load_conjurer",
-				ui_name = "unsafe_options_load_conjurer",
-				ui_description = "unsafe_options_load_conjurer_desc",
+				ui_name = "unsafe_load_conjurer",
+				ui_description = "unsafe_load_conjurer_desc",
 				value_default = false,
 				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
             }),
@@ -400,15 +542,15 @@ mod_settings =
             }),
 			Setting({
 				id = "unsafe_brush",
-				ui_name = "unsafe_options_unsafe_brush",
-				ui_description = "unsafe_options_unsafe_brush_desc",
+				ui_name = "unsafe_brush",
+				ui_description = "unsafe_brush_desc",
 				value_default = true,
 				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
             }),
 			Setting({
 				id = "unsafe_brush_create_light",
-				ui_name = "unsafe_options_unsafe_brush_create_light",
-				ui_description = "unsafe_options_unsafe_brush_create_light_desc",
+				ui_name = "unsafe_brush_create_light",
+				ui_description = "unsafe_brush_create_light_desc",
 				value_default = false,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
             }),
@@ -417,7 +559,7 @@ mod_settings =
 		
 	Setting({
 		category_id = "control_settings",
-		ui_name = "setting_notice",
+		ui_name = "notice",
 		settings = {},
 	}),
 }

@@ -63,8 +63,10 @@ function OnPlayerSpawned(player)
 		handle_inventory(player)
 		player_overrides(player)
 
-		-- Always start on noon
-		set_time_of_day(NOON)
+        if ModIsEnabled("conjurer_reborn") then
+            -- Always start on noon
+            set_time_of_day(NOON)
+        end
 
 		GlobalsSetValue(FIRST_LOAD_DONE, "1")
 		GlobalsSetValue(PLAYER_HAS_DIED, "0")

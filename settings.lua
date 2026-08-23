@@ -222,7 +222,7 @@ mod_settings =
 				ui_name = "progression",
 				ui_description = "progression_desc",
 				value_default = false,
-				scope = MOD_SETTING_SCOPE_RUNTIME_RESTART,
+				scope = MOD_SETTING_SCOPE_RUNTIME,
             },
 			Setting{
 				id = "split_search_text2",

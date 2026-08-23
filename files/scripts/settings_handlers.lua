@@ -1,6 +1,3 @@
-dofile_once("mods/conjurer_reborn/files/scripts/enums.lua")
-
-
 function handle_zoom_setting()
     local zoom = CurSettingGet("zoom_level")
     if zoom == "noita" then
@@ -49,10 +46,16 @@ end
 function handle_progression_setting()
     local progression = CurSettingGet("progression")
 
-    if not progression then
-        print("Conjurer: Disabling progression logging")
+    if not progression and not GameHasFlagRun("conjurer_reborn_disable_progression") then
         GameAddFlagRun("no_progress_flags_perk")
         GameAddFlagRun("no_progress_flags_animal")
         GameAddFlagRun("no_progress_flags_action")
+        GameAddFlagRun("conjurer_reborn_disable_progression")
+    elseif progression then
+        if GameHasFlagRun("conjurer_reborn_disable_progression") then
+            GameRemoveFlagRun("no_progress_flags_perk")
+            GameRemoveFlagRun("no_progress_flags_animal")
+            GameRemoveFlagRun("no_progress_flags_action")
+        end
     end
 end

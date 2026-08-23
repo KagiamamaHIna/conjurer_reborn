@@ -1,4 +1,5 @@
 dofile_once("mods/conjurer_reborn/files/lib/Graphics.lua")
+dofile_once("mods/conjurer_reborn/files/scripts/settings_handlers.lua")
 ---@type Gui
 local UI = dofile("mods/conjurer_reborn/files/unsafe/gui.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
@@ -351,7 +352,8 @@ UI.MiscEventFn["WeatherLoop"] = function()
 	end
 end
 
-UI.MiscEventFn["SettingOtherUpdate"] = function ()
+UI.MiscEventFn["SettingOtherUpdate"] = function()
+	handle_progression_setting()
     local player = GetPlayerObj()
 	
     if GetConjurerCheckBoxStatus("SetIngestCheckbox") and player and player.comp_all.IngestionComponent then

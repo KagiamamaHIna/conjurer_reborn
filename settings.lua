@@ -94,7 +94,7 @@ local i18n = {
             },
         visuals_and_audio = "Visuals & Audio",
         tooltip_animation = "Tooltip animation",
-		kalma_inversion = "Kalma's Call Inversion"
+        kalma_inversion = "Kalma's Call Inversion",
     },
     ["zh-cn"] = {
 		notice =
@@ -182,7 +182,7 @@ local i18n = {
             },
         visuals_and_audio = "视觉与音效",
         tooltip_animation = "悬浮窗动画",
-		kalma_inversion = "死亡之兆反转"
+        kalma_inversion = "死亡之兆反转",
 	}
 }
 ---@param key string
@@ -279,7 +279,7 @@ end
 
 local function Setting(t)
 	TableListener(t, function(key, value)
-		if key == "ui_name" or key == "ui_description" then
+		if key == "ui_name" or key == "ui_description" or key == "value_display_formatting" then
 			local result = GetText(value)
 			return result
 		end
@@ -288,12 +288,14 @@ local function Setting(t)
 end
 
 local function GetTextOrKey(key)
-	local result = GetText(key)
-	return result or key
+	return GetText(key) or key
 end
 
 local function ValueListInit(t)
-	TableListener(t, function(key, value)
+    TableListener(t, function(key, value)
+		if key == 1 then--第一个是内部键
+			return key
+		end
 		return GetTextOrKey(value)
 	end)
 	return t
@@ -561,7 +563,7 @@ mod_settings =
 		category_id = "control_settings",
 		ui_name = "notice",
 		settings = {},
-	},
+    },
 }
 
 

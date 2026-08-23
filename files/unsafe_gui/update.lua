@@ -65,6 +65,7 @@ local MainBtns = {
 			EnabledBrushes(UI, true)
 		end,
 		release = function()
+			UI.UserData["BrushRotationType"] = 0
             EnabledBrushes(UI, false)
 			HandleEraseRelease()
 		end,

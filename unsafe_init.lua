@@ -129,7 +129,7 @@ end
 dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("mods/conjurer_reborn/files/lib/EntityClass.lua")
 dofile_once("mods/conjurer_reborn/files/lib/EntitySerialize.lua")
-dofile_once("mods/conjurer_unsafe/csv.lua")
+dofile_once("mods/conjurer_reborn/files/lib/csv.lua")
 local function ClearDofileOnceCache(filename)
 	__loadonce[filename] = nil
 end

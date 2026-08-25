@@ -1,12 +1,53 @@
---需要大小写不敏感，拉丁字母转换，这些可以隐式进行
+local function Default(arg, default)
+    if arg == nil then
+        return default
+    end
+    return arg
+end
 
+function UpdateSharedPinin()
+    if SharedPinin == nil then
+        return
+    end
+    if ModTextFileGetContent("mods/conjurer_reborn/is_refresh_pinin.txt") ~= "1" then
+        return
+    end
+    local config = SharedPinin:GetConfig()
+    if ModTextFileGetContent("mods/conjurer_reborn/is_refresh_keyboard.txt") == "1" then
+        config.keyboard = PinInLua.Keyboard[Default(CurSettingGet("keyboard_switch"), "QUANPIN")]
+    end
+    config.fFirstChar = Default(CurSettingGet("first_letter"), true)
+    config.fZh2Z = Default(CurSettingGet("zh_eq_z"), true)
+    config.fSh2S = Default(CurSettingGet("sh_eq_s"), true)
+    config.fCh2C = Default(CurSettingGet("ch_eq_c"), true)
+    config.fAng2An = Default(CurSettingGet("ang_eq_an"), true)
+    config.fEng2En = Default(CurSettingGet("eng_eq_en"), true)
+    config.fU2V = Default(CurSettingGet("v_eq_u"), true)
+    config:Commit()
+
+    VirtualFileSet("mods/conjurer_reborn/is_refresh_keyboard.txt", "0")
+    VirtualFileSet("mods/conjurer_reborn/is_refresh_pinin.txt", "0")
+end
+
+local function GetSharedPinin()
+    if SharedPinin ~= nil then--初始化
+        return SharedPinin
+    end
+    SharedPinin = PinInLua.PinIn("mods/conjurer_unsafe/files/pinyin/pinyin.txt")
+    VirtualFileSet("mods/conjurer_reborn/is_refresh_keyboard.txt", "1")
+    VirtualFileSet("mods/conjurer_reborn/is_refresh_pinin.txt", "1")
+    UpdateSharedPinin()
+    return SharedPinin
+end
+
+--需要大小写不敏感，拉丁字母转换，这些可以隐式进行
 --- getStrs返回的字符串会被自动处理为小写和芬兰语字母转换
 ---@param list table
 ---@param getStrs fun(item:any):...
 ---@return fun(keyword:string):any[]
 function NewSearcher(list, getStrs)
     if SharedPinin == nil then--初始化
-        SharedPinin = PinInLua.PinIn("mods/conjurer_unsafe/files/pinyin/pinyin.txt")
+        SharedPinin = GetSharedPinin()
     end
     if SharedPinin == nil then--如果初始化失败了
         error("conjurer reborn: Fatal error: PinIn failed to initialize")

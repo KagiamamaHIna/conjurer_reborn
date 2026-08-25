@@ -362,8 +362,8 @@ end
 
 UI.MiscEventFn["SettingOtherUpdate"] = function()
 	handle_progression_setting()
+	UpdateSharedPinin()
     local player = GetPlayerObj()
-	
     if GetConjurerCheckBoxStatus("SetIngestCheckbox") and player and player.comp_all.IngestionComponent then
 		local IngestNumStr = WorldGlobalGet(UI, "GlobalSetIngestSizeInput", "0")
         local IngestNum = tonumber(IngestNumStr) or 0

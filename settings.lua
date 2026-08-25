@@ -100,6 +100,34 @@ local i18n = {
         visuals_and_audio = "Visuals & Audio",
         tooltip_animation = "Tooltip animation",
         kalma_inversion = "Kalma's Call Inversion",
+		pinyin_matching = "Pinyin Matching",
+        pinyin_matching_desc = "A setting intended for Chinese users.",
+		pinyin_keyboard_switch = "Keybind Selection: ",
+		pinyin_keyboard_switch_desc =
+            MT {
+                "Choose a keybind that fits your habits!",
+                "I guess if you're a non-Chinese speaker,",
+				"you're only reading this out of curiosity, right?"
+            },
+        pinyin_quanpin = "Quanpin",
+        pinyin_daqian = "DaQian Zhuyin",
+        pinyin_xiaohe = "XiaoHe Shuangpin",
+        pinyin_ziranma = "Ziranma Shuangpin",
+        pinyin_sougou = "Sougou Shuangpin",
+        pinyin_zhineng_abc = "Zhineng ABC Shuangpin",
+        pinyin_guobiao = "Guobiao Shuangpin",
+        pinyin_microsoft = "Microsoft Shuangpin",
+        pinyin_pinyinpp = "Pinyin++ Shuangpin",
+        pinyin_ziguang = "Ziguang Shuangpin",
+		pinyin_fuzzy_phonetics = "Fuzzy Phonetics",
+        pinyin_fuzzy_phonetics_desc = "This causes the match engine to treat two specific phonemes as the same.",
+		pinyin_first = "First-Letter Matching",
+        pinyin_zh_eq_z = "zh = z",
+        pinyin_sh_eq_s = "sh = s",
+        pinyin_ch_eq_c = "ch = c",
+        pinyin_ang_eq_an = "ang = an",
+		pinyiin_eng_eq_en = "eng = en",
+		pinyiin_v_eq_u = "v = u"
     },
     ["zh-cn"] = {
 		notice =
@@ -188,14 +216,177 @@ local i18n = {
         visuals_and_audio = "视觉与音效",
         tooltip_animation = "悬浮窗动画",
         kalma_inversion = "死亡之兆反转",
+        pinyin_matching = "拼音匹配",
+        pinyin_matching_desc = "为中文使用者准备的设置",
+        pinyin_keyboard_switch = "键位选择：",
+        pinyin_keyboard_switch_desc = "根据你的使用习惯选择一个键位！",
+        pinyin_quanpin = "全拼",
+        pinyin_daqian = "大千注音",
+        pinyin_xiaohe = "小鹤双拼",
+        pinyin_ziranma = "自然码双拼",
+        pinyin_sougou = "搜狗双拼",
+        pinyin_zhineng_abc = "智能ABC双拼",
+        pinyin_guobiao = "国标双拼",
+        pinyin_microsoft = "微软双拼",
+        pinyin_pinyinpp = "拼音++双拼",
+        pinyin_ziguang = "紫光双拼",
+        pinyin_fuzzy_phonetics = "模糊音",
+        pinyin_fuzzy_phonetics_desc = "这将让匹配引擎将特定两种音韵视为同一种",
+		pinyin_first = "首字母匹配",
+        pinyin_zh_eq_z = "zh = z",
+        pinyin_sh_eq_s = "sh = s",
+        pinyin_ch_eq_c = "ch = c",
+        pinyin_ang_eq_an = "ang = an",
+		pinyiin_eng_eq_en = "eng = en",
+		pinyiin_v_eq_u = "v = u"
 	}
 }
 local Setting, ValueList, GetTextOrKey = i18nLib(i18n)
+
 dofile("data/scripts/lib/mod_settings.lua")
 
 local mod_id = "conjurer_reborn"
 local conjurer_reborn_reset_matwand_fav_confirm = false
 local conjurer_reborn_reset_entwand_fav_confirm = false
+
+local mod_id_prefix = mod_id .. "."
+
+local KeyboardList = {
+    {
+        name = "pinyin_quanpin",
+		SettingKey = "QUANPIN"
+    },
+    {
+        name = "pinyin_daqian",
+		SettingKey = "DAQIAN"
+    },
+	{
+        name = "pinyin_xiaohe",
+		SettingKey = "XIAOHE"
+    },
+	{
+        name = "pinyin_ziranma",
+		SettingKey = "ZIRANMA"
+    },
+	{
+        name = "pinyin_sougou",
+		SettingKey = "SOUGOU"
+    },
+	{
+        name = "pinyin_zhineng_abc",
+		SettingKey = "ZHINENG_ABC"
+    },
+	{
+        name = "pinyin_guobiao",
+		SettingKey = "GUOBIAO"
+    },
+	{
+        name = "pinyin_microsoft",
+		SettingKey = "MICROSOFT"
+    },
+	{
+        name = "pinyin_pinyinpp",
+		SettingKey = "PINYINPP"
+    },
+	{
+        name = "pinyin_ziguang",
+		SettingKey = "ZIGUANG"
+    },
+}
+
+local function DrawKeyboardItem(gui)
+	local key = mod_id_prefix .. "keyboard_switch"
+	local keyboard = ModSettingGet(key)
+    if keyboard == nil then
+        ModSettingSet(key, "QUANPIN")
+        keyboard = "QUANPIN"
+    end
+    for _, v in ipairs(KeyboardList) do
+		local offset = 4
+        GuiIdPushString(gui, v.name)
+
+        if keyboard == v.SettingKey then
+            GuiColorSetForNextWidget(gui, 0x33 / 255, 0x67 / 255, 0xD1 / 255, 1)
+			offset = 8
+		end
+        if GuiButton(gui, 0, offset, 0, GetTextOrKey(v.name)) and keyboard ~= v.SettingKey then
+            ModSettingSet(key, v.SettingKey)
+			local flag, entity = pcall(GameGetWorldStateEntity)
+            local isConjurer = GameHasFlagRun("conjurer_reborn_world")
+			if entity ~= 0 and isConjurer then--处在conjurer世界
+                ModTextFileSetContent("mods/conjurer_reborn/is_refresh_keyboard.txt", "1")
+				ModTextFileSetContent("mods/conjurer_reborn/is_refresh_pinin.txt", "1")
+			end
+		end
+		
+        if v.desc ~= nil then
+            GuiTooltip(gui, GetTextOrKey(v.desc), "")
+        end
+
+        GuiIdPop(gui)
+    end
+end
+
+local FuzzyPhonetics = {
+    {
+		name = "pinyin_first",
+		SettingKey = "first_letter",
+		value_default = true,
+	},
+	{
+        name = "pinyin_zh_eq_z",
+        SettingKey = "zh_eq_z",
+		value_default = true,
+    },
+	{
+        name = "pinyin_sh_eq_s",
+        SettingKey = "sh_eq_s",
+		value_default = true,
+    },
+	{
+        name = "pinyin_ch_eq_c",
+        SettingKey = "ch_eq_c",
+		value_default = true,
+    },
+	{
+        name = "pinyin_ang_eq_an",
+        SettingKey = "ang_eq_an",
+		value_default = true,
+    },
+	{
+        name = "pinyiin_eng_eq_en",
+        SettingKey = "eng_eq_en",
+		value_default = true,
+    },
+	{
+        name = "pinyiin_v_eq_u",
+        SettingKey = "v_eq_u",
+		value_default = true,
+    },
+}
+
+local function DrawFuzzyPhoneticsItem(gui)
+	local offset = 4
+	for _, v in ipairs(FuzzyPhonetics) do
+        GuiIdPushString(gui, v.name)
+		local key = mod_id_prefix .. v.SettingKey
+		local value = ModSettingGet(key)
+		if value == nil then
+            value = v.value_default
+			ModSettingSet(key, value)
+		end
+        local text = GetTextOrKey(v.name) .. ": " .. GameTextGet(value and "$option_on" or "$option_off")
+        if GuiButton(gui, 0, offset, 0, text) then
+            ModSettingSet(key, not value)
+            local flag, entity = pcall(GameGetWorldStateEntity)
+            local isConjurer = GameHasFlagRun("conjurer_reborn_world")
+            if entity ~= 0 and isConjurer then --处在conjurer世界
+                ModTextFileSetContent("mods/conjurer_reborn/is_refresh_pinin.txt", "1")
+            end
+        end
+        GuiIdPop(gui)
+    end
+end
 
 mod_settings_version = 1
 mod_settings =
@@ -442,11 +633,38 @@ mod_settings =
             },
 		}
     },
-		
+	Setting{
+		category_id = "pinyin_settings",
+        ui_name = "pinyin_matching",
+        ui_description = "pinyin_matching_desc",
+		foldable = true,
+		_folded = true,
+        settings = {
+            Setting {
+				ui_fn = function(mod_id, gui, in_main_menu, im_id, setting)
+                    GuiIdPushString(gui, "conjurer_reborn_pinyin_keyboard_switch")
+                    
+                    GuiOptionsAddForNextWidget(gui, GUI_OPTION.DrawSemiTransparent)
+					GuiText(gui, 2, 0, GetTextOrKey("pinyin_keyboard_switch"))
+					GuiTooltip(gui, GetTextOrKey("pinyin_keyboard_switch_desc"), "")
+
+					DrawKeyboardItem(gui)
+
+					GuiOptionsAddForNextWidget(gui, GUI_OPTION.DrawSemiTransparent)
+					GuiText(gui, 2, 0, GetTextOrKey("pinyin_fuzzy_phonetics"))
+                    GuiTooltip(gui, GetTextOrKey("pinyin_fuzzy_phonetics_desc"), "")
+					
+					DrawFuzzyPhoneticsItem(gui)
+
+					GuiIdPop(gui)
+				end
+			}
+		},
+    },
 	Setting{
 		category_id = "control_settings",
 		ui_name = "notice",
-		settings = {},
+        settings = {},
     },
 }
 

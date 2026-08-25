@@ -431,8 +431,8 @@ local function NewEntSearcher(data)
     end
 
     if data.Type == EntityType.Enemy then
-        local getid = function(item) return GetEnemy(item).from_id end
-        local datagetid = function(item) return GetEnemy(item[1]).from_id end
+        local getid = function(item) return GetEnemy(item).from_id or "?" end
+        local datagetid = function(item) return GetEnemy(item[1]).from_id or "?" end
 		ModToDatas = GetDataToModlist(getid)(data.entities)
 		local SearcherSet = NewSearcherSet {
         	common = NewSearcher(data.entities, InitSearcherEnemy),
@@ -440,8 +440,8 @@ local function NewEntSearcher(data)
         }
         return GetSearcherhasModid(SearcherSet)
     elseif data.Type == EntityType.Perk then
-        local getid = function(item) return GetPerk(item).conjurer_unsafe_from_id end
-		local datagetid = function(item) return GetPerk(item[1]).conjurer_unsafe_from_id end
+        local getid = function(item) return GetPerk(item).conjurer_unsafe_from_id or "?" end
+		local datagetid = function(item) return GetPerk(item[1]).conjurer_unsafe_from_id or "?" end
 		ModToDatas = GetDataToModlist(getid)(data.entities)
 		local SearcherSet = NewSearcherSet {
         	common = NewSearcher(data.entities, InitSearcherPerk),
@@ -449,8 +449,8 @@ local function NewEntSearcher(data)
         }
         return GetSearcherhasModid(SearcherSet)
     elseif data.Type == EntityType.Spell then
-        local getid = function(item) return GetSpell(item).conjurer_unsafe_from_id end
-		local datagetid = function(item) return GetSpell(item[1]).conjurer_unsafe_from_id end
+        local getid = function(item) return GetSpell(item).conjurer_unsafe_from_id or "?" end
+		local datagetid = function(item) return GetSpell(item[1]).conjurer_unsafe_from_id or "?" end
 		ModToDatas = GetDataToModlist(getid)(data.entities)
 		local SearcherSet = NewSearcherSet {
         	common = NewSearcher(data.entities, InitSearcherSpell),

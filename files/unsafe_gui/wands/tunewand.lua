@@ -26,8 +26,8 @@ local function InitSearcher(item)
 end
 
 local function NewTuneSearcher(items)
-    local getid = function(item) return item.conjurer_unsafe_from_id end
-    local datagetid = function(item) return item[1].conjurer_unsafe_from_id end
+    local getid = function(item) return item.conjurer_unsafe_from_id or "?" end
+    local datagetid = function(item) return item[1].conjurer_unsafe_from_id or "?" end
     ModToDatas = GetDataToModlist(getid)(items)
 
     local SearcherSet = NewSearcherSet {

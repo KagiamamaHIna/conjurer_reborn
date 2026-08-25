@@ -260,8 +260,8 @@ local SpeChar = string.byte('@')
 local SpeChar2 = string.byte('[')
 
 local function NewMatSearcher(items)
-    local getid = function(item) return MatTable[item].conjurer_unsafe_from_id end
-    local datagetid = function(item) return MatTable[item[1]].conjurer_unsafe_from_id end
+    local getid = function(item) return MatTable[item].conjurer_unsafe_from_id or "?" end
+    local datagetid = function(item) return MatTable[item[1]].conjurer_unsafe_from_id or "?" end
     ModToDatas = GetDataToModlist(getid)(items)
 
     local SearcherSet = NewSearcherSet {

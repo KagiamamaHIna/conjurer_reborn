@@ -167,12 +167,27 @@ local GuiDofileError = nil
 local ignore_mats
 ---@type WorldClass
 World = nil
+CSV = nil
+function GetLNameEnName(str)
+    local Name = GetNameOrKey(str)
+    if Name == "" then
+        Name = str
+    end
+
+    local flag, EnName = pcall(CSV.get, string.sub(str, 2), "en") --判断英文原名
+    if flag and EnName then
+        return Name, EnName
+    end
+    return Name, str
+end
+
 function OnWorldPostUpdate()
     if not initFlag then
         if not ModIsEnabled("conjurer_reborn") then
             GamePrint("$conjurer_reborn_force_open_message")
         end
         initFlag = true
+        CSV = ParseCSV(ModTextFileGetContent("data/translations/common.csv"))
         dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetAllData.lua") --确保数据收集
         dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/MatIconSpawn.lua")
         GUIDatas, GuiDofileError = dofile_once("mods/conjurer_reborn/files/unsafe_gui/update.lua")

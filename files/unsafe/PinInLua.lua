@@ -2,10 +2,10 @@
 
 local ffi = require("ffi")
 
-ffi.cdef([[
+pcall(ffi.cdef,[[
     int SetDllDirectoryA(const char* lpPathName);
 
-       struct PinInCpp_PinIn_NULL;
+    struct PinInCpp_PinIn_NULL;
     typedef struct PinInCpp_PinIn_NULL* PinInCpp_PinIn;//PinInCpp_PinIn == std::shared_ptr<PinInCpp::PinIn> *
     //需要在C++层面共享所有权，所以是套的智能指针，但是一定要记得回收这个智能指针，不然会内存泄漏
 

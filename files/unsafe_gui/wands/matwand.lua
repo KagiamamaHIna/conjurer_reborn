@@ -233,6 +233,86 @@ function MatTooltipText(UI, id)
 	UI.Text(0,0,modName)
 end
 
+local function InitSearcherCommon(item)
+    local obj = MatTable[item]
+    local Name = GetNameOrKey(obj.attr.ui_name)--搜索材料本地化名字
+    if Name == "" then
+        Name = obj.attr.ui_name
+    end
+
+    local ID = MatTable[item].attr.name
+    local function GetEnName()
+        return CSV.get(string.sub(obj.attr.ui_name, 2), "en")
+    end
+    local flag, pEnName = pcall(GetEnName)
+    local EnName
+    if flag and pEnName then--判断英文原名
+        EnName = pEnName
+    end
+    return Name, ID, EnName
+end
+
+local function InitSearcherTag(item)
+    return unpack(MatTable[item].attr.tags)
+end
+
+local SpeChar = string.byte('@')
+local SpeChar2 = string.byte('[')
+
+local function NewMatSearcher(items)
+    local getid = function(item) return MatTable[item].conjurer_unsafe_from_id end
+    local datagetid = function(item) return MatTable[item[1]].conjurer_unsafe_from_id end
+    ModToDatas = GetDataToModlist(getid)(items)
+
+    local SearcherSet = NewSearcherSet {
+        common = NewSearcher(items, InitSearcherCommon),
+        modid = NewSearcher(ModToDatas, GetInitSearcherModid(datagetid)),
+        tag = NewSearcher(items, InitSearcherTag),
+    }
+
+    return function(keyword)
+        local commons = {}
+        local modids = {}
+        local tags = {}
+        if CurSettingGet("split_search_text2") then
+            local keywordList = split(keyword, " ")
+
+            for _, v in ipairs(keywordList) do
+                if v:byte(1, 1) == SpeChar then
+                    modids[#modids + 1] = v:sub(2)
+                elseif v:byte(1, 1) == SpeChar2 then
+                    tags[#tags + 1] = v:sub(2)
+                else
+                    commons[#commons + 1] = v
+                end
+            end
+        else
+            if keyword:byte(1, 1) == SpeChar then
+                modids[#modids + 1] = keyword:sub(2)
+            elseif keyword:byte(1, 1) == SpeChar2 then
+                tags[#tags + 1] = keyword:sub(2)
+            else
+                commons[#commons + 1] = keyword
+            end
+        end
+
+        return SearcherSet {
+            common = commons,
+            modid = modids,
+            tag = tags
+        }
+    end
+end
+
+local function GetSearcher(self)
+    local curLang = GameTextGet("$current_language")
+    if self.last_lang ~= curLang then--语言发生变化时重置
+        self.last_lang = curLang
+        self.searcher = NewMatSearcher(self.items)
+    end
+    return self.searcher
+end
+
 local SwtichType = {
     {
         name = "$conjurer_reborn_material_type_all",
@@ -240,6 +320,7 @@ local SwtichType = {
 		icon="mods/conjurer_reborn/files/gfx/matwand_icons/icon_all_mat.png",
         icon_off = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_all_mat_off.png",
         items = GetMaterialList(),
+        get_searcher = GetSearcher
 	},
 	{
         name = "$conjurer_reborn_material_type_solid",
@@ -247,13 +328,15 @@ local SwtichType = {
 		icon="mods/conjurer_reborn/files/gfx/matwand_icons/icon_solid.png",
 		icon_off="mods/conjurer_reborn/files/gfx/matwand_icons/icon_solid_off.png",
         items = GetMaterialTypeList()[MatType.Solid],
+        get_searcher = GetSearcher
     },
 	{
 		name = "$conjurer_reborn_material_type_powder",
         id = MatType.Powder,
 		icon="mods/conjurer_reborn/files/gfx/matwand_icons/icon_sand.png",
-		icon_off="mods/conjurer_reborn/files/gfx/matwand_icons/icon_sand_off.png",
+        icon_off = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_sand_off.png",
         items = GetMaterialTypeList()[MatType.Powder],
+        get_searcher = GetSearcher
 	},
 	{
 		name = "$conjurer_reborn_material_type_liquid",
@@ -261,6 +344,7 @@ local SwtichType = {
 		icon="mods/conjurer_reborn/files/gfx/matwand_icons/icon_liquid.png",
 		icon_off="mods/conjurer_reborn/files/gfx/matwand_icons/icon_liquid_off.png",
         items = GetMaterialTypeList()[MatType.Liquid],
+        get_searcher = GetSearcher
     },
 	{
 		name = "$conjurer_reborn_material_type_gas",
@@ -268,6 +352,7 @@ local SwtichType = {
 		icon="mods/conjurer_reborn/files/gfx/matwand_icons/icon_gas.png",
 		icon_off="mods/conjurer_reborn/files/gfx/matwand_icons/icon_gas_off.png",
         items = GetMaterialTypeList()[MatType.Gas],
+        get_searcher = GetSearcher
     },
 	{
 		name = "$conjurer_reborn_material_type_box2d",
@@ -275,6 +360,7 @@ local SwtichType = {
 		icon="mods/conjurer_reborn/files/gfx/matwand_icons/icon_box2d.png",
 		icon_off="mods/conjurer_reborn/files/gfx/matwand_icons/icon_box2d_off.png",
         items = GetMaterialTypeList()[MatType.Box2d],
+        get_searcher = GetSearcher
     },
 	{
 		name = "$conjurer_reborn_material_type_fire",
@@ -282,6 +368,7 @@ local SwtichType = {
 		icon="mods/conjurer_reborn/files/gfx/matwand_icons/icon_fire.png",
 		icon_off="mods/conjurer_reborn/files/gfx/matwand_icons/icon_fire_off.png",
         items = GetMaterialTypeList()[MatType.Fire],
+        get_searcher = GetSearcher
 	}
 }
 
@@ -630,9 +717,6 @@ local function BrushPicker(UI)
 	UI.DrawScrollContainer("BrushPickerBox", true, true, MatWandSpriteBG)
 end
 
-local SpeChar = string.byte('@')
-local SpeChar2 = string.byte('[')
-
 local LastKeyword
 ---绘制材料选择框
 ---@param UI Gui
@@ -677,59 +761,7 @@ local function MatPicker(UI)
 	local return_keyword = ""
     local PageId = "MatWandPage" .. SwtichType[SwitchIndex].id
 	UI.NextZDeep(0)
-    list, return_keyword = SearchInputBox(UI, "MatwandSearch", list, X + 30, Y + 215, 102.5, 0, refresh,
-        function(item, keyword)
-			keyword = keyword:lower()
-            local Name = GetNameOrKey(MatTable[item].attr.ui_name) --搜索材料本地化名字
-            if Name == "" then
-                Name = MatTable[item].attr.name
-            end
-			local lowerName = Name:lower()
-            --默认分数是0，分数最低下限也是0，那么第一次获取分数可以不用判断直接赋值
-			--减少分支优化
-			local score = Cpp.AbsPartialPinyinRatio(lowerName,keyword)
-
-			local lowerId = MatTable[item].attr.name:lower()
-            local newScore = Cpp.AbsPartialPinyinRatio(lowerId, keyword)--搜索材料id
-            if newScore > score then
-                score = newScore
-            end
-			local function GetEnName()
-				return CSV.get(string.sub(MatTable[item].attr.ui_name,2), "en")
-			end
-			local flag, EnName = pcall(GetEnName)
-			if flag and EnName then--判断英文原名
-                newScore = Cpp.AbsPartialPinyinRatio(EnName:lower(), keyword)
-				if newScore > score then
-					score = newScore
-				end
-			end
-
-            if string.byte(keyword, 1, 1) == SpeChar then --搜索模组id/模组名字
-                local modId = MatTable[item].conjurer_unsafe_from_id or "?"
-                local lowerModId = modId:lower()
-                newScore = Cpp.AbsPartialPinyinRatio(lowerModId, string.sub(keyword, 2):lower())
-                if newScore > score then
-                    score = newScore
-                end
-                local modName = ModIdToName(modId) --获取模组名字
-                if modName then                    --对模组名字判空
-                    newScore = Cpp.AbsPartialPinyinRatio(modName:lower(), string.sub(keyword, 2):lower())
-                    if newScore > score then
-                        score = newScore
-                    end
-                end
-            end
-			if string.byte(keyword,1,1) == SpeChar2 then
-				for _,v in ipairs(MatTable[item].attr.tags) do--计算tag符合
-					newScore = Cpp.AbsPartialPinyinRatio(v:lower(), keyword)
-					if newScore > score then
-						score = newScore
-					end
-				end
-			end
-			return score
-        end)
+    list, return_keyword = SearchInputBox2(UI, "MatwandSearch", list, X + 30, Y + 215, 102.5, refresh,SwtichType[SwitchIndex]:get_searcher())
 	UI.GuiTooltip("$conjurer_reborn_material_search_desc")
 	if return_keyword ~= "" then
 		PageId = PageId .. "Searched"

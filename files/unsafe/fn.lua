@@ -497,7 +497,7 @@ end
 ---根据分隔符分割字符串
 ---@param s string
 ---@param delim string
----@return table
+---@return string[]
 function split(s, delim)
 	if string.find(s, delim) == nil then
 		return {

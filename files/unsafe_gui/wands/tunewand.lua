@@ -20,10 +20,64 @@ local TuneWandSpriteBG = "mods/conjurer_reborn/files/gfx/9piece_light.png"
 
 local SpeChar = string.byte('@')
 
+local function InitSearcher(item)
+    local name, EnName = GetLNameEnName(item.ui_name)
+    return name, item.id, EnName
+end
+
+local function NewTuneSearcher(items)
+    local getid = function(item) return item.conjurer_unsafe_from_id end
+    local datagetid = function(item) return item[1].conjurer_unsafe_from_id end
+    ModToDatas = GetDataToModlist(getid)(items)
+
+    local SearcherSet = NewSearcherSet {
+        common = NewSearcher(items, InitSearcher),
+        modid = NewSearcher(ModToDatas, GetInitSearcherModid(datagetid)),
+    }
+
+    return function(keyword)
+        local commons = {}
+        local modids = {}
+        if CurSettingGet("split_search_text2") then
+            local keywordList = split(keyword, " ")
+
+            for _, v in ipairs(keywordList) do
+                if v:byte(1, 1) == SpeChar then
+                    modids[#modids + 1] = v:sub(2)
+                else
+                    commons[#commons + 1] = v
+                end
+            end
+        else
+            if keyword:byte(1, 1) == SpeChar then
+                modids[#modids + 1] = keyword:sub(2)
+            else
+                commons[#commons + 1] = keyword
+            end
+        end
+
+        return SearcherSet {
+            common = commons,
+            modid = modids,
+        }
+    end
+end
+
+local function GetSearcher(data)
+    local curLang = GameTextGet("$current_language")
+    if data.last_lang ~= curLang then --语言发生变化时重置
+        data.last_lang = curLang
+        data.searcher = NewTuneSearcher(data.list)
+    end
+    return data.searcher
+end
+
 local ThisRunTextInputInit = false
 local ActivelySwitch = false
 local HoverID
 local LastKeyword
+
+local data = {list = HasStatusEntityList}
 ---绘制状态选择栏
 ---@param UI Gui
 local function StatusPicker(UI)
@@ -35,51 +89,7 @@ local function StatusPicker(UI)
     UI.Text(X + 2, Y - textH - 4 - 2,"$conjurer_reborn_tunewand_status_effect")
 
 	UI.NextZDeep(0)
-    local list, return_keyword = SearchInputBox(UI, "TunewandSearch", HasStatusEntityList, X + 30, Y + 205, 102.5, 0, false,
-        function(item, keyword)
-			keyword = keyword:lower()
-            local Name = GetNameOrKey(item.ui_name) --搜索状态本地化名字
-            if Name == "" then
-                Name = item.id
-            end
-			local lowerName = Name:lower()
-            --默认分数是0，分数最低下限也是0，那么第一次获取分数可以不用判断直接赋值
-			--减少分支优化
-			local score = Cpp.AbsPartialPinyinRatio(lowerName,keyword)
-
-			local lowerId = item.id:lower()
-            local newScore = Cpp.AbsPartialPinyinRatio(lowerId, keyword)--搜索状态id
-            if newScore > score then
-                score = newScore
-            end
-			local function GetEnName()
-				return CSV.get(string.sub(item.ui_name,2), "en")
-			end
-			local flag, EnName = pcall(GetEnName)
-			if flag and EnName then--判断英文原名
-                newScore = Cpp.AbsPartialPinyinRatio(EnName:lower(), keyword)
-				if newScore > score then
-					score = newScore
-				end
-			end
-
-            if string.byte(keyword, 1, 1) == SpeChar then --搜索模组id/模组名字
-                local modId = item.conjurer_unsafe_from_id or "?"
-                local lowerModId = modId:lower()
-                newScore = Cpp.AbsPartialPinyinRatio(lowerModId, string.sub(keyword, 2):lower())
-                if newScore > score then
-                    score = newScore
-                end
-                local modName = ModIdToName(modId) --获取模组名字
-                if modName then                    --对模组名字判空
-                    newScore = Cpp.AbsPartialPinyinRatio(modName:lower(), string.sub(keyword, 2):lower())
-                    if newScore > score then
-                        score = newScore
-                    end
-                end
-            end
-			return score
-        end)
+    local list, return_keyword = SearchInputBox2(UI, "TunewandSearch", data.list, X + 30, Y + 205, 102.5, false, GetSearcher(data))
     return_keyword = return_keyword or ""
     local PageId = "StatusPickerPage"
     if return_keyword ~= "" then

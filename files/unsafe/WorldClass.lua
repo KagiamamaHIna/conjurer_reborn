@@ -363,6 +363,25 @@ function world.GetCellData(strid)
     return NewCelldataObj(world_ffi.get_material_ptr(CellFactory_GetType(strid)))
 end
 
+local function GetCreateCell()
+    if DebugGetIsDevBuild() then
+        return world_ffi.construct_cell
+    end
+    local matptr = world_ffi.get_material_ptr(CellFactory_GetType("sand_static"))
+    return function (grid_world, x, y, material, memory)
+        if material.cell_holes_in_texture then
+            local cell = world_ffi.construct_cell(grid_world, x, y, matptr, memory)
+            cell.vtable.cell_overwrite(cell, grid_world, material.material_type)
+            return cell
+        else
+            return world_ffi.construct_cell(grid_world, x, y, material, memory)
+        end
+    end
+end
+
+---@type fun(grid_world: GridWorld, x: integer, y: integer, material: CellData, memory: ffi.cdata*)
+CreateCell = GetCreateCell()
+
 --在网格中创建一个材料
 ---@param x integer
 ---@param y integer
@@ -380,9 +399,9 @@ function world.CreateCell(celldata, x, y)
     end
     if type(celldata) == "string" then
         local id = world_ffi.get_material_ptr(CellFactory_GetType(celldata))
-        pcell[0] = world_ffi.construct_cell(grid, x, y, id, nil)
+        pcell[0] = CreateCell(grid, x, y, id, nil)
     else
-        pcell[0] = world_ffi.construct_cell(grid, x, y, celldata.celldata, nil)
+        pcell[0] = CreateCell(grid, x, y, celldata.celldata, nil)
     end
     return NewCellObj(pcell[0])
 end
@@ -408,7 +427,7 @@ function world.CreateCellsInArea(list, matid, x, y, drawLight)
             if pcell[0] ~= nil then
                 goto continue
             end
-            pcell[0] = world_ffi.construct_cell(grid, cx, cy, matptr, nil)
+            pcell[0] = CreateCell(grid, cx, cy, matptr, nil)
             pcell[0].draw_create_light = true
             pcell[0].start_frame_or_lightning_end_frame = GameGetFrameNum()
             ::continue::
@@ -424,7 +443,7 @@ function world.CreateCellsInArea(list, matid, x, y, drawLight)
             if pcell[0] ~= nil then
                 goto continue
             end
-            pcell[0] = world_ffi.construct_cell(grid, cx, cy, matptr, nil)
+            pcell[0] = CreateCell(grid, cx, cy, matptr, nil)
             ::continue::
         end
     end
@@ -453,7 +472,7 @@ function world.OverwriteCellsInArea(list, matid, x, y, construct, drawLight)
             if not world_ffi.chunk_loaded(chunkMap, cx, cy) then
                 goto continue
             end
-            pcell[0] = world_ffi.construct_cell(grid, cx, cy, matptr, nil)
+            pcell[0] = CreateCell(grid, cx, cy, matptr, nil)
             if drawLight then--新建材料时的光
                 pcell[0].draw_create_light = true
                 pcell[0].start_frame_or_lightning_end_frame = GameGetFrameNum()
@@ -498,7 +517,7 @@ function world.ConversionCellsInArea(list, matid, x, y, construct)
             if not world_ffi.chunk_loaded(chunkMap, cx, cy) then --没有需要先判断区块加载
                 goto continue
             end
-            pcell[0] = world_ffi.construct_cell(grid, cx, cy, matptr, nil)
+            pcell[0] = CreateCell(grid, cx, cy, matptr, nil)
             ::continue::
         end
     else --不构造分支
@@ -613,9 +632,9 @@ function world.OverwriteCell(celldata, x, y)
     --没有则新建材料
     if type(celldata) == "string" then
         local id = world_ffi.get_material_ptr(CellFactory_GetType(celldata))
-        pcell[0] = world_ffi.construct_cell(grid, x, y, id, nil)
+        pcell[0] = CreateCell(grid, x, y, id, nil)
     else
-        pcell[0] = world_ffi.construct_cell(grid, x, y, celldata.celldata, nil)
+        pcell[0] = CreateCell(grid, x, y, celldata.celldata, nil)
     end
     return NewCellObj(pcell[0])
 end

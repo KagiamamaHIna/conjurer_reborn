@@ -4,11 +4,9 @@ dofile_once("mods/conjurer_reborn/files/scripts/settings_handlers.lua")
 local UI = dofile("mods/conjurer_reborn/files/unsafe/gui.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/misc/SearchForList.lua")
+dofile_once("mods/conjurer_reborn/files/unsafe/misc/searcher.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetAllData.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/utilities.lua")
-
-CSV = ParseCSV(ModTextFileGetContent("data/translations/common.csv"))
-
 --GUI加载
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/matwand.lua")  --材料法杖
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/entwand.lua")  --实体法杖
@@ -598,7 +596,7 @@ UI.MiscEventFn["ImmunityUpdate"] = function ()
 	end
 end
 
-UI.MiscEventFn["AppendEnemy"] = function ()
+UI.MiscEventFn["AppendEnemy"] = function()
 	for _,enemy in ipairs(EntityGetWithTag("mortal") or {})do
 		if not EntityHasTag(enemy, "conjurer_enemy_flag") then
             EntityAddTag(enemy, "conjurer_enemy_flag")

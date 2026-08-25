@@ -14,4 +14,4 @@ Cpp = require("ConjurerExtensions") --加载模块
 SavePath = Cpp.GetAbsPath(SavePath)
 
 ---@module 'PinInLua'
--- PinInLua = dofile("mods/conjurer_reborn/files/unsafe/PinInLua.lua")
+PinInLua = dofile_once("mods/conjurer_reborn/files/unsafe/PinInLua.lua")

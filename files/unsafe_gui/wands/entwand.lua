@@ -22,32 +22,6 @@ local function DrawActiveEntwandFn(UI)
 	end
 end
 
-local SpeChar = string.byte('@')
-
----简化的id搜索流程
----@param keyword string
----@param id string
----@return number
-local function FromIdSearch(keyword, id)
-	local score = 0
-    if string.byte(keyword, 1, 1) == SpeChar then --搜索模组id/模组名字
-        local modId = id or "?"
-        local lowerModId = modId:lower()
-        local newScore = Cpp.AbsPartialPinyinRatio(lowerModId, string.sub(keyword, 2):lower())
-        if newScore > score then
-            score = newScore
-        end
-        local modName = ModIdToName(modId) --获取模组名字
-        if modName then              --对模组名字判空
-            newScore = Cpp.AbsPartialPinyinRatio(modName:lower(), string.sub(keyword, 2):lower())
-            if newScore > score then
-                score = newScore
-            end
-        end
-    end
-	return score
-end
-
 local function PassDataPath(str)
     local findpos = string.find(str, "data/entities/", 1, false)
 	local result = str
@@ -404,6 +378,112 @@ local function DrawFav(UI)
 	end)
 end
 
+local function InitSearcherEnemy(item)
+    local enemy = GetEnemy(item)
+    local Name, EnName = GetLNameEnName(enemy.name)
+	return Name, item, EnName
+end
+
+local function InitSearcherPerk(item)
+    local perk = GetPerk(item)
+	local Name, EnName = GetLNameEnName(perk.ui_name)
+	return Name, item, EnName
+end
+
+local function InitSearcherSpell(item)
+    local spell = GetSpell(item)
+    local Name, EnName = GetLNameEnName(spell.name)
+	return Name, item, EnName
+end
+
+local function InitSearcherOther(item)
+	local Name, EnName = GetLNameEnName(item.name)
+	return Name, EnName, item.id
+end
+
+local SpeChar = string.byte('@')
+local function NewEntSearcher(data)
+    local function GetSearcherhasModid(SearcherSet)
+        return function(keyword)
+            local commons = {}
+            local modids = {}
+            if CurSettingGet("split_search_text2") then
+                local keywordList = split(keyword, " ")
+                for _, v in ipairs(keywordList) do
+                    if v:byte(1, 1) == SpeChar then
+                        modids[#modids + 1] = v:sub(2)
+                    else
+                        commons[#commons + 1] = v
+                    end
+                end
+            else
+                if keyword:byte(1, 1) == SpeChar then
+                    modids[#modids + 1] = keyword:sub(2)
+                else
+                    commons[#commons + 1] = keyword
+                end
+            end
+            return SearcherSet {
+                common = commons,
+                modid = modids,
+            }
+        end
+    end
+
+    if data.Type == EntityType.Enemy then
+        local getid = function(item) return GetEnemy(item).from_id end
+        local datagetid = function(item) return GetEnemy(item[1]).from_id end
+		ModToDatas = GetDataToModlist(getid)(data.entities)
+		local SearcherSet = NewSearcherSet {
+        	common = NewSearcher(data.entities, InitSearcherEnemy),
+        	modid = NewSearcher(ModToDatas, GetInitSearcherModid(datagetid)),
+        }
+        return GetSearcherhasModid(SearcherSet)
+    elseif data.Type == EntityType.Perk then
+        local getid = function(item) return GetPerk(item).conjurer_unsafe_from_id end
+		local datagetid = function(item) return GetPerk(item[1]).conjurer_unsafe_from_id end
+		ModToDatas = GetDataToModlist(getid)(data.entities)
+		local SearcherSet = NewSearcherSet {
+        	common = NewSearcher(data.entities, InitSearcherPerk),
+        	modid = NewSearcher(ModToDatas, GetInitSearcherModid(datagetid)),
+        }
+        return GetSearcherhasModid(SearcherSet)
+    elseif data.Type == EntityType.Spell then
+        local getid = function(item) return GetSpell(item).conjurer_unsafe_from_id end
+		local datagetid = function(item) return GetSpell(item[1]).conjurer_unsafe_from_id end
+		ModToDatas = GetDataToModlist(getid)(data.entities)
+		local SearcherSet = NewSearcherSet {
+        	common = NewSearcher(data.entities, InitSearcherSpell),
+        	modid = NewSearcher(ModToDatas, GetInitSearcherModid(datagetid)),
+        }
+        return GetSearcherhasModid(SearcherSet)
+    else
+		local SearcherSet = NewSearcherSet{
+			common = NewSearcher(data.entities, InitSearcherOther)
+		}
+		return function(keyword)
+            local commons
+            if CurSettingGet("split_search_text2") then
+                commons = split(keyword, " ")
+            else
+                commons = {keyword}
+            end
+            return SearcherSet {
+                common = commons,
+            }
+        end
+    end
+end
+
+local function GetSearcher(data)
+    local curLang = GameTextGet("$current_language")
+    if data.last_lang ~= curLang then --语言发生变化时重置
+        data.last_lang = curLang
+        data.searcher = NewEntSearcher(data)
+    end
+    return data.searcher
+end
+
 local LastKeyword
 ---绘制实体选择框
 ---@param UI Gui
@@ -451,96 +531,8 @@ local function EntPicker(UI)
     local list = ALL_ENTITIES[SwitchIndex].entities
 	local return_keyword = ""
     local PageId = "EntWandPage" .. ALL_ENTITIES[SwitchIndex].name
-	UI.NextZDeep(0)
-    list, return_keyword = SearchInputBox(UI, "EntwandSearch", list, X + 30, Y + 215, 102.5, 0, refresh,
-        function(item, keyword)
-			local function GetEnName(str)
-				return CSV.get(string.sub(str, 2), "en")
-			end
-			local score
-			keyword = keyword:lower()
-            if ALL_ENTITIES[SwitchIndex].Type == EntityType.Enemy then
-                local enemy = GetEnemy(item)
-                local lowerName = GetNameOrKey(enemy.name):lower()
-                score = Cpp.AbsPartialPinyinRatio(lowerName, keyword)
-				local newScore = Cpp.AbsPartialPinyinRatio(item:lower(), keyword)--搜索id
-                if newScore > score then
-                    score = newScore
-                end
-                local flag, EnName = pcall(GetEnName, enemy.name)
-				if flag and EnName then
-					local EnLowerName = EnName:lower()
-					newScore = Cpp.AbsPartialPinyinRatio(EnLowerName, keyword)
-                    if newScore > score then
-                        score = newScore
-                    end
-                    EnLowerName = Cpp.FinnishToEnLower(EnLowerName)
-					newScore = Cpp.AbsPartialPinyinRatio(EnLowerName, keyword)
-                    if newScore > score then
-                        score = newScore
-                    end
-				end
-                newScore = FromIdSearch(keyword, enemy.from_id)--搜索模组
-				if newScore > score then
-                    score = newScore
-                end
-            elseif ALL_ENTITIES[SwitchIndex].Type == EntityType.Perk then
-                local perk = GetPerk(item)
-                local lowerName = GetNameOrKey(perk.ui_name):lower()
-                score = Cpp.AbsPartialPinyinRatio(lowerName, keyword)
-				local newScore = Cpp.AbsPartialPinyinRatio(item:lower(), keyword)--搜索id
-                if newScore > score then
-                    score = newScore
-                end
-				local flag, EnName = pcall(GetEnName, perk.ui_name)
-				if flag and EnName then
-					newScore = Cpp.AbsPartialPinyinRatio(EnName:lower(), keyword)
-					if newScore > score then
-						score = newScore
-					end
-				end
-				newScore = FromIdSearch(keyword, perk.conjurer_unsafe_from_id)
-				if newScore > score then
-                    score = newScore
-                end
-            elseif ALL_ENTITIES[SwitchIndex].Type == EntityType.Spell then
-                local spell = GetSpell(item)
-				local lowerName = GetNameOrKey(spell.name):lower()--搜索名字
-                score = Cpp.AbsPartialPinyinRatio(lowerName, keyword)
-				local newScore = Cpp.AbsPartialPinyinRatio(item:lower(), keyword)--搜索id
-                if newScore > score then
-                    score = newScore
-                end
-				local flag, EnName = pcall(GetEnName, spell.name)
-				if flag and EnName then
-					newScore = Cpp.AbsPartialPinyinRatio(EnName:lower(), keyword)
-					if newScore > score then
-						score = newScore
-					end
-				end
-				newScore = FromIdSearch(keyword, spell.conjurer_unsafe_from_id)
-				if newScore > score then
-                    score = newScore
-                end
-            else
-                local lowerName = GetNameOrKey(item.name):lower()
-                score = Cpp.AbsPartialPinyinRatio(lowerName, keyword)
-                if item.id then
-                    local newScore = Cpp.AbsPartialPinyinRatio(item.id:lower(), keyword)
-                    if newScore > score then
-                        score = newScore
-                    end
-                end
-				local flag, EnName = pcall(GetEnName, item.name)
-				if flag and EnName then
-					local newScore = Cpp.AbsPartialPinyinRatio(EnName:lower(), keyword)
-					if newScore > score then
-						score = newScore
-					end
-				end
-			end
-			return score
-        end)
+    UI.NextZDeep(0)
+    list, return_keyword = SearchInputBox2(UI, "EntwandSearch", list, X + 30, Y + 215, 102.5, refresh, GetSearcher(ALL_ENTITIES[SwitchIndex]))
 	if return_keyword ~= "" then
 		PageId = PageId .. "Searched"
 	end

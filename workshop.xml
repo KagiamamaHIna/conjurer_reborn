@@ -3,6 +3,6 @@
    description=""  
    tags="gameplay,total conversions,game modes,creatures,alchemy,items,cheats"  
    dont_upload_folders=".vscode|others"  
-   dont_upload_files=".editorconfig"  
+   dont_upload_files=".editorconfig|files/lib/EntityClassTypeHint.lua"  
 >  
 </Mod>

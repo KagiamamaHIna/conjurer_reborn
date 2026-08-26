@@ -418,7 +418,7 @@ UI.MiscEventFn["POLYMORPH"] = function()
 			script_damage_received="mods/conjurer_reborn/files/scripts/poly_death.lua"
         }
 		
-		for _,v in ipairs(player.comp_all.DamageModelComponent)do
+		for _,v in ipairs(player.comp_all.DamageModelComponent or {})do
 			v.attr.wait_for_kill_flag_on_death = true
 		end
         GamePrintImportant("$conjurer_reborn_exit_poly")
@@ -427,14 +427,14 @@ UI.MiscEventFn["POLYMORPH"] = function()
     if not InputIsKeyDown(Key_q) then
         return
     end
-	for _,v in ipairs(player:GetAllChildObj() or {})do
+    for _, v in ipairs(player:GetAllChildObj() or {}) do
         for _, c in ipairs(v.comp_all.GameEffectComponent or {}) do
-			local effect = c.attr.effect
-			if effect == "POLYMORPH" or effect == "POLYMORPH_RANDOM" or effect == "POLYMORPH_UNSTABLE" then
-				c.attr.frames = 1
-			end
-		end
-	end
+            local effect = c.attr.effect
+            if effect == "POLYMORPH" or effect == "POLYMORPH_RANDOM" or effect == "POLYMORPH_UNSTABLE" then
+                c.attr.frames = 1
+            end
+        end
+    end
 end
 
 UI.TickEventFn["PolyDeath"] = function()

@@ -1,0 +1,44 @@
+-- dofile_once("mods/conjurer_reborn/files/lib/EntityClass.lua")
+
+-- local TargetPath = "mods/conjurer_reborn/virtual_poly/%d.xml"
+-- local TargetData = [[<Entity>
+-- 	<InheritTransformComponent>
+--     </InheritTransformComponent>	
+    
+--     <GameEffectComponent 
+--     	effect="POLYMORPH"
+--     	frames="2147483647"
+--     	polymorph_target="%s"
+--     >
+-- 	</GameEffectComponent >
+-- </Entity>]]
+-- local fileCache = {}
+-- local maxid = 0
+-- function EntityPolyToEntity(src, target)
+--     local srcObj = EntityObj(src)
+--     if srcObj:HasTag("polymorphed") or srcObj:HasTag("polymorphable_NOT") or srcObj:GetGameEffectCount("PROTECTION_POLYMORPH") > 0 then
+--         return
+--     end
+--     local filePath = EntityGetFilename(target)
+--     local id = fileCache[fileCache]
+--     if id == nil then
+--         id = maxid
+--         maxid = maxid + 1
+--         VirtualFileSet(TargetPath:format(id), TargetData:format(filePath))
+--     end
+
+--     local effectObj = EntityObj(LoadGameEffectEntityTo(src, TargetPath:format(id)))
+--     local parent = effectObj:GetParent()
+--     if parent.comp_all.CharacterDataComponent == nil then
+--         parent.NewComp.CharacterDataComponent {}
+--     end
+--     if parent.comp_all.CharacterPlatformingComponent == nil then
+--         parent.NewComp.CharacterPlatformingComponent {}
+--     end
+--     if parent.comp_all.ControlsComponent == nil then
+--         parent.NewComp.ControlsComponent {}
+--     end
+--     for _, v in ipairs(parent.comp_all.GhostComponent or {}) do
+-- 		v.attr.die_if_no_home = false
+-- 	end
+-- end

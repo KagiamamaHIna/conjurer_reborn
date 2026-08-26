@@ -761,7 +761,7 @@ local function MatPicker(UI)
 	local return_keyword = ""
     local PageId = "MatWandPage" .. SwtichType[SwitchIndex].id
 	UI.NextZDeep(0)
-    list, return_keyword = SearchInputBox2(UI, "MatwandSearch", list, X + 30, Y + 215, 102.5, refresh,SwtichType[SwitchIndex]:get_searcher())
+    list, return_keyword = SearchInputBox(UI, "MatwandSearch", list, X + 10, Y + 215, 142.5, refresh,SwtichType[SwitchIndex]:get_searcher())
 	UI.GuiTooltip("$conjurer_reborn_material_search_desc")
 	if return_keyword ~= "" then
 		PageId = PageId .. "Searched"

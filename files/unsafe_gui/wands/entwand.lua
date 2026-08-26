@@ -542,7 +542,7 @@ local function EntPicker(UI)
 	local return_keyword = ""
     local PageId = "EntWandPage" .. ALL_ENTITIES[SwitchIndex].name
     UI.NextZDeep(0)
-    list, return_keyword = SearchInputBox2(UI, "EntwandSearch", list, X + 30, Y + 215, 102.5, refresh, GetSearcher(ALL_ENTITIES[SwitchIndex]))
+    list, return_keyword = SearchInputBox(UI, "EntwandSearch", list, X + 10, Y + 215, 142.5, refresh, GetSearcher(ALL_ENTITIES[SwitchIndex]))
 	if return_keyword ~= "" then
 		PageId = PageId .. "Searched"
 	end

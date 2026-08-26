@@ -12,8 +12,8 @@ dofile_once("mods/conjurer_reborn/files/unsafe_gui/utilities.lua")
 ---@param refresh boolean
 ---@param callback function
 ---@return table list, string keyword
-function SearchInputBox2(UI, id, list, x, y, width, refresh, callback)
-    local keyword = UI.TextInput(id, x, y, width, -1, "")
+function SearchInputBox(UI, id, list, x, y, width, refresh, callback)
+    local keyword = UI.TextInput(id, x, y, width, -1, "", nil, "$conjurer_reborn_search_no_text_tip")
     local _, _, hover = UI.WidgetInfo()
     local LastKeyword = UI.UserData["LastSearchKeyword" .. id]
     UI.UserData["LastSearchKeyword" .. id] = keyword

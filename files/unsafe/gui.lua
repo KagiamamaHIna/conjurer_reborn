@@ -136,7 +136,9 @@ local this = {
 		TextInputHeight = 0,
 
         RawScreenWidth = -1,
-        RawScreenHeight = -1
+        RawScreenHeight = -1,
+        
+        lastZdeep = nil,
 	},
 	public = {
 		ScreenWidth = -1, --当前屏宽
@@ -1365,7 +1367,7 @@ end
 ---@param str string? str=""
 ---@param allowed_characters string?
 ---@return string
-function UI.TextInput(id, x, y, w, l, str, allowed_characters)
+function UI.TextInput(id, x, y, w, l, str, allowed_characters, no_text_tip)
     local Remove1Char = function(InputStr, pos)
         local utf8Size = Cpp.UTF8StringSize(InputStr)
 		if pos > utf8Size or pos < 1 then--检查越界
@@ -1413,7 +1415,13 @@ function UI.TextInput(id, x, y, w, l, str, allowed_characters)
 	end
 	local newStr = this.private.TextInputIDtoStr[newid].str
 
-	GuiOptionsAddForNextWidget(this.public.gui,GUI_OPTION.NonInteractive)
+    if this.private.TextInputIDtoStr[newid].str == "" and no_text_tip and this.private.TextInputDrawPosTimer == nil then
+        GuiOptionsAddForNextWidget(this.public.gui,GUI_OPTION.NonInteractive)
+        GuiOptionsAddForNextWidget(this.public.gui, GUI_OPTION.DrawSemiTransparent)
+        GuiText(this.public.gui, x + 2, y, no_text_tip)
+    end
+    GuiOptionsAddForNextWidget(this.public.gui, GUI_OPTION.NonInteractive)
+    UI.UseLastZDeep(-1)
     GuiTextInput(this.public.gui, UI.NewID(id), x, y, this.private.TextInputIDtoStr[newid].str, w, l, allowed_characters)
 
     local _, _, TXHover, TIx, TIy, TXWidth, height = GuiGetPreviousWidgetInfo(this.public.gui)	--绘制光标
@@ -1982,7 +1990,16 @@ end
 ---设置下一个的zdeep，值越大越上面
 ---@param deep integer
 function UI.NextZDeep(deep)
+    this.private.lastZdeep = deep
 	GuiZSetForNextWidget(UI.gui,this.private.ZDeep - deep)
+end
+
+---设置下一个的zdeep，值越大越上面
+---@param deep integer
+function UI.UseLastZDeep(zdeep)
+    if this.private.lastZdeep then
+	    GuiZSetForNextWidget(UI.gui,this.private.ZDeep - this.private.lastZdeep - zdeep)
+    end
 end
 
 ---设置最近绘制的控件的zdeep，值越大越上面

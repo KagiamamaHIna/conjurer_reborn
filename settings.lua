@@ -144,7 +144,7 @@ local i18n = {
 				"!     3. 自定义的GUI",
 				"\\"
             },
-        general = "主要",
+        general = "通常",
         zoom_level = "缩放级别",
         zoom_level_desc =
 		    MT {

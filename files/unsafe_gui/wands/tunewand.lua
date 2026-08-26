@@ -90,7 +90,7 @@ local function StatusPicker(UI)
     UI.Text(X + 2, Y - textH - 4 - 2,"$conjurer_reborn_tunewand_status_effect")
 
 	UI.NextZDeep(0)
-    local list, return_keyword = SearchInputBox2(UI, "TunewandSearch", data.list, X + 30, Y + 205, 102.5, false, GetSearcher(data))
+    local list, return_keyword = SearchInputBox(UI, "TunewandSearch", data.list, X + 10, Y + 205, 142.5, false, GetSearcher(data))
     return_keyword = return_keyword or ""
     local PageId = "StatusPickerPage"
     if return_keyword ~= "" then

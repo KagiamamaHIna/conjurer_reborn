@@ -1415,7 +1415,7 @@ function UI.TextInput(id, x, y, w, l, str, allowed_characters, no_text_tip)
 	end
 	local newStr = this.private.TextInputIDtoStr[newid].str
 
-    if this.private.TextInputIDtoStr[newid].str == "" and no_text_tip and this.private.TextInputDrawPosTimer == nil then
+    if this.private.TextInputIDtoStr[newid].str == "" and no_text_tip and not this.private.TextInputIDtoStr[newid].hover then
         GuiOptionsAddForNextWidget(this.public.gui,GUI_OPTION.NonInteractive)
         GuiOptionsAddForNextWidget(this.public.gui, GUI_OPTION.DrawSemiTransparent)
         GuiText(this.public.gui, x + 2, y, no_text_tip)
@@ -1426,6 +1426,7 @@ function UI.TextInput(id, x, y, w, l, str, allowed_characters, no_text_tip)
 
     local _, _, TXHover, TIx, TIy, TXWidth, height = GuiGetPreviousWidgetInfo(this.public.gui)	--绘制光标
     this.private.TextInputDrawPosHas = this.private.TextInputDrawPosHas or TXHover
+    this.private.TextInputIDtoStr[newid].hover = TXHover
     if this.private.TextInputIDtoStr[newid].SetStr ~= nil then--设置文本，并检查超出部分
         local SetStr = this.private.TextInputIDtoStr[newid].SetStr
         local strWidth = GuiGetTextDimensions(this.public.gui, SetStr, 1)

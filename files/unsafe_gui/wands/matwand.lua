@@ -472,6 +472,68 @@ local function GetEraserCategories(UI)
                     UI.Text(0, 0, "$conjurer_reborn_material_eraser_options_type_fire_desc")
 				end
 			},
+        },
+        {
+            {
+				id = "NotEraserPickerTypeOfSolid",
+				text = "$conjurer_reborn_material_type_non_solid",
+				mode = "NOT_"..MatType.Solid,
+                image = GetEraserSprites("NOT_" .. MatType.Solid),
+    			desc_fn = function ()
+					UI.VerticalSpacing(2)
+                    UI.Text(0, 0, "$conjurer_reborn_matwand_unsafe_brush_eraser_desc")
+				end
+            },
+			{
+				id = "NotEraserPickerTypeOfPowder",
+				text = "$conjurer_reborn_material_type_non_powder",
+				mode = "NOT_"..MatType.Powder,
+                image = GetEraserSprites("NOT_" .. MatType.Powder),
+    			desc_fn = function ()
+					UI.VerticalSpacing(2)
+                    UI.Text(0, 0, "$conjurer_reborn_matwand_unsafe_brush_eraser_desc")
+				end
+			},
+            {
+				id = "NotEraserPickerTypeOfLiquid",
+				text = "$conjurer_reborn_material_type_non_liquid",
+				mode = "NOT_"..MatType.Liquid,
+                image = GetEraserSprites("NOT_" .. MatType.Liquid),
+    			desc_fn = function ()
+					UI.VerticalSpacing(2)
+                    UI.Text(0, 0, "$conjurer_reborn_matwand_unsafe_brush_eraser_desc")
+				end
+			},
+            {
+				id = "NotEraserPickerTypeOfGas",
+				text = "$conjurer_reborn_material_type_non_gas",
+				mode = "NOT_"..MatType.Gas,
+                image = GetEraserSprites("NOT_" .. MatType.Gas),
+    			desc_fn = function ()
+					UI.VerticalSpacing(2)
+                    UI.Text(0, 0, "$conjurer_reborn_matwand_unsafe_brush_eraser_desc")
+				end
+            },
+			{
+				id = "NotEraserPickerTypeOfBox2D",
+				text = "$conjurer_reborn_material_type_non_box2d",
+				mode = "NOT_"..MatType.Box2d,
+                image = GetEraserSprites("NOT_" .. MatType.Box2d),
+    			desc_fn = function ()
+					UI.VerticalSpacing(2)
+                    UI.Text(0, 0, "$conjurer_reborn_matwand_unsafe_brush_eraser_desc")
+				end
+			},
+			{
+				id = "NotEraserPickerTypeOfFire",
+				text = "$conjurer_reborn_material_type_non_fire",
+				mode = "NOT_"..MatType.Fire,
+                image = GetEraserSprites("NOT_" .. MatType.Fire),
+    			desc_fn = function ()
+					UI.VerticalSpacing(2)
+                    UI.Text(0, 0, "$conjurer_reborn_matwand_unsafe_brush_eraser_desc")
+				end
+			},
 		}
 	}
 	return eraser_categories

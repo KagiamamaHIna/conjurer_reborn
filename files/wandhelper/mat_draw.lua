@@ -520,7 +520,7 @@ local function UnsafeErase(UI, material, x, y)
             end
 		elseif GetMaterialTypeList()[eraser_mode] ~= nil then --材料类型模式
             if eraser_replace then
-				return function(cell)
+                return function(cell)
                     if eraser_mode == MatType.Fire then
                         cell.vtable.stop_burning(cell)
                     end
@@ -537,7 +537,22 @@ local function UnsafeErase(UI, material, x, y)
                         World.capi.remove_cell(grid, cell, cx, cy, true)
                     end
                 end
-			end
+            end
+        else--NOT_ Type
+            local eraser_type = eraser_mode:sub(5)
+			if eraser_replace then
+                return function(cell)
+                    if MatNumIdToType(cell.material_ptr.material_type) ~= eraser_type then
+                        ReplaceCell(cell)
+                    end
+                end
+            else
+                return function(cell, cx, cy)
+                    if MatNumIdToType(cell.material_ptr.material_type) ~= eraser_type then
+                        World.capi.remove_cell(grid, cell, cx, cy, true)
+                    end
+                end
+            end
         end
 	end
     local impl = GetImpl()

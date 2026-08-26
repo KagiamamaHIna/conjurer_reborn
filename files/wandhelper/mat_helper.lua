@@ -16,6 +16,13 @@ local EraserModeGases = MatType.Gas
 local EraserModeFire = MatType.Fire
 local EraserModeBox2D = MatType.Box2d
 
+local NotEraserModeSolids = "NOT_"..MatType.Solid
+local NotEraserModeLiquids = "NOT_"..MatType.Liquid
+local NotEraserModePowder = "NOT_"..MatType.Powder
+local NotEraserModeGases = "NOT_"..MatType.Gas
+local NotEraserModeFire = "NOT_"..MatType.Fire
+local NotEraserModeBox2D = "NOT_"..MatType.Box2d
+
 local EraserSprites = {
 	[EraserModeAll] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_erase_solids.png",
 	[EraserModeWash] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_wash.png",
@@ -25,7 +32,14 @@ local EraserSprites = {
 	[EraserModePowder] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_sand.png",
 	[EraserModeGases] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_gas.png",
     [EraserModeFire] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_fire.png",
-	[EraserModeBox2D] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_box2d.png"
+    [EraserModeBox2D] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_box2d.png",
+	
+	[NotEraserModeSolids] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_solid_off.png",
+	[NotEraserModeLiquids] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_liquid_off.png",
+	[NotEraserModePowder] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_sand_off.png",
+	[NotEraserModeGases] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_gas_off.png",
+    [NotEraserModeFire] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_fire_off.png",
+	[NotEraserModeBox2D] = "mods/conjurer_reborn/files/gfx/matwand_icons/icon_box2d_off.png"
 }
 
 local EraserPixelSprite = "mods/conjurer_reborn/files/gfx/eraser_pixel.png"

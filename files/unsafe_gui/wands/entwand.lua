@@ -386,19 +386,29 @@ end
 
 local function InitSearcherPerk(item)
     local perk = GetPerk(item)
-	local Name, EnName = GetLNameEnName(perk.ui_name)
-	return Name, item, EnName
+    local Name, EnName = GetLNameEnName(perk.ui_name)
+    local Desc, EnDesc = GetLNameEnName(perk.ui_description)
+	return Name, item, EnName, Desc, EnDesc
 end
 
 local function InitSearcherSpell(item)
     local spell = GetSpell(item)
     local Name, EnName = GetLNameEnName(spell.name)
-	return Name, item, EnName
+    local Desc, EnDesc = GetLNameEnName(spell.description)
+	return Name, item, EnName, Desc, EnDesc
 end
 
 local function InitSearcherOther(item)
-	local Name, EnName = GetLNameEnName(item.name)
-	return Name, EnName, item.id
+    local Name, EnName = GetLNameEnName(item.name)
+    local Desc, EnDesc
+    if item.desc then
+        Desc, EnDesc = GetLNameEnName(item.desc)
+    end
+    local Desc2, EnDesc2
+    if item.desc2 then
+        Desc2, EnDesc2 = GetLNameEnName(item.desc2)
+    end
+	return Name, EnName, item.id, Desc, EnDesc, Desc2, EnDesc2
 end
 
 local SpeChar = string.byte('@')

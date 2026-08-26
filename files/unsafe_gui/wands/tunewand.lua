@@ -22,7 +22,8 @@ local SpeChar = string.byte('@')
 
 local function InitSearcher(item)
     local name, EnName = GetLNameEnName(item.ui_name)
-    return name, item.id, EnName
+    local desc, EnDesc = GetLNameEnName(item.ui_description)
+    return name, item.id, EnName, desc, EnDesc
 end
 
 local function NewTuneSearcher(items)

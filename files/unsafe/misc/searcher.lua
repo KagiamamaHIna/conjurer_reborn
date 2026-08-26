@@ -41,7 +41,9 @@ local function GetSharedPinin()
 end
 
 --需要大小写不敏感，拉丁字母转换，这些可以隐式进行
+
 --- getStrs返回的字符串会被自动处理为小写和芬兰语字母转换
+--- 返回的函数对输入的参数会自动进行小写转换
 ---@param list table
 ---@param getStrs fun(item:any):...
 ---@return fun(keyword:string):any[]
@@ -55,7 +57,7 @@ function NewSearcher(list, getStrs)
     local tree = PinInLua.TreeSearcher(PinInLua.Logic.CONTAIN, SharedPinin)
     local IdToObj = {}
     for _, v in pairs(list) do
-        for _, str in ipairs({ getStrs(v) }) do --这些id都能表示同一个东西
+        for _, str in pairs({ getStrs(v) }) do --这些id都能表示同一个东西
             if type(str) == "string" and str ~= "" then
                 local id = tree:PutString(Cpp.FinnishToEnLower(str):lower())
                 IdToObj[id] = v

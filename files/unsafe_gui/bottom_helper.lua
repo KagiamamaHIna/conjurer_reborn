@@ -472,3 +472,20 @@ end
 function ToggleFullbright(UI)
 	SetFullbright(UI, not GetFullbright(UI))
 end
+
+---@param UI Gui
+---@return boolean
+function GetPostFx(UI)
+	return WorldGlobalGetBool(UI, "PostFx", false)
+end
+
+---@param UI Gui
+---@param enable boolean
+function SetPostFx(UI, enable)
+	WorldGlobalSetBool(UI, "PostFx", enable)
+end
+
+---@param UI Gui
+function TogglePostFx(UI)
+	SetPostFx(UI, not GetPostFx(UI))
+end

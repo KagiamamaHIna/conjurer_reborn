@@ -600,8 +600,10 @@ conjurer_reborn_power_up_world = "Next West World"
 conjurer_reborn_power_overworld = "Overworld"
 conjurer_reborn_power_east = "$0 East World"
 conjurer_reborn_power_west = "$0 West World"
-conjurer_reborn_open_fullbright = "Right-click to open All-seeing eye"
-conjurer_reborn_close_fullbright = "Right-click to close All-seeing eye"
+conjurer_reborn_open_fullbright = "Right-click to open All-seeing eye\nEnabling this while holding SHIFT will disable world simulation"
+conjurer_reborn_close_fullbright = "Right-click to close All-seeing eye\nEnabling this while holding SHIFT will disable world simulation"
+conjurer_reborn_open_post_fx = "Right-click to open Post FX"
+conjurer_reborn_close_post_fx = "Right-click to close Post FX"
 conjurer_reborn_power_herd_relation = "Relation to current herd: $0"
 
 --tunewand

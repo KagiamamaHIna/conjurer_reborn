@@ -5,6 +5,7 @@ local UI = dofile("mods/conjurer_reborn/files/unsafe/gui.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/fn.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/misc/SearchForList.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/misc/searcher.lua")
+DebugSetting = dofile_once("mods/conjurer_reborn/files/unsafe/misc/DebugSettings.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetAllData.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/utilities.lua")
 --GUI加载

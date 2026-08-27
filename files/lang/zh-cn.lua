@@ -463,8 +463,10 @@ conjurer_reborn_power_up_world = "下一个西世界"
 conjurer_reborn_power_overworld = "主世界"
 conjurer_reborn_power_east = "$0 东世界"
 conjurer_reborn_power_west = "$0 西世界"
-conjurer_reborn_open_fullbright = "按 鼠标右键 打开全视之眼"
-conjurer_reborn_close_fullbright = "按 鼠标右键 关闭全视之眼"
+conjurer_reborn_open_fullbright = "按 鼠标右键 打开全视之眼\n按住 SHIFT 时开启将关闭世界模拟"
+conjurer_reborn_close_fullbright = "按 鼠标右键 关闭全视之眼\n按住 SHIFT 时开启将关闭世界模拟"
+conjurer_reborn_open_post_fx = "按 鼠标右键 开启后期特效"
+conjurer_reborn_close_post_fx = "按 鼠标右键 关闭后期特效"
 conjurer_reborn_power_herd_relation = "对当前阵营关系：$0"
 
 --调谐法杖相关

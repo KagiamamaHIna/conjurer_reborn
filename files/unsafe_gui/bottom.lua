@@ -1224,13 +1224,32 @@ local main_menu_items = {
 		action = ToggleCameraControls,
 		get_active = function(UI)
 			return GetCameraControls()
+        end,
+		tip_func = function(UI)
+            return GetPostFx(UI) and "$conjurer_reborn_open_post_fx" or "$conjurer_reborn_close_post_fx"
 		end,
+        right_action = function(UI)
+            TogglePostFx(UI)
+        end,
+        update = function(UI)
+			if DebugSetting then
+				DebugSetting.mPostFxDisabled = GetPostFx(UI)
+			end
+		end
 	},
 	{
 		-- TODO: This ugly tooltip & teaching the player
 		name = "$conjurer_reborn_power_binoculars",
 		image = "mods/conjurer_reborn/files/gfx/power_icons/binoculars.png",
         action = function(UI)
+            if DebugSetting and InputIsKeyDown(Key_LSHIFT) or InputIsKeyDown(Key_RSHIFT) then
+                DebugSetting.mPauseSomeSimulation = true
+				return
+            end
+			if DebugSetting and DebugSetting.mPauseSomeSimulation then
+                DebugSetting.mPauseSomeSimulation = false
+				return
+			end
             if GetBinocularsActive(UI) then
 				SetFullbright(UI, WorldGlobalGetBool(UI, "lastFullbright", false))
             else
@@ -1239,7 +1258,10 @@ local main_menu_items = {
             end
             ToggleBinoculars(UI)
 		end,
-		get_active = function(UI)
+        get_active = function(UI)
+			if DebugSetting.mPauseSomeSimulation then
+				return true
+			end
 			return GetBinocularsActive(UI)
         end,
 		tip_func = function(UI)

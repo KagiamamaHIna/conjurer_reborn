@@ -110,7 +110,7 @@ function EntityTrueKillOrDelete(id, no_delete)
         end
         ComponentSetValue2(DamageModel, "invincibility_frames", 0)
 		ComponentSetValue2(DamageModel, "hp", 0)
-        EntityInflictDamage(id, math.huge, "", "", "NONE", 0, 0)
+        EntityInflictDamage(id, 1, "", "", "NONE", 0, 0)--触发死亡用的伤害
     elseif not no_delete then
 		EntityKill(id)
 	end

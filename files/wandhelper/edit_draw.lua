@@ -121,7 +121,9 @@ local function RotateEntity(entity, x, y)
 		PhysicsApplyTorque(entity, mass)
 		return
 	end
-
+	if not EntityGetIsAlive(entity) then
+		return
+	end
 	local entity_x, entity_y = EntityGetTransform(entity)
 	local rot = math.atan2(entity_y - y, entity_x - x)
 

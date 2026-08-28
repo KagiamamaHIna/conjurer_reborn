@@ -89,17 +89,17 @@ local function EnemyTooltipText(UI, id, isNoDraw, MainFn)
                     print_error("enemy:", enemy.name)
                 end
             elseif enemy.conjurer_reborn_custom_desc.argb then
-				local a, r, g, b = StrGetRGBANumber(enemy.conjurer_reborn_custom_desc.argb)
+                local a, r, g, b = StrGetRGBANumber(enemy.conjurer_reborn_custom_desc.argb)
                 if r and g and b and a then
                     UI.NextColor(r, g, b, a)
                 else
                     print_error("The color format is incorrect! color:", enemy.conjurer_reborn_custom_desc.argb)
                     print_error("enemy:", enemy.name)
                 end
-			end
+            end
             UI.Text(0, 0, enemy.conjurer_reborn_custom_desc.text)
-			UI.VerticalSpacing(3)
-		end
+            UI.VerticalSpacing(1)
+        end
         local file = PassDataPath(enemy.files[UI.UserData[FileIKey]])
         UI.Text(0, 0, GameTextGet("$conjurer_reborn_entwand_enemy_list_active", file))
         local _, _, hover = UI.WidgetInfo()
@@ -111,6 +111,16 @@ local function EnemyTooltipText(UI, id, isNoDraw, MainFn)
             UI.Text(0, 0, "$conjurer_reborn_entwand_enemy_list_desc_only")
         else
             UI.Text(0, 0, "$conjurer_reborn_entwand_enemy_list_desc")
+        end
+        if APIExtend.StatsGetKeyValue and enemy.is_new_other == nil then
+            UI.VerticalSpacing(1)
+            local count = APIExtend.StatsGetKeyValue(id)
+            UI.NextColor(127, 127, 127, 255)
+            if count > 0 then
+                UI.Text(0, 0, "$conjurer_reborn_entwand_progress_remove")
+            else
+                UI.Text(0, 0, "$conjurer_reborn_entwand_progress_get")
+            end
         end
     end
 	if HasHover then--如果悬浮到文件文本，自动切换选择的实体
@@ -142,6 +152,14 @@ local ActiveHoverY = 0
 ---@param MainFn function? 给主函数开放的特别函数，用于在前面加上选择实体的文本
 local function EnemyTooltip(UI, id, index, MainFn)
     local _, _, hover, x, y = UI.WidgetInfo()
+    if hover and InputIsMouseButtonJustDown(Mouse_middle) then
+        local count = APIExtend.StatsGetKeyValue(id)
+        APIExtend.StatsSetKeyValue(id, count > 0 and 0 or 1)
+        if count then
+            GameRemoveFlagRun("new_kill_" .. id)
+        end
+        ClickSound()
+    end
     local ActiveKey = "EntWandActiveHoverEnemy" .. tostring(index)--多例实现，通过索引区分不同的情况
     local thisActive = UI.UserData[ActiveKey]
 	if HasActive and thisActive == nil then
@@ -209,7 +227,18 @@ local function SpellTooltipText(UI, id)
 
     UI.NextColor(127, 127, 255, 255)--法术类型
     UI.Text(0, 0, SpellTypeEnumToStr(spell.type))
-	
+
+    if APIExtend.StatsGetKeyValue then
+        UI.VerticalSpacing(1)
+        local count = APIExtend.StatsGetKeyValue("action_" .. id:lower())
+        UI.NextColor(127, 127, 127, 255)
+        if count > 0 then
+            UI.Text(0, 0, "$conjurer_reborn_entwand_progress_remove")
+        else
+            UI.Text(0, 0, "$conjurer_reborn_entwand_progress_get")
+        end
+    end
+    
 	UI.VerticalSpacing(3)
 	UI.NextColor(72, 209, 204, 255)--所属模组
 	local modName
@@ -234,7 +263,15 @@ local function PerkTooltipText(UI, id)
 
     local desc = GetNameOrKey(perk.ui_description)
     UI.Text(0, 0, desc) --描述显示
-	
+
+    UI.VerticalSpacing(1)
+    UI.NextColor(127, 127, 127, 255)
+    if HasFlagPersistent("perk_picked_" .. id:lower()) then
+        UI.Text(0, 0, "$conjurer_reborn_entwand_progress_remove")
+    else
+        UI.Text(0, 0, "$conjurer_reborn_entwand_progress_get")
+    end
+
 	UI.VerticalSpacing(3)
 	UI.NextColor(72, 209, 204, 255)--所属模组
 	local modName
@@ -262,6 +299,63 @@ local function OtherTooltipText(UI, item)
         UI.VerticalSpacing(2)
 		UI.Text(0, 0, item.desc2) --描述显示
 	end
+end
+
+---@param UI Gui
+---@param enemy table
+---@param id string
+local function EnemyNextSemi(UI, enemy, id)
+    if enemy.is_new_other == nil and APIExtend.StatsGetKeyValue and APIExtend.StatsGetKeyValue(id) == 0 then
+        UI.NextOption(GUI_OPTION.DrawSemiTransparent)
+    end
+end
+
+---@param UI Gui
+---@param id string
+local function SepllNextSemi(UI, id)
+    if APIExtend.StatsGetKeyValue and APIExtend.StatsGetKeyValue("action_" .. id:lower()) == 0 then
+        UI.NextOption(GUI_OPTION.DrawSemiTransparent)
+    end
+end
+
+---@param UI Gui
+---@param id string
+local function SpellMiddleMouse(UI, id)
+    if APIExtend.StatsSetKeyValue and UI.WidgetInfoTable().hovered and InputIsMouseButtonJustDown(Mouse_middle) then
+        local keyname = "action_" .. id:lower()
+        local count = APIExtend.StatsGetKeyValue(keyname)
+        APIExtend.StatsSetKeyValue(keyname, count > 0 and 0 or 1)
+        if count > 0 then
+            RemoveFlagPersistent(keyname)
+            GameRemoveFlagRun("new_" .. keyname)
+        else
+            AddFlagPersistent(keyname)
+        end
+        ClickSound()
+    end
+end
+
+---@param UI Gui
+---@param id string
+local function PerkNextSemi(UI, id)
+    if not HasFlagPersistent("perk_picked_" .. id:lower()) then
+        UI.NextOption(GUI_OPTION.DrawSemiTransparent)
+    end
+end
+
+---@param UI Gui
+---@param id string
+local function PerkMiddleMouse(UI, id)
+    if UI.WidgetInfoTable().hovered and InputIsMouseButtonJustDown(Mouse_middle) then
+        local keyname = "perk_picked_" .. id:lower()
+        if HasFlagPersistent(keyname) then
+            RemoveFlagPersistent(keyname)
+            GameRemoveFlagRun("new_" .. keyname)
+        else
+            AddFlagPersistent(keyname)
+        end
+        ClickSound()
+    end
 end
 
 local favItems
@@ -319,6 +413,7 @@ local function DrawFav(UI)
 			if enemy == nil then
 				NoHasItem = true
             else
+                EnemyNextSemi(UI, enemy, value.item)
 				left, right = UI.ImageButton("FavEntIconEnemy" .. enemy.name .. index, 0, 0, enemy.png)
 				EnemyTooltip(UI, value.item, count)
 			end
@@ -327,7 +422,9 @@ local function DrawFav(UI)
 			if perk == nil then
                 NoHasItem = true
             else
-				left, right = UI.ImageButton("FavEntIconPerk" .. perk.id .. index, 0, 0, perk.perk_icon)
+                PerkNextSemi(UI, value.item)
+                left, right = UI.ImageButton("FavEntIconPerk" .. perk.id .. index, 0, 0, perk.perk_icon)
+                PerkMiddleMouse(UI, value.item)
 				UI.BetterTooltipsNoCenter(function()
 					PerkTooltipText(UI, value.item)
 				end, UI.GetZDeep() - 1000, 10, 3)
@@ -337,7 +434,9 @@ local function DrawFav(UI)
 			if spell == nil then
 				NoHasItem = true
             else
-				left, right = UI.ImageButton("FavEntIconSpell" .. spell.id .. index, 0, 0, spell.sprite)
+                SepllNextSemi(UI, value.item)
+                left, right = UI.ImageButton("FavEntIconSpell" .. spell.id .. index, 0, 0, spell.sprite)
+                SpellMiddleMouse(UI, value.item)
 				UI.BetterTooltipsNoCenter(function()
 					SpellTooltipText(UI, value.item)
 				end, UI.GetZDeep() - 1000, 10, 3)
@@ -558,23 +657,22 @@ local function EntPicker(UI)
 			local left, right
             if ALL_ENTITIES[SwitchIndex].Type == EntityType.Enemy then
                 local enemy = GetEnemy(item)
-                if enemy.is_new_other == nil and APIExtend.StatsGetKeyValue(item) == 0 then
-                    UI.NextOption(GUI_OPTION.DrawSemiTransparent)
-                end
-				left, right = UI.ImageButton("EntIconEnemy" .. enemy.name .. index, 0, 0, enemy.png)
+                EnemyNextSemi(UI, enemy, item)
+                left, right = UI.ImageButton("EntIconEnemy" .. enemy.name .. index, 0, 0, enemy.png)
                 EnemyTooltip(UI, item, index)
             elseif ALL_ENTITIES[SwitchIndex].Type == EntityType.Perk then
                 local perk = GetPerk(item)
+                PerkNextSemi(UI, item)
                 left, right = UI.ImageButton("EntIconPerk" .. perk.id .. index, 0, 0, perk.perk_icon)
+                PerkMiddleMouse(UI, item)
                 UI.BetterTooltipsNoCenter(function()
                     PerkTooltipText(UI, item)
                 end, UI.GetZDeep() - 1000, 10, 3)
             elseif ALL_ENTITIES[SwitchIndex].Type == EntityType.Spell then
                 local spell = GetSpell(item)
-                if APIExtend.StatsGetKeyValue("action_" .. item:lower()) == 0 then
-                    UI.NextOption(GUI_OPTION.DrawSemiTransparent)
-                end
+                SepllNextSemi(UI, item)
                 left, right = UI.ImageButton("EntIconSpell" .. spell.id .. index, 0, 0, spell.sprite)
+                SpellMiddleMouse(UI, item)
                 UI.BetterTooltipsNoCenter(function()
                     SpellTooltipText(UI, item)
                 end, UI.GetZDeep() - 1000, 10, 3)

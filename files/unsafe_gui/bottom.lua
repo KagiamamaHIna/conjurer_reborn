@@ -201,6 +201,7 @@ local function RenderWorldMenu(UI)
 	end
     if InputInfo.right_clicked then
         UI.TextInputRestore("PowerWorldSeedGet")
+		ClickSound()
     end
 	if InputIsKeyJustDown(Key_TAB) then
 		UI.SetInputText("PowerWorldSeedGet", StatsGetValue("world_seed") or "1")--如果用0作为默认值，在dev版中会崩溃，虽然很有可能是不可达分支

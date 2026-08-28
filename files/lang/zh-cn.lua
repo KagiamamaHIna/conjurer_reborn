@@ -280,6 +280,8 @@ conjurer_reborn_entwand_options_gold_drop = "掉落黄金"
 conjurer_reborn_entwand_options_gold_drop_desc = "生物死亡后是否掉落黄金"
 conjurer_reborn_entwand_options_spawn_corpse = "产生尸体"
 conjurer_reborn_entwand_options_spawn_corpse_desc = "生物死亡后是否产生尸体"
+conjurer_reborn_entwand_progress_get = "未获得进展，按下[鼠标中键]可获得"
+conjurer_reborn_entwand_progress_remove = "已获得进展，按下[鼠标中键]可删除"
 
 --编辑法杖相关
 conjurer_reborn_editwand_move_btn = "按下[鼠标左键]移动实体"

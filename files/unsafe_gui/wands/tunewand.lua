@@ -706,7 +706,7 @@ local MainTuneBtns = {
                 if not HasFlagPersistent(name) then
                     AddFlagPersistent(name)
                 end
-                if not HasFlagPersistent(data.spawn_requires_flag) then
+                if data.spawn_requires_flag and not HasFlagPersistent(data.spawn_requires_flag) then
                     AddFlagPersistent(data.spawn_requires_flag)
                 end
             end

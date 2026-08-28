@@ -506,16 +506,14 @@ conjurer_reborn_tunewand_is_gamemode_close = "设置Conjurer Reborn为游戏模�
 conjurer_reborn_tunewand_unlockall = "解锁所有进展"
 
 --其他信息
-conjurer_reborn_player_died1 = "你竟然真的死了"
-conjurer_reborn_player_died2 = "[保存并退出]然后进入存档时选[继续]你就可以保存当前进度并重生"
+conjurer_reborn_player_died1 = "你死了"
+conjurer_reborn_player_died2 = "按[回车键]重生"
 conjurer_reborn_picker_open = "开启"
 conjurer_reborn_picker_close = "关闭"
 conjurer_reborn_picker_desc = "这是可移动按钮，按shift+鼠标左键可以移动\n再点击一次鼠标左键确定位置\n鼠标右键重置位置"
 conjurer_reborn_picker_more = "按住ctrl查阅更多信息"
 conjurer_reborn_exit_cessation = "[Q]退出虚空状态"
 conjurer_reborn_exit_poly = "[Q]退出变形状态"
-conjurer_reborn_player_reborn1 = "你死了"
-conjurer_reborn_player_reborn2 = "恶人不得安宁\n(在传送秘法里可以回到上一次死亡点)"
 conjurer_reborn_pickup_danger_tip = "警告：本模组无法移除此物品"
 conjurer_reborn_reset_IKnowWhatImDoing = "此操作不可撤销，再点击一次确认"
 conjurer_reborn_force_open_message = "Conjurer Reborn: 地图修改已关闭"

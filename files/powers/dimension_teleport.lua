@@ -93,8 +93,6 @@ function collision_trigger(entity)
     GlobalsSetValue(BIOME_CURRENT, destination_biome)
     GlobalsSetValue(WORLD_CURRENT, destination_world)
     
-    GlobalsSetValue("conjurer_reborn_last_death_x", "nan")
-    GlobalsSetValue("conjurer_reborn_last_death_y", "nan")
     --[[
     -- Fix a case where you couldn't draw after a teleport, before swapping wands.
     if EntityGetName(get_active_wand()) == "matwand" then

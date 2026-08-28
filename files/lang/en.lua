@@ -643,16 +643,14 @@ conjurer_reborn_tunewand_is_gamemode_close = "Set Conjurer Reborn as a gamemode 
 conjurer_reborn_tunewand_unlockall = "Unlock all progress"
 
 --other
-conjurer_reborn_player_died1 = "Somehow you managed to die for real"
-conjurer_reborn_player_died2 = "[Save & Quit] and [Continue] to keep your progress and respawn"
+conjurer_reborn_player_died1 = "You died"
+conjurer_reborn_player_died2 = "[ENTER] to respawn"
 conjurer_reborn_picker_open = "Open "
 conjurer_reborn_picker_close = "Close "
 conjurer_reborn_picker_desc = "This is the moveable button, press shift+left mouse button to move\nClick the left mouse button again to determine the position\nRight mouse button to reset the position"
 conjurer_reborn_picker_more = "Hold ctrl for more information"
 conjurer_reborn_exit_cessation = "[Q] Exit Cessation State"
 conjurer_reborn_exit_poly = "[Q] Exit Polymorph State"
-conjurer_reborn_player_reborn1 = "You died"
-conjurer_reborn_player_reborn2 = "No rest for the wicked\nIn Arcane Mind, you can return to the point where you last died"
 conjurer_reborn_pickup_danger_tip = "Danger: Not removable after picking up"
 conjurer_reborn_reset_IKnowWhatImDoing = "This action cannot be undone, click again to confirm"
 conjurer_reborn_force_open_message = "Conjurer Reborn: map modification has been closed"

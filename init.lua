@@ -75,7 +75,6 @@ end
 
 function OnPlayerDied(player)
 	GlobalsToggleBool(PLAYER_HAS_DIED)
-	GlobalsSetValue("conjurer_unsafePowerKalmaActive", "0") --让游戏给玩家在下次开启时添加无敌和防变形
 	GamePrintImportant(
 		"$conjurer_reborn_player_died1",
 		"$conjurer_reborn_player_died2"

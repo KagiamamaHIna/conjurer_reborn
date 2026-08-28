@@ -241,13 +241,6 @@ local function RenderTeleportMenu(UI)
 	local teleport_buttons = {
 		{
             name = "$conjurer_reborn_power_memorize_return",
-			desc_fn = function (_UI)
-                local death_x, death_y = GetLastDeathPoint()
-                if death_x == nil then
-                    return
-                end
-				return "$conjurer_reborn_power_memorize_back"
-			end,
 			image = "mods/conjurer_reborn/files/gfx/power_icons/tower.png",
 			action = function()
 				local x, y = GetSpawnPosition()
@@ -257,16 +250,6 @@ local function RenderTeleportMenu(UI)
 				end
 				EntitySetTransform(player, x, y)
             end,
-            right_action = function()
-                local player = GetPlayerObj()
-				if player == nil then
-					return
-				end
-				local death_x,death_y = GetLastDeathPoint()
-				if death_x then
-					SetCameraPlayerXY(death_x, death_y)
-				end
-			end
 		},
 		{
 			name = "$conjurer_reborn_power_memorize_set_location",

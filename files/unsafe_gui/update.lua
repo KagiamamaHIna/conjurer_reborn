@@ -418,7 +418,7 @@ UI.MiscEventFn["POLYMORPH"] = function()
     end
     if not PolymorphMessage then
         player.NewComp.LuaComponent {
-			script_damage_received="mods/conjurer_reborn/files/scripts/poly_death.lua"
+			script_damage_received="mods/conjurer_reborn/files/scripts/death.lua"
         }
 		
 		for _,v in ipairs(player.comp_all.DamageModelComponent or {})do
@@ -448,23 +448,6 @@ UI.TickEventFn["PolyDeath"] = function()
     if player == nil then
         return
     end
-	
-    if CurSettingGet("rebirth_blinded") and not GetBinocularsActive(UI) then
-        player:NewChild().NewComp.GameEffectComponent {
-            effect = "BLINDNESS",
-            frames = 120,
-        }
-    end
-
-	player:NewChild().NewComp.GameEffectComponent {
-		effect="PROTECTION_POLYMORPH",
-		frames=60,
-    }
-	
-    local x, y = GetSpawnPosition()
-	SetCameraPlayerXY(x, y)
-    GamePrintImportant("$conjurer_reborn_player_reborn1", "$conjurer_reborn_player_reborn2")
-	GlobalsSetValue("conjurer_reborn_poly_death", "0")
 end
 
 local MarginSize = 10
@@ -609,5 +592,17 @@ UI.MiscEventFn["AppendEnemy"] = function()
 		end
 	end
 end
+
+if APIExtend.PlayerIsDied then
+    UI.MiscEventFn["CheckPlayerIsDead"] = function()
+        if not APIExtend.PlayerIsDied() then
+            return
+        end
+        if InputIsKeyJustDown(Key_RETURN) then
+			APIExtend.PlayerRespawn()
+		end
+    end
+end
+
 
 return {UI.DispatchMessage, UI.Destroy}

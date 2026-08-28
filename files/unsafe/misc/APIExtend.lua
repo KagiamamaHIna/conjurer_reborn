@@ -5,9 +5,33 @@ dofile_once("mods/conjurer_unsafe/files/YNPCommon.lua")
 local mp = dofile_once("mods/conjurer_reborn/files/unsafe/MemoryPattern.lua")
 local ffi = require("ffi")
 ffi.cdef[[
+
+struct DeathMatch{
+    void* vtable1;//+0
+    void* vtable2;//+4
+    char unknown1[20];//+8
+    bool is_camera_free;//+28
+    char unknown2[3];//+29
+    int unkfield;//+32
+    char unknown3[108];//+36
+    bool is_player_death;//+144
+    //unk...
+};
+
+void* FindPlatformWin();
 typedef int __fastcall StatsGetKeyValue(struct std_string* key, bool* out_exists);
 typedef int* __thiscall MapGetValuePtr(void* this, struct std_string* key);
+typedef struct DeathMatch* __thiscall GetDeathMatch(void* PlatformWinPtr);
+
+typedef int __thiscall KeyboardListern(void* DeathMatchOffset8, int keycode1, int keycode2);
 ]]
+local YNP = ffi.load("YNoitaPatcher")
+local PlatformWinPtr = YNP.FindPlatformWin()
+local DeathMatch
+if PlatformWinPtr ~= nil then
+    local Vftable = ffi.cast("char**", PlatformWinPtr)[0]
+    DeathMatch = ffi.cast("GetDeathMatch*", ffi.cast("char**", (Vftable + 24))[0])(PlatformWinPtr)
+end
 
 local function ToStdString(str)
     local stdstrPtr = ffi.new("struct std_string[1]")
@@ -62,6 +86,30 @@ if StatsSetKeyValueCode ~= nil then
     function extend.StatsSetKeyValue(key, value)
         local valuePtr = MapGetValuePtr(statsPtr, ToStdString(key))
         valuePtr[0] = value
+    end
+end
+
+local KeyboardListernCode = mp.FindPatternInModule(nil, "83 ? 24 00 0F ? ? ? ? ? 80 3D ? ? ? ? 00 0F")
+if DeathMatch ~= nil and KeyboardListernCode ~= nil then
+    local KeyboardListern = ffi.cast("KeyboardListern*", mp.FindFuncStart(KeyboardListernCode))
+    local isDebugPtr = ffi.cast("bool**", KeyboardListernCode + 12)[0]
+    local ToKeyboardListernDM = ffi.cast("void*", ffi.cast("uint32_t", DeathMatch) + 8)
+    --让玩家重生
+    function extend.PlayerRespawn()
+        if not DeathMatch.is_player_death then
+            return
+        end
+        local lastCameraFree = DeathMatch.is_camera_free
+        local lastDebug = isDebugPtr[0]
+        isDebugPtr[0] = true
+        DeathMatch.is_camera_free = true
+        KeyboardListern(ToKeyboardListernDM, 40, 13) --模拟按下enter，触发玩家复活
+        isDebugPtr[0] = lastDebug
+        DeathMatch.is_camera_free = lastCameraFree
+    end
+    ---@return boolean
+    function extend.PlayerIsDied()
+        return DeathMatch.is_player_death
     end
 end
 return extend

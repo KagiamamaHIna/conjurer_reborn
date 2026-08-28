@@ -74,7 +74,6 @@ local i18n = {
         reset_IKnowWhatImDoing = "This action cannot be undone, click again to confirm",
         inf_chaos_poly = "Potential Permanent Chaotic Polymorphine",
         inf_chaos_poly_desc = "Note: This cannot salvage player affected by Permanent Chaotic Polymorphine",
-        rebirth_blinded = "Blinded effect after rebirth",
 		game_print_gui_error = "In-game print GUI error",
         vertical_page_column_max = "Favorite Bar Single Column Size",
         vertical_page_column_max_desc = "How many items can be displayed in one column?",
@@ -190,7 +189,6 @@ local i18n = {
         reset_IKnowWhatImDoing = "此操作不可撤销，再点击一次确认",
         inf_chaos_poly = "潜在的永久混沌变形",
         inf_chaos_poly_desc = "注意：这无法挽回已经被永久混沌变形的玩家",
-        rebirth_blinded = "重生后的致盲效果",
 		game_print_gui_error = "游戏内打印GUI错误",
         vertical_page_column_max = "收藏栏单列大小",
         vertical_page_column_max_desc = "一列可以显示多少个？",
@@ -473,12 +471,6 @@ mod_settings =
 					{ "left", "bottom_hidden_btn_pos_left" },
                     { "right",  "bottom_hidden_btn_pos_right" },
 				},
-				scope = MOD_SETTING_SCOPE_RUNTIME,
-            },
-			Setting{
-				id = "rebirth_blinded",
-				ui_name = "rebirth_blinded",
-				value_default = true,
 				scope = MOD_SETTING_SCOPE_RUNTIME,
             },
 			Setting{

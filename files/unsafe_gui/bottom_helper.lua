@@ -117,7 +117,12 @@ function ToggleKalma(UI)
 	local active = GetKalma(UI)
 	if active then
 		GamePrint("$conjurer_reborn_power_kalma_off")
-	else
+    else
+        local playerObj = EntityObj(player)
+        local dmc = playerObj.comp.DamageModelComponent
+		if dmc then
+			dmc[1].attr.wait_for_kill_flag_on_death = false
+		end
 		GamePrint("$conjurer_reborn_power_kalma_on")
 	end
 
@@ -430,18 +435,6 @@ function GetHappinessImage()
         return love
     end
 	return neutral
-end
-
-
----返回死亡点
----@return number?
----@return number?
-function GetLastDeathPoint()
-	local death_x = tonumber(GlobalsGetValue("conjurer_reborn_last_death_x", "nan"))
-    local death_y = tonumber(GlobalsGetValue("conjurer_reborn_last_death_y", "nan"))
-	if death_x and death_y and not IsNaN(death_x) and not IsNaN(death_y) then
-		return death_x, death_y
-	end
 end
 
 ---维护光照实体

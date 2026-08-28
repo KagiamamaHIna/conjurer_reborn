@@ -23,8 +23,8 @@ function handle_zoom_setting()
     local currentAspectRatio = internal_size_w / internal_size_h
     local resx = ZOOM_LEVELS[zoom]
     local resy = math.floor(resx / currentAspectRatio + 0.5) + 1
-    ModTextFileSetContent("mods/conjurer_reborn/visual_magic_numbers.xml", MagicNumberFormat:format(resx, resy))
-    ModMagicNumbersFileAdd("mods/conjurer_reborn/visual_magic_numbers.xml")
+    ModTextFileSetContent("mods/conjurer_reborn/virtual_magic_numbers.xml", MagicNumberFormat:format(resx, resy))
+    ModMagicNumbersFileAdd("mods/conjurer_reborn/virtual_magic_numbers.xml")
 
 
     -- Make the fog of war shader match the zoom level.

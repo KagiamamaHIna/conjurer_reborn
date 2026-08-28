@@ -598,7 +598,7 @@ if APIExtend.PlayerIsDied then
         if not APIExtend.PlayerIsDied() then
             return
         end
-        if InputIsKeyJustDown(Key_RETURN) then
+        if InputIsKeyJustDown(Key_RETURN) or InputIsKeyJustDown(Key_KP_ENTER) then--KP是小键盘上的回车键
 			APIExtend.PlayerRespawn()
 		end
     end

@@ -21,3 +21,7 @@ function OnWorldPreUpdate()
   -- All default weather features are disabled, just to make our own weather
   -- GUI less confusing with too many overlapping layers of functionality.
 end
+
+function OnPlayerDied( player_entity )
+	GameTriggerGameOver()
+end

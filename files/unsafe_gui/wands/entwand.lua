@@ -106,12 +106,12 @@ local function EnemyTooltipText(UI, id, isNoDraw, MainFn)
         HasHover = hover or HasHover
 		
 		UI.VerticalSpacing(1)
-		if #enemy.files == 1 then
-			UI.NextColor(127, 127, 127, 255)
-			UI.Text(0, 0, "$conjurer_reborn_entwand_enemy_list_desc_only")
+        if #enemy.files == 1 then
+            UI.NextColor(127, 127, 127, 255)
+            UI.Text(0, 0, "$conjurer_reborn_entwand_enemy_list_desc_only")
         else
-			UI.Text(0, 0, "$conjurer_reborn_entwand_enemy_list_desc")
-		end
+            UI.Text(0, 0, "$conjurer_reborn_entwand_enemy_list_desc")
+        end
     end
 	if HasHover then--如果悬浮到文件文本，自动切换选择的实体
 		local Active,cindex = GetActiveEntity(UI)
@@ -558,6 +558,9 @@ local function EntPicker(UI)
 			local left, right
             if ALL_ENTITIES[SwitchIndex].Type == EntityType.Enemy then
                 local enemy = GetEnemy(item)
+                if enemy.is_new_other == nil and APIExtend.StatsGetKeyValue(item) == 0 then
+                    UI.NextOption(GUI_OPTION.DrawSemiTransparent)
+                end
 				left, right = UI.ImageButton("EntIconEnemy" .. enemy.name .. index, 0, 0, enemy.png)
                 EnemyTooltip(UI, item, index)
             elseif ALL_ENTITIES[SwitchIndex].Type == EntityType.Perk then
@@ -568,6 +571,9 @@ local function EntPicker(UI)
                 end, UI.GetZDeep() - 1000, 10, 3)
             elseif ALL_ENTITIES[SwitchIndex].Type == EntityType.Spell then
                 local spell = GetSpell(item)
+                if APIExtend.StatsGetKeyValue("action_" .. item:lower()) == 0 then
+                    UI.NextOption(GUI_OPTION.DrawSemiTransparent)
+                end
                 left, right = UI.ImageButton("EntIconSpell" .. spell.id .. index, 0, 0, spell.sprite)
                 UI.BetterTooltipsNoCenter(function()
                     SpellTooltipText(UI, item)

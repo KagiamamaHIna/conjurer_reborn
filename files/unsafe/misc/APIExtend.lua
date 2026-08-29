@@ -6,14 +6,38 @@ local mp = dofile_once("mods/conjurer_reborn/files/unsafe/MemoryPattern.lua")
 local ffi = require("ffi")
 ffi.cdef[[
 
+struct DevEntity{
+    void* vtable;
+    int id;
+    //unknown...
+};
+
+struct NormalEntity{
+    int id;
+    //unknown...
+};
+
+struct EntityPtrVec{
+    void* begin_;
+    void* end_;
+    void* capacity_end_;
+};
+
 struct DeathMatch{
-    void* vtable1;//+0
-    void* vtable2;//+4
-    char unknown1[20];//+8
+    void* application_vtable;//+0
+    void* mouse_listener_vtable;//+4
+    void* keyboard_listener_vtable;//+8
+    char unk;//+12
+    char padding1[3];//+13
+    void* joystick_listener_vtable;//+16
+    void* simple_ui_listener_vtable;//+20
+    void* event_listener_vtable;//+24
     bool is_camera_free;//+28
     char unknown2[3];//+29
     int unkfield;//+32
-    char unknown3[108];//+36
+    char unknown3[52];//+36
+    struct EntityPtrVec player_entities;//+88
+    char unknown3[44];//+100
     bool is_player_death;//+144
     //unk...
 };
@@ -141,4 +165,46 @@ if EntityKillCode ~= nil then
 else
     print_error("EntityKillCode is nullptr")
 end
+
+if DeathMatch ~= nil and EntityKillCode ~= nil then
+    ---设置引擎认为的玩家实体，即摄像头跟随的
+    ---@param entity_id integer
+    ---@param index integer? =0
+    function extend.SetPlayerEntity(entity_id, index)
+        index = index or 0
+        local playersSize = (ffi.cast("size_t", DeathMatch.player_entities.end_) - ffi.cast("size_t", DeathMatch.player_entities.begin_)) / 4
+        if index >= playersSize then
+            print_error("SetPlayerEntity: index out of range")
+            return
+        end
+        if not EntityGetIsAlive(entity_id) then
+            return
+        end
+        local ptr = extend.EntityGetPtr(entity_id)
+        local begin = ffi.cast("void**", DeathMatch.player_entities.begin_)
+        begin[index] = ptr
+    end
+    
+    ---获取引擎认为的玩家实体，即摄像头跟随的
+    ---@param index integer? =0
+    ---@return integer? id
+    function extend.GetPlayerEntity(index)
+        index = index or 0
+        local playersSize = (ffi.cast("size_t", DeathMatch.player_entities.end_) - ffi.cast("size_t", DeathMatch.player_entities.begin_)) / 4
+        if index >= playersSize then
+            print_error("SetPlayerEntity: index out of range")
+            return
+        end
+        local begin = ffi.cast("void**", DeathMatch.player_entities.begin_)
+        local entity = begin[0]
+        if DebugGetIsDevBuild() then
+            entity = ffi.cast("struct DevEntity*", entity)
+        else
+            entity = ffi.cast("struct NormalEntity*", entity)
+        end
+        return entity.id
+    end
+end
+
+
 return extend

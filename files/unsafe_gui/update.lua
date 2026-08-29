@@ -595,7 +595,10 @@ end
 
 if APIExtend.PlayerIsDied then
     UI.MiscEventFn["CheckPlayerIsDead"] = function()
-        if not APIExtend.PlayerIsDied() then
+		if APIExtend.GetIsDebug() then
+			return
+		end
+        if not APIExtend.PlayerIsDied()  then
             return
         end
         if InputIsKeyJustDown(Key_RETURN) or InputIsKeyJustDown(Key_KP_ENTER) then--KP是小键盘上的回车键

@@ -24,6 +24,8 @@ typedef int* __thiscall MapGetValuePtr(void* this, struct std_string* key);
 typedef struct DeathMatch* __thiscall GetDeathMatch(void* PlatformWinPtr);
 
 typedef int __thiscall KeyboardListern(void* DeathMatchOffset8, int keycode1, int keycode2);
+
+typedef void* __thiscall EntityGetPtr(void* EntityManager, int EntityID);
 ]]
 local YNP = ffi.load("YNoitaPatcher")
 local PlatformWinPtr = YNP.FindPlatformWin()
@@ -74,6 +76,8 @@ if StatsGetKeyValueCode ~= nil then
         local value = StatsGetKeyValue(ToStdString(key), out_exists)
         return value, out_exists[0]
     end
+else
+    print_error("StatsGetKeyValueCode is nullptr")
 end
 
 local StatsSetKeyValueCode = mp.FindPatternInModule(nil, "8D 45 C0 B9 ? ? ? ? 50 74 ? E8 ? ? ? ? 8B 10")
@@ -87,6 +91,8 @@ if StatsSetKeyValueCode ~= nil then
         local valuePtr = MapGetValuePtr(statsPtr, ToStdString(key))
         valuePtr[0] = value
     end
+else
+    print_error("StatsSetKeyValueCode is nullptr")
 end
 
 local KeyboardListernCode = mp.FindPatternInModule(nil, "83 ? 24 00 0F ? ? ? ? ? 80 3D ? ? ? ? 00 0F")
@@ -107,9 +113,32 @@ if DeathMatch ~= nil and KeyboardListernCode ~= nil then
         isDebugPtr[0] = lastDebug
         DeathMatch.is_camera_free = lastCameraFree
     end
+
+    --实际上是控制是否显示结算页面的字段
     ---@return boolean
     function extend.PlayerIsDied()
         return DeathMatch.is_player_death
     end
+
+    ---@return boolean
+    function extend.GetIsDebug()
+        return isDebugPtr[0]
+    end
+else
+    print_error("KeyboardListernCode is nullptr")
+end
+
+local EntityKillCode = mp.FindPatternInModule(nil, "8B 0D ? ? ? ? ? ? ? ? E8 ? ? ? ? 85 c0 74 e0 8b c8 e8")
+if EntityKillCode ~= nil then
+    local EntityManager = ffi.cast("char***", EntityKillCode + 2)[0][0]
+    local EntityGetPtr = ffi.cast("EntityGetPtr*", mp.ResolveRelativeAddress(EntityKillCode + 10, 1, 5))
+    ---获取实体指针
+    ---@param id integer
+    ---@return ffi.cdata*
+    function extend.EntityGetPtr(id)
+        return EntityGetPtr(EntityManager, id)
+    end
+else
+    print_error("EntityKillCode is nullptr")
 end
 return extend

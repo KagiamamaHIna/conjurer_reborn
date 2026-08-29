@@ -73,14 +73,6 @@ function OnPlayerSpawned(player)
 	end
 end
 
-function OnPlayerDied(player)
-	GlobalsToggleBool(PLAYER_HAS_DIED)
-	GamePrintImportant(
-		"$conjurer_reborn_player_died1",
-		"$conjurer_reborn_player_died2"
-	)
-end
-
 if not ModIsEnabled("conjurer_unsafe") then
 	local count = 0
 	function OnWorldPostUpdate()

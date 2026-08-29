@@ -153,10 +153,6 @@ if not Cpp.PathExists("mods/conjurer_unsafe/secrets_secrets_secrets") then
     Cpp.CreateDir("mods/conjurer_unsafe/secrets_secrets_secrets")
 end
 
-function OnPlayerSpawned(player)
-    RestoreInput()
-end
-
 VirtualFileSet = ModTextFileSetContent
 SrcModMaterialsFileAdd = ModMaterialsFileAdd
 SrcModImageMakeEditable = ModImageMakeEditable
@@ -316,4 +312,20 @@ function OnMagicNumbersAndWorldSeedInitialized()
             end
         end
     end
+end
+
+function OnPlayerDied(player)
+    if APIExtend.GetIsDebug() then
+        return
+    end
+    --防止使用debug的原生复活玩家功能的时候，复活导致物品消失
+    GlobalsSetValue("conjurer_reborn_PLAYER_HAS_DIED", "1")
+	GamePrintImportant(
+		"$conjurer_reborn_player_died1",
+		"$conjurer_reborn_player_died2"
+	)
+end
+
+function OnPlayerSpawned(player)
+    RestoreInput()
 end

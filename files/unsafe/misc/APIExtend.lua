@@ -185,6 +185,10 @@ if DeathMatch ~= nil and EntityKillCode ~= nil then
         begin[index] = ptr
     end
     
+    local EntityType = "struct NormalEntity*"
+    if DebugGetIsDevBuild() then
+        EntityType = "struct DevEntity*"
+    end
     ---获取引擎认为的玩家实体，即摄像头跟随的
     ---@param index integer? =0
     ---@return integer? id
@@ -196,12 +200,7 @@ if DeathMatch ~= nil and EntityKillCode ~= nil then
             return
         end
         local begin = ffi.cast("void**", DeathMatch.player_entities.begin_)
-        local entity = begin[0]
-        if DebugGetIsDevBuild() then
-            entity = ffi.cast("struct DevEntity*", entity)
-        else
-            entity = ffi.cast("struct NormalEntity*", entity)
-        end
+        local entity = ffi.cast(EntityType, begin[0])
         return entity.id
     end
 end

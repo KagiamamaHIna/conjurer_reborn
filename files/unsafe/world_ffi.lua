@@ -42,7 +42,7 @@ struct AABB {
 struct std_vector_string {
     struct std_string* start;
     struct std_string* end;
-    size_t capacity;
+    struct std_string* capacity;
 };
 
 typedef enum cell_type {

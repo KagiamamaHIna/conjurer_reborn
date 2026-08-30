@@ -40,9 +40,9 @@ struct AABB {
 };
 
 struct std_vector_string {
-    struct std_string* start;
-    struct std_string* end;
-    struct std_string* capacity;
+    struct std_string* start_;
+    struct std_string* end_;
+    struct std_string* capacity_;
 };
 
 typedef enum cell_type {

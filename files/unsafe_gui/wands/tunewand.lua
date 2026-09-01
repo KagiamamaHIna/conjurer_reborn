@@ -35,11 +35,11 @@ local function NewTuneSearcher(items)
         modid = NewSearcher(ModToDatas, GetInitSearcherModid(datagetid)),
     }
     local KeywordPreprocessing = GetKeywordPreprocessing {
-            delim = " ",
-            prefix = {
-                "@",
-                "-"
-            }
+        delim = " ",
+        prefix = {
+            "@",
+            "-"
+        }
     }
     return function(keyword)
         local param = KeywordPreprocessing(keyword, CurSettingGet("split_search_text2"))

@@ -81,6 +81,47 @@ function NewSearcher(list, getStrs)
     end
 end
 
+---@param list any[]
+---@param getStrs fun(item:any):...
+---@return function
+function NewReverseSearcher(list, getStrs)
+    if SharedPinin == nil then--初始化
+        SharedPinin = GetSharedPinin()
+    end
+    if SharedPinin == nil then--如果初始化失败了
+        error("conjurer reborn: Fatal error: PinIn failed to initialize")
+    end
+    local tree = PinInLua.TreeSearcher(PinInLua.Logic.CONTAIN, SharedPinin)
+    local IdToObj = {}
+    for _, v in pairs(list) do
+        for _, str in pairs({ getStrs(v) }) do --这些id都能表示同一个东西
+            if type(str) == "string" and str ~= "" then
+                local id = tree:PutString(Cpp.FinnishToEnLower(str):lower())
+                IdToObj[id] = v
+            end
+        end
+    end
+    return function(...)
+        local result = {}
+        local hasObj = {}
+        for _, str in ipairs({ ... }) do
+            str = str:lower()
+            for _, id in ipairs(tree:ExecuteSearchGetIds(str)) do
+                local obj = IdToObj[id]
+                if obj ~= nil then
+                    hasObj[obj] = true
+                end
+            end
+        end
+        for _, v in ipairs(list) do
+            if hasObj[v] == nil then
+                result[#result + 1] = v
+            end
+        end
+        return result
+    end
+end
+
 ---"与"逻辑筛选
 ---@param arg table<string, fun(keyword:string):any[]>
 ---@return fun(KeywordArgs:table<string, string[]>):any[]
@@ -166,7 +207,44 @@ function GetInitSearcherModid(getID)
     end
 end
 
---TODO
--- function GetKeywordPreprocessing(param)
-    
--- end
+---@class KeywordPreprocessingParam
+---@field delim string
+---@field prefix string[]
+
+---@param param KeywordPreprocessingParam
+---@return fun(keyword:string, isDelim: boolean):table
+function GetKeywordPreprocessing(param)
+    local ByteMap = {}
+    for k, v in ipairs(param.prefix) do
+        ByteMap[v:byte(1, 1)] = v:sub(1, 1)
+    end
+    return function(keyword, isDelim)
+        local result = {}
+        for k, v in pairs(ByteMap) do
+            result[v] = {}
+        end
+        result.common = {}
+        local function set(str)
+            if str == "" then
+                return
+            end
+            local prefix = ByteMap[str:byte(1, 1)]
+            if prefix ~= nil then
+                result[prefix][#result[prefix] + 1] = str:sub(2)
+            else
+                result.common[#result.common + 1] = str
+            end
+        end
+        if not isDelim then
+            set(keyword)
+            return result
+        end
+        --解析
+        local keywordList = split(keyword, param.delim)
+
+        for _, v in ipairs(keywordList) do
+            set(v)
+        end
+        return result
+    end
+end

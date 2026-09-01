@@ -18,8 +18,6 @@ end
 
 local TuneWandSpriteBG = "mods/conjurer_reborn/files/gfx/9piece_light.png"
 
-local SpeChar = string.byte('@')
-
 local function InitSearcher(item)
     local name, EnName = GetLNameEnName(item.ui_name)
     local desc, EnDesc = GetLNameEnName(item.ui_description)
@@ -33,33 +31,22 @@ local function NewTuneSearcher(items)
 
     local SearcherSet = NewSearcherSet {
         common = NewSearcher(items, InitSearcher),
+        difference = NewReverseSearcher(items, InitSearcher),
         modid = NewSearcher(ModToDatas, GetInitSearcherModid(datagetid)),
     }
-
+    local KeywordPreprocessing = GetKeywordPreprocessing {
+            delim = " ",
+            prefix = {
+                "@",
+                "-"
+            }
+    }
     return function(keyword)
-        local commons = {}
-        local modids = {}
-        if CurSettingGet("split_search_text2") then
-            local keywordList = split(keyword, " ")
-
-            for _, v in ipairs(keywordList) do
-                if v:byte(1, 1) == SpeChar then
-                    modids[#modids + 1] = v:sub(2)
-                else
-                    commons[#commons + 1] = v
-                end
-            end
-        else
-            if keyword:byte(1, 1) == SpeChar then
-                modids[#modids + 1] = keyword:sub(2)
-            else
-                commons[#commons + 1] = keyword
-            end
-        end
-
+        local param = KeywordPreprocessing(keyword, CurSettingGet("split_search_text2"))
         return SearcherSet {
-            common = commons,
-            modid = modids,
+            common = param.common,
+            modid = param["@"],
+            difference = param["-"]
         }
     end
 end

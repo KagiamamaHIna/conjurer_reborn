@@ -510,31 +510,21 @@ local function InitSearcherOther(item)
 	return Name, EnName, item.id, Desc, EnDesc, Desc2, EnDesc2
 end
 
-local SpeChar = string.byte('@')
 local function NewEntSearcher(data)
     local function GetSearcherhasModid(SearcherSet)
+        local KeywordPreprocessing = GetKeywordPreprocessing {
+            delim = " ",
+            prefix = {
+                "@",
+                "-"
+            }
+        }
         return function(keyword)
-            local commons = {}
-            local modids = {}
-            if CurSettingGet("split_search_text2") then
-                local keywordList = split(keyword, " ")
-                for _, v in ipairs(keywordList) do
-                    if v:byte(1, 1) == SpeChar then
-                        modids[#modids + 1] = v:sub(2)
-                    else
-                        commons[#commons + 1] = v
-                    end
-                end
-            else
-                if keyword:byte(1, 1) == SpeChar then
-                    modids[#modids + 1] = keyword:sub(2)
-                else
-                    commons[#commons + 1] = keyword
-                end
-            end
+            local param = KeywordPreprocessing(keyword, CurSettingGet("split_search_text2"))
             return SearcherSet {
-                common = commons,
-                modid = modids,
+                common = param.common,
+                modid = param["@"],
+                difference = param["-"]
             }
         end
     end
@@ -544,8 +534,9 @@ local function NewEntSearcher(data)
         local datagetid = function(item) return GetEnemy(item[1]).from_id or "?" end
 		ModToDatas = GetDataToModlist(getid)(data.entities)
 		local SearcherSet = NewSearcherSet {
-        	common = NewSearcher(data.entities, InitSearcherEnemy),
-        	modid = NewSearcher(ModToDatas, GetInitSearcherModid(datagetid)),
+            common = NewSearcher(data.entities, InitSearcherEnemy),
+            difference = NewReverseSearcher(data.entities, InitSearcherEnemy),
+            modid = NewSearcher(ModToDatas, GetInitSearcherModid(datagetid)),
         }
         return GetSearcherhasModid(SearcherSet)
     elseif data.Type == EntityType.Perk then
@@ -554,6 +545,7 @@ local function NewEntSearcher(data)
 		ModToDatas = GetDataToModlist(getid)(data.entities)
 		local SearcherSet = NewSearcherSet {
         	common = NewSearcher(data.entities, InitSearcherPerk),
+            difference = NewReverseSearcher(data.entities, InitSearcherPerk),
         	modid = NewSearcher(ModToDatas, GetInitSearcherModid(datagetid)),
         }
         return GetSearcherhasModid(SearcherSet)
@@ -562,23 +554,27 @@ local function NewEntSearcher(data)
 		local datagetid = function(item) return GetSpell(item[1]).conjurer_unsafe_from_id or "?" end
 		ModToDatas = GetDataToModlist(getid)(data.entities)
 		local SearcherSet = NewSearcherSet {
-        	common = NewSearcher(data.entities, InitSearcherSpell),
+            common = NewSearcher(data.entities, InitSearcherSpell),
+            difference = NewReverseSearcher(data.entities, InitSearcherSpell),
         	modid = NewSearcher(ModToDatas, GetInitSearcherModid(datagetid)),
         }
         return GetSearcherhasModid(SearcherSet)
     else
 		local SearcherSet = NewSearcherSet{
-			common = NewSearcher(data.entities, InitSearcherOther)
+            common = NewSearcher(data.entities, InitSearcherOther),
+            difference = NewReverseSearcher(data.entities, InitSearcherOther),
 		}
+        local KeywordPreprocessing = GetKeywordPreprocessing {
+            delim = " ",
+            prefix = {
+                "-"
+            }
+        }
 		return function(keyword)
-            local commons
-            if CurSettingGet("split_search_text2") then
-                commons = split(keyword, " ")
-            else
-                commons = {keyword}
-            end
+            local param = KeywordPreprocessing(keyword, CurSettingGet("split_search_text2"))
             return SearcherSet {
-                common = commons,
+                common = param.common,
+                difference = param["-"]
             }
         end
     end

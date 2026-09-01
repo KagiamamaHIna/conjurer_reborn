@@ -256,9 +256,6 @@ local function InitSearcherTag(item)
     return unpack(MatTable[item].attr.tags)
 end
 
-local SpeChar = string.byte('@')
-local SpeChar2 = string.byte('[')
-
 local function NewMatSearcher(items)
     local getid = function(item) return MatTable[item].conjurer_unsafe_from_id or "?" end
     local datagetid = function(item) return MatTable[item[1]].conjurer_unsafe_from_id or "?" end
@@ -268,38 +265,23 @@ local function NewMatSearcher(items)
         common = NewSearcher(items, InitSearcherCommon),
         modid = NewSearcher(ModToDatas, GetInitSearcherModid(datagetid)),
         tag = NewSearcher(items, InitSearcherTag),
+        difference = NewReverseSearcher(items, InitSearcherCommon)
     }
-
+    local KeywordPreprocessing = GetKeywordPreprocessing {
+        delim = " ",
+        prefix = {
+            "[",
+            "@",
+            "-"
+        }
+    }
     return function(keyword)
-        local commons = {}
-        local modids = {}
-        local tags = {}
-        if CurSettingGet("split_search_text2") then
-            local keywordList = split(keyword, " ")
-
-            for _, v in ipairs(keywordList) do
-                if v:byte(1, 1) == SpeChar then
-                    modids[#modids + 1] = v:sub(2)
-                elseif v:byte(1, 1) == SpeChar2 then
-                    tags[#tags + 1] = v:sub(2)
-                else
-                    commons[#commons + 1] = v
-                end
-            end
-        else
-            if keyword:byte(1, 1) == SpeChar then
-                modids[#modids + 1] = keyword:sub(2)
-            elseif keyword:byte(1, 1) == SpeChar2 then
-                tags[#tags + 1] = keyword:sub(2)
-            else
-                commons[#commons + 1] = keyword
-            end
-        end
-
+        local param = KeywordPreprocessing(keyword, CurSettingGet("split_search_text2"))
         return SearcherSet {
-            common = commons,
-            modid = modids,
-            tag = tags
+            common = param.common,
+            modid = param["@"],
+            tag = param["["],
+            difference = param["-"],
         }
     end
 end

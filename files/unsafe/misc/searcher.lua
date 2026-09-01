@@ -151,6 +151,8 @@ function NewSearcherSet(arg)
         local size = #results
         if size == 1 then
             return results[1]
+        elseif size == 0 then
+            return {}
         end
         --求交集
         local result = {}

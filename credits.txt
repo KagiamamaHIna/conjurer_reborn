@@ -19,3 +19,4 @@ Developer of Conjurer:
 - Ryyst (Mortti), Developed the original version of Conjurer
 -- Github: https://github.com/ryyst/conjurer
 -- Steam Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=2319794898
+-- ModWorkshop: https://modworkshop.net/mod/30531

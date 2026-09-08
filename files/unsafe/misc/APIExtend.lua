@@ -5,6 +5,8 @@ dofile_once("mods/conjurer_unsafe/files/YNPCommon.lua")
 local mp = dofile_once("mods/conjurer_reborn/files/unsafe/MemoryPattern.lua")
 local ffi = require("ffi")
 ffi.cdef[[
+void free(void *ptr);
+void *malloc(size_t size);
 
 struct DevEntity{
     void* vtable;
@@ -42,7 +44,20 @@ struct DeathMatch{
     //unk...
 };
 
+struct CSerializerSaver{
+    void* unkptr;
+    struct std_string buffer;
+    char unk[20];// +44? 
+};
+
+struct CSerializerLoader{
+    void* unkptr;
+    struct std_string buffer;
+    char unk[20];
+};
+
 void* FindPlatformWin();
+
 typedef int __fastcall StatsGetKeyValue(struct std_string* key, bool* out_exists);
 typedef int* __thiscall MapGetValuePtr(void* this, struct std_string* key);
 typedef struct DeathMatch* __thiscall GetDeathMatch(void* PlatformWinPtr);
@@ -50,6 +65,12 @@ typedef struct DeathMatch* __thiscall GetDeathMatch(void* PlatformWinPtr);
 typedef int __thiscall KeyboardListern(void* DeathMatchOffset8, int keycode1, int keycode2);
 
 typedef void* __thiscall EntityGetPtr(void* EntityManager, int EntityID);
+
+typedef void __fastcall SerializeEntity(void* entity_ptr, void* saver);
+typedef void __fastcall DeserializeEntity(void* entity_ptr, void* loader, float* vec2);
+
+typedef struct CSerializerSaver* __thiscall CSerializerSaverInit(struct CSerializerSaver* data, void* entity_ptr);
+typedef struct CSerializerLoader* __thiscall CSerializerLoaderInit(struct CSerializerLoader* data, struct std_string* str, size_t str_size);
 ]]
 local YNP = ffi.load("YNoitaPatcher")
 local PlatformWinPtr = YNP.FindPlatformWin()
@@ -83,6 +104,13 @@ local function ToStdString(str)
         stdstr.data.sso_buffer[str:len()] = 0
     end
     return stdstrPtr
+end
+
+local function StdStringToStr(stdstr)
+    if stdstr.size >= 16 then
+        return ffi.string(stdstr.data.buffer, stdstr.size)
+    end
+	return ffi.string(stdstr.data.sso_buffer, stdstr.size)
 end
 
 local extend = {}
@@ -205,5 +233,71 @@ if DeathMatch ~= nil and EntityKillCode ~= nil then
     end
 end
 
+local SerializeEntityCode = mp.FindPatternInModule(nil, "e8 ? ? ? ? c7 45 fc 01 00 00 00 8d 4d ? 8b ? 51 8b ? ff 50 10")
+local HasCSerialSaverCode = mp.FindPatternInModule(nil, "C7 ? ? ? ? ? C7 ? ? ? ? ? ? 8B ? 8D ? ? C7")
+local DeserializeEntityCode = mp.FindPatternInModule(nil, "c6 ? ? 00 c7 45 fc 01 00 00 00 8d 4d ? 8b ? 51 8b ? ff 50 10")
+local HasCSerialLoaderCode = mp.FindPatternInModule(nil, "C7 ? ? ? ? ? C7 ? ? ? ? ? ? 8B ? C7")
 
+if SerializeEntityCode == nil or HasCSerialSaverCode == nil or DeserializeEntityCode == nil or HasCSerialLoaderCode == nil then
+    print_error("nullptr?:")
+    print_error("SerializeEntityCode: ", tostring(SerializeEntityCode))
+    print_error("HasCSerialSaverCode: ", tostring(HasCSerialSaverCode))
+    print_error("DeserializeEntityCode: ", tostring(DeserializeEntityCode))
+    print_error("HasCSerialLoaderCode: ", tostring(HasCSerialLoaderCode))
+else
+    local SerializeEntityPtr = ffi.cast("SerializeEntity*", mp.FindFuncStart(SerializeEntityCode))
+    local DeserializeEntityPtr = ffi.cast("DeserializeEntity*", mp.FindFuncStart(DeserializeEntityCode))
+    local CSerialSaverInit = ffi.cast("CSerializerSaverInit*", mp.FindFuncStart(HasCSerialSaverCode))
+    local CSerialLoaderInit = ffi.cast("CSerializerLoaderInit*", mp.FindFuncStart(HasCSerialLoaderCode))
+
+    ---序列化为内部二进制格式
+    ---@param entity_id integer
+    ---@return string
+    function extend.SerializeEntity(entity_id)
+        local EntityPtr = extend.EntityGetPtr(entity_id)
+        if EntityPtr == nil then
+            return ""
+        end
+        local data = ffi.new("struct CSerializerSaver[1]")
+        CSerialSaverInit(data, EntityPtr)
+        local CSerialSaver = ffi.cast("void*", ffi.cast("uint32_t", data) + 44)
+        SerializeEntityPtr(EntityPtr, CSerialSaver)
+        local result = StdStringToStr(data[0].buffer)
+        if data[0].buffer.size >= 16 then
+            ffi.C.free(data[0].buffer.data.buffer)
+        end
+        return result
+    end
+
+    ---反序列化内部二进制格式为实体
+    ---@param entity_id integer
+    ---@param serialized_data string
+    ---@param x number?
+    ---@param y number?
+    ---@return integer
+    function extend.DeserializeEntity(entity_id, serialized_data, x, y)
+        local EntityPtr = extend.EntityGetPtr(entity_id)
+        if EntityPtr == nil then
+            return 0
+        end
+        local length = #serialized_data
+        if length < 40 then
+            return 0
+        end
+        local data = ffi.new("struct CSerializerLoader[1]")
+        CSerialLoaderInit(data, ToStdString(serialized_data), #serialized_data)
+        local CSerialLoader = ffi.cast("void*", ffi.cast("uint32_t", data) + 44)
+        local position = nil
+        if x ~= nil and y ~= nil then
+            position = ffi.new("float[2]")
+            position[0] = x
+            position[1] = y
+        end
+        DeserializeEntityPtr(EntityPtr, CSerialLoader, position)
+        if data[0].buffer.size >= 16 then
+            ffi.C.free(data[0].buffer.data.buffer)
+        end
+        return entity_id
+    end
+end
 return extend

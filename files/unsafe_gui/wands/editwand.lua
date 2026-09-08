@@ -395,11 +395,22 @@ local function EditwandInspect(UI)
 		UI.GuiTooltip("$conjurer_reborn_editwand_delete_entity")
 
 		UI.NextZDeep(0)
-		if UI.ImageButton("editwand_clone_entity", 0, 1, "mods/conjurer_reborn/files/gfx/editwand_icons/icon_cln.png") then
-            EntityLoadProcessed(EntityGetFilename(entity), x + 10, y - 10)
+        if UI.ImageButton("editwand_clone_entity", 0, 1, "mods/conjurer_reborn/files/gfx/editwand_icons/icon_cln.png") then
+            local BinEntity = APIExtend.SerializeEntity(entity)
+            local NewEntity = APIExtend.DeserializeEntity(EntityCreateNew(), BinEntity, x + 10, y - 10)
+            NewEntity = EntityObj(NewEntity)
+            
+            local cursor = NewEntity:GetChildWithName("conjurer_reborn_editwand_cursor")
+            if cursor then
+                cursor:Kill()
+            end
+            local indicator = NewEntity:GetChildWithName("conjurer_reborn_editwand_indicator")
+            if indicator then
+                indicator:Kill()
+            end
 			ClickSound()
 		end
-		UI.GuiTooltip(GameTextGet("$conjurer_reborn_editwand_clone_entity").."\n"..GameTextGet("$conjurer_reborn_editwand_clone_entity_desc"))
+		UI.GuiTooltip(GameTextGet("$conjurer_reborn_editwand_clone_entity"))
 
         UI.NextZDeep(0)
         if UI.ImageButton("editwand_save_entity", 0, 1, "mods/conjurer_reborn/files/gfx/editwand_icons/icon_sav.png") then

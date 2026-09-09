@@ -337,6 +337,7 @@ conjurer_reborn_material_tools_filler_tool_desc = "---\n[HOLD] to fill and [RELE
 conjurer_reborn_material_tools_unasfe_filler_tool_desc = "---\n[LEFT-CLICK] to fill materials; if Box2D: [RELEASE] to apply\nDue to engine bug, filling Box2D into Box2D has some issues\nMaybe don't use this in open areas?"
 conjurer_reborn_material_tools_eyedropper_tool = "Eyedropper tool"
 conjurer_reborn_material_tools_eyedropper_tool_desc = "[MIDDLE-MOUSE] on the map to quickly select material"
+conjurer_reborn_material_tools_spray_tool = "Spray tool"
 conjurer_reborn_material_tools_line_tool = "Line tool"
 conjurer_reborn_material_tools_not_filler_desc = "---\n[HOLD] to draw and [RELEASE] to apply\nHOLD [SHIFT] to constrain proportion"
 conjurer_reborn_material_tools_not_filler_desc_line = "---\n[HOLD] to draw and [RELEASE] to apply\nHOLD [SHIFT] to angle snapping"

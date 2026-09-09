@@ -171,7 +171,7 @@ function SetBurshMatOverwrite(UI, enable)
 end
 
 ---返回画刷的 材料覆盖 是否启用
----@param UI Gui
+---@param UI Gui?
 ---@return boolean
 function GetBurshMatOverwrite(UI)
 	return WorldGlobalGetBool(UI, "MatwandBurshMatOverwrite", false)

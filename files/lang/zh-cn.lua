@@ -200,6 +200,7 @@ conjurer_reborn_material_tools_filler_tool_desc = "---\n[长按]填充材料，[
 conjurer_reborn_material_tools_unasfe_filler_tool_desc = "---\n[鼠标左键]填充材料，若是Box2D：[放开]完成填充操作\n由于引擎的bug，Box2D填充Box2D存在一些问题\n也许不要在空旷的地方用？"
 conjurer_reborn_material_tools_eyedropper_tool = "吸管工具"
 conjurer_reborn_material_tools_eyedropper_tool_desc = "在地图上按下[鼠标中键]可快捷选中材料"
+conjurer_reborn_material_tools_spray_tool = "喷雾工具"
 conjurer_reborn_material_tools_line_tool = "线条工具"
 conjurer_reborn_material_tools_not_filler_desc = "[长按]绘制，[放开]完成操作\n按住[SHIFT]限制比例"
 conjurer_reborn_material_tools_not_filler_desc_line = "[长按]绘制，[放开]完成操作\n按住[SHIFT]开启角度吸附功能"

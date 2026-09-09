@@ -154,7 +154,40 @@ function unsafe_filler_release_action(material, brush, x, y)
     end
 end
 
+--喷雾半径
+local sprayRadius = 16
+--每次喷射的粒子数
+local spraydensity = 20
 
+function unsafe_spray_action(material, brush, ix, iy)
+    if World == nil then
+        return
+    end
+    local world_ffi = World.capi
+	local matid = CellFactory_GetType(material)
+	local matptr = world_ffi.get_material_ptr(matid)
+    local grid = world_ffi.get_grid_world()
+    local chunkMap = grid.vtable.get_chunk_map(grid)
+    for i = 1, spraydensity do
+        --均匀圆形随机采样
+        local angle = math.random() * math.pi * 2
+        local radius = math.sqrt(math.random()) * sprayRadius
+        local x = ix + radius * math.cos(angle)
+        local y = iy + radius * math.sin(angle)
+        local pcell = world_ffi.get_cell(chunkMap, x, y)
+        if pcell[0] == nil then
+			if world_ffi.chunk_loaded(chunkMap, x, y) then--需要区块是加载的
+	            pcell[0] = world_ffi.construct_cell(grid, x, y, matptr, nil)
+			end
+        elseif GetBurshMatOverwrite() then
+	        pcell[0].vtable.cell_overwrite(pcell[0], grid, matid)
+        end
+    end
+end
+
+function unsafe_spray_release_action(material, brush, x, y)
+	
+end
 --
 -- Line tool
 --

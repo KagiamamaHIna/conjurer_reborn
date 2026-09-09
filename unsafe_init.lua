@@ -324,6 +324,7 @@ function OnPlayerDied(player)
 		"$conjurer_reborn_player_died1",
 		"$conjurer_reborn_player_died2"
 	)
+    GamePrint("$conjurer_reborn_player_died2")
 end
 
 function OnPlayerSpawned(player)

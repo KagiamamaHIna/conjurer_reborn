@@ -262,6 +262,18 @@ local Tools = {
 		physics_supported = true,
 		action = EyedropperAction,
 		release_action = EyedropperReleaseAction,
+    },
+	{
+        name = "$conjurer_reborn_material_tools_spray_tool",
+		desc = "$conjurer_reborn_matwand_unsafe_brush_eraser_desc",
+		offset_x = 0,
+		offset_y = 5,
+		reticle_file = "mods/conjurer_reborn/files/wands/matwand/brushes/spray_reticle.png",
+		brush_file = "mods/conjurer_reborn/files/wands/matwand/brushes/0_reticle.png",
+		icon_file = "mods/conjurer_reborn/files/wands/matwand/brushes/spray_icon.png",
+		physics_supported = false,
+		action = unsafe_spray_action,
+		release_action = unsafe_spray_release_action,
 	},
 	{
 		name = "$conjurer_reborn_material_tools_line_tool",

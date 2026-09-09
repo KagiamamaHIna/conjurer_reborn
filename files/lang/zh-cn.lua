@@ -260,6 +260,8 @@ conjurer_reborn_entwand_options_entity_scan_radius_desc = "实体扫描的半径
 conjurer_reborn_entwand_options_other = "其他设置"
 conjurer_reborn_entwand_options_holding = "按住持续生成"
 conjurer_reborn_entwand_options_holding_desc = "快速生成大量实体的方法"
+conjurer_reborn_entwand_options_cbc = "生成时移除CBC"
+conjurer_reborn_entwand_options_cbc_desc = "如果你不知道CBC是干什么的，请保持开启！"
 conjurer_reborn_entwand_options_row = "行"
 conjurer_reborn_entwand_options_row_desc = "一次要生成多少行实体\n警告：数字越大越可能导致严重后果"
 conjurer_reborn_entwand_options_col = "列"
@@ -330,6 +332,8 @@ conjurer_reborn_editwand_save_entity = "保存实体"
 conjurer_reborn_editwand_save_entity_game_print = "实体被保存在了 Noita根目录/debug/$0"
 conjurer_reborn_editwand_save_entity_desc = "将实体序列化为xml文件并保存在Noita debug目录"
 conjurer_reborn_editwand_save_entity_desc_normal = "注：和Noita Dev版本的序列化的略有不同"
+conjurer_reborn_editwand_poly_entity = "附身实体"
+conjurer_reborn_editwand_poly_entity_desc = "将玩家变形为此实体\n虽然不一定能控制此实体移动"
 conjurer_reborn_editwand_show_hitboxes = "受击碰撞箱"
 
 --底部按钮列表相关

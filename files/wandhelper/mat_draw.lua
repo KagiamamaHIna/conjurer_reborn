@@ -571,7 +571,7 @@ end
 local DrawLine = GetDrawLine()
 local EraseLine = GetDrawLine()
 ---@param UI Gui
-local function UnsafeMaterialToolEntityUpdate(UI)
+local function UnsafeMaterialToolEntityUpdate(UI, refresh)
 	BrushFollowMouse(UI)
 	EraserFollowMouse(UI)
 
@@ -679,12 +679,16 @@ local function UnsafeMaterialToolEntityUpdate(UI)
 	end
 
 	PrevDraw = holding_m1
-	PrevErase = ACTION_HOLD_ERASE
+    PrevErase = ACTION_HOLD_ERASE
+    if refresh then
+        DrawLine = GetDrawLine()
+        EraseLine = GetDrawLine()
+    end
 end
 
-function MaterialToolEntityUpdate(UI)
+function MaterialToolEntityUpdate(UI, refresh)
 	if CurSettingGet("unsafe_brush") then
-        UnsafeMaterialToolEntityUpdate(UI)
+        UnsafeMaterialToolEntityUpdate(UI, refresh)
     else
 		LegacyMaterialToolEntityUpdate(UI)
 	end

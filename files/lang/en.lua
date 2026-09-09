@@ -399,6 +399,8 @@ conjurer_reborn_entwand_options_entity_scan_radius_desc = "Radius setting for En
 conjurer_reborn_entwand_options_other = "Other"
 conjurer_reborn_entwand_options_holding = "Spawn when holding"
 conjurer_reborn_entwand_options_holding_desc = "Really quick way to flood entities."
+conjurer_reborn_entwand_options_cbc = "Remove CBC on Spawn"
+conjurer_reborn_entwand_options_cbc_desc = "If you don't know what CBC does, leave this on!"
 conjurer_reborn_entwand_options_row = "Rows"
 conjurer_reborn_entwand_options_row_desc = "How many rows to spawn entities\nWarning: Things can quickly turn sour with high numbers"
 conjurer_reborn_entwand_options_col = "Cols"
@@ -467,6 +469,8 @@ conjurer_reborn_editwand_save_entity = "Save entity"
 conjurer_reborn_editwand_save_entity_game_print = "Entity saved as $0 in the Noita folder"
 conjurer_reborn_editwand_save_entity_desc = "Dumps the whole entity XML into your Noita debug directory"
 conjurer_reborn_editwand_save_entity_desc_normal = "Note: Differs slightly from the Noita Dev version dump"
+conjurer_reborn_editwand_poly_entity = "Possession entity"
+conjurer_reborn_editwand_poly_entity_desc = "Polymorphs the player into this entity\nThough you may not be able to control its movement"
 conjurer_reborn_editwand_show_hitboxes = "Show hitboxes"
 
 --power(bottom btns)

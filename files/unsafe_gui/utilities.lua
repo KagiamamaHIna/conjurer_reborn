@@ -122,12 +122,20 @@ end
 local Globaldefault = "__conjurer_reborn_is_not_has_any_value___yes_i_am_sajo_yukimi_p"
 
 ---从当前世界的全局获取值或从UserData缓存的获取
----@param UI Gui
+---@param UI Gui?
 ---@param key string
 ---@param default string? default = ""
 ---@return string
 function WorldGlobalGet(UI, key, default)
 	default = Default(default, "")
+	if UI == nil then
+		local value = GlobalsGetValue(ModID .. key, Globaldefault)
+		if value == Globaldefault then
+			GlobalsSetValue(ModID .. key, default)
+			value = default
+		end
+		return value
+	end
 	if UI.UserData["__WorldGlobalCache"] == nil then
 		UI.UserData["__WorldGlobalCache"] = {}
 	end
@@ -155,7 +163,7 @@ function WorldGlobalSet(UI, key, value)
 end
 
 ---从当前世界的全局获取值或从UserData缓存的获取
----@param UI Gui
+---@param UI Gui?
 ---@param key string
 ---@param default boolean? default = false
 ---@return boolean

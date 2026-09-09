@@ -178,7 +178,14 @@ UI.MainTickFn["Main"] = function()
 		end)
 	end
 	local player = GetPlayer()
-	if player == nil then
+    if player == nil then
+		if ActiveTable then
+			ActiveTable.action(UI, true)
+            for _, v in pairs(MainBtns) do
+                v.release()
+            end
+			ActiveTable = nil
+		end
 		return
 	end
     BottomBtnDraw(UI) --底部功能按钮绘制
@@ -197,10 +204,9 @@ UI.MainTickFn["Main"] = function()
 		if item == -1 then
 			ItemSwitch = true
 		end
-		local wand = EntityGetWithName("conjurer_reborn_wand_entity")
+		local wand = EntityGetChildWithName(player, "conjurer_reborn_wand_entity")
 		if wand == nil or wand == 0 then
 			wand = EntityLoadChild(player, "mods/conjurer_reborn/files/wands/wand.xml")
-			local pos_x, pos_y = EntityGetTransform(player)
 		end
 		local comp = EntityGetFirstComponent(wand, "SpriteComponent")
 		local CompSprite = ComponentGetValue2(comp, "image_file")
@@ -436,6 +442,7 @@ UI.MiscEventFn["POLYMORPH"] = function()
             if effect == "POLYMORPH" or effect == "POLYMORPH_RANDOM" or effect == "POLYMORPH_UNSTABLE" then
                 c.attr.frames = 1
             end
+			c:SetEnable(true)
         end
     end
 end

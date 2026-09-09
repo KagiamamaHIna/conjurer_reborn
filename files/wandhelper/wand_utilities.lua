@@ -1,9 +1,18 @@
 dofile_once("mods/conjurer_reborn/files/wands/entwand/processors.lua")
 dofile_once("mods/conjurer_reborn/files/wandhelper/ent_helper.lua")
 
+local function entwand_remove_cbc(entity)
+    if GetEntWandCBC and GetEntWandCBC() then
+        local CameraBound = EntityGetFirstComponentIncludingDisabled(entity, "CameraBoundComponent")
+        if CameraBound then
+            EntityRemoveComponent(entity, CameraBound)
+        end
+    end
+end
+
 ENTITY_POST_PROCESSORS = {
 	disable_new_physicsbody_optimizations,
-	remove_spawn_limits_set_by_camerabound,
+	entwand_remove_cbc,
 	add_friendly_fire_corrector,
 }
 

@@ -1169,9 +1169,9 @@ end
 
 ---绘制Matwand的GUI
 ---@param UI Gui
-function DrawMatWandGui(UI)
+function DrawMatWandGui(UI, refresh)
     EnabledBrushes(UI, true) --保持存在
-    MaterialToolEntityUpdate(UI)
+    MaterialToolEntityUpdate(UI, refresh)
 	if GetPlayer() == nil or GameIsInventoryOpen() then
 		return
 	end

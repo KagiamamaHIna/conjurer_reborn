@@ -538,6 +538,9 @@ end
 ---@param path string EntityFile
 ---@return integer
 function EntityLoadChild(father, path)
+	if not EntityGetIsAlive(father) then
+		return 0
+	end
 	local x, y = EntityGetTransform(father)
 	local id = EntityLoad(path, x, y)
 	EntityAddChild(father, id)

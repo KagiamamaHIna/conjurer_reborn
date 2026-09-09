@@ -2,6 +2,95 @@ dofile_once("mods/conjurer_reborn/files/unsafe/DataGenerator/GetAllData.lua")
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/utilities.lua")
 dofile_once("mods/conjurer_reborn/files/wandhelper/edit_draw.lua")
 dofile_once("mods/conjurer_reborn/files/wandhelper/wand_utilities.lua")
+---@module "basexx"
+local basexx = dofile_once("mods/conjurer_reborn/files/lib/basexx.lua")
+
+---将玩家变形为任意实体
+---@param src integer
+---@param target integer
+local function PolymorphToEntity(src, target)
+    local SrcBase64 = basexx.to_base64(APIExtend.SerializeEntity(src))
+    APIExtend.SetPlayerEntity(target)
+    EntityKill(src)
+    local srcObj = EntityObj(src)
+    local entityObj = EntityObj(target)
+    entityObj:NewChild().NewComp.GameEffectComponent {
+        frames = 2147483647,
+        disable_movement = false,
+        effect = "POLYMORPH",
+        mSerializedData = SrcBase64,
+    }.NewComp.InheritTransformComponent {}
+
+    EntityRemoveTag(src, "player_unit")--让他不再被视为玩家，因为实体删除本身是有延迟的
+    entityObj:AddTag("polymorphed_player"):AddTag("polymorphed")
+    local cursor = entityObj:GetChildWithName("conjurer_reborn_editwand_cursor")
+    if cursor then
+        cursor:Kill()
+    end
+    local indicator = entityObj:GetChildWithName("conjurer_reborn_editwand_indicator")
+    if indicator then
+        indicator:Kill()
+    end
+
+    local cc = entityObj.comp_all.ControlsComponent
+    if cc == nil then
+        _, cc = entityObj.NewComp.ControlsComponent {
+            enabled = true,
+            polymorph_hax = true
+        }
+    else
+        cc[1].attr.enabled = true
+        cc[1].attr.polymorph_hax = true
+        cc[1]:SetEnable(true)
+    end
+    local ai = entityObj.comp_all.AnimalAIComponent
+    if ai ~= nil then
+        ai[1]:SetEnable(false)
+    end
+    local dragonBoss = entityObj.comp.BossDragonComponent
+    if dragonBoss ~= nil then
+        entityObj.NewComp.WormComponent {
+            speed = dragonBoss[1].attr.speed,
+            acceleration = dragonBoss[1].attr.acceleration,
+            gravity = 0,
+            tail_gravity = dragonBoss[1].attr.tail_gravity,
+            part_distance = dragonBoss[1].attr.part_distance,
+            ground_check_offset = dragonBoss[1].attr.ground_check_offset,
+            hitbox_radius = dragonBoss[1].attr.hitbox_radius,
+            bite_damage = dragonBoss[1].attr.bite_damage,
+            target_kill_radius = dragonBoss[1].attr.target_kill_radius,
+            target_kill_ragdoll_force = dragonBoss[1].attr.target_kill_ragdoll_force,
+            jump_cam_shake = dragonBoss[1].attr.jump_cam_shake,
+            jump_cam_shake_distance = dragonBoss[1].attr.jump_cam_shake_distance,
+            eat_anim_wait_mult = dragonBoss[1].attr.eat_anim_wait_mult,
+            ragdoll_filename = dragonBoss[1].attr.ragdoll_filename,
+        }
+        dragonBoss[1]:SetEnable(false)
+    end
+    local worm = entityObj.comp.WormComponent
+    if worm ~= nil then
+        entityObj.NewComp.WormPlayerComponent {}
+    end
+
+    entityObj.NewComp.FogOfWarRadiusComponent {}
+    entityObj.NewComp.FogOfWarRemoverComponent {}
+    local srcGSC = srcObj.comp.GameStatsComponent
+    if srcGSC then
+        entityObj.NewComp.GameStatsComponent {
+            name = srcGSC[1].attr.name,
+            stats_filename = srcGSC[1].attr.stats_filename,
+            extra_death_msg = GameTextGet("$death_polymorph", GameTextGetTranslatedOrNot(entityObj:GetName())),
+            dont_do_logplayerkill = srcGSC[1].attr.dont_do_logplayerkill,
+            player_polymorph_count = srcGSC[1].attr.player_polymorph_count + 1
+        }
+    end
+    for _, v in ipairs(entityObj.comp_all.CameraBoundComponent or {}) do
+        v:RemoveSelf() --防止因为cbc删了玩家
+    end
+    for _, v in ipairs(entityObj.comp_all.WormAIComponent or {}) do
+        v:SetEnable(false)
+    end
+end
 
 local function IsPhysicalEntity(entity)
 	local result = EntityFirstComponent(entity, "PhysicsBody2Component") or
@@ -410,7 +499,7 @@ local function EditwandInspect(UI)
             end
 			ClickSound()
 		end
-		UI.GuiTooltip(GameTextGet("$conjurer_reborn_editwand_clone_entity"))
+		UI.GuiTooltip("$conjurer_reborn_editwand_clone_entity")
 
         UI.NextZDeep(0)
         if UI.ImageButton("editwand_save_entity", 0, 1, "mods/conjurer_reborn/files/gfx/editwand_icons/icon_sav.png") then
@@ -440,6 +529,15 @@ local function EditwandInspect(UI)
         else
             UI.GuiTooltip("$conjurer_reborn_editwand_save_entity_desc", "$conjurer_reborn_editwand_save_entity_desc_normal")
         end
+
+        UI.NextZDeep(0)
+        if UI.ImageButton("editwand_poly_entity", 0, 1, "mods/conjurer_reborn/files/gfx/editwand_icons/icon_pol.png") then
+            local player = GetPlayer()
+            if player ~= nil then
+                PolymorphToEntity(player, entity)
+            end
+        end
+        UI.GuiTooltip("$conjurer_reborn_editwand_poly_entity", "$conjurer_reborn_editwand_poly_entity_desc")
 
         UI.LayoutEnd()
         local entityObj = EntityObj(entity)

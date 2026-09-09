@@ -746,6 +746,13 @@ local function EntOptions(UI)
         end
 		UI.VerticalSpacing(2)
 		
+        local CBCFlag, CBCClick = ConjurerCheckbox(UI, "EntWandCBC", 0, 0, "$conjurer_reborn_entwand_options_cbc", nil, true)
+		UI.GuiTooltip("$conjurer_reborn_entwand_options_cbc_desc")
+        if CBCClick then
+            SetEntWandCBC(UI, CBCFlag)
+        end
+        UI.VerticalSpacing(2)
+        
 		local RowValue = EntSlider(UI, "EntWandRowSlider",0,0,"$conjurer_reborn_entwand_options_row",1,50,1,100,GetEntWandRows(UI))
         SetEntWandRows(UI, RowValue)
 

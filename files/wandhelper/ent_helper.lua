@@ -134,6 +134,19 @@ function SetEntWandHoldSpawn(UI, value)
 	WorldGlobalSetBool(UI, "EntWandHoldSpawn", value)
 end
 
+---返回实体法杖是否应该移除CBC
+---@return boolean
+function GetEntWandCBC()
+	return WorldGlobalGetBool(nil, "EntWandRemoveCBC", true)
+end
+
+---设置实体法杖是否应该移除CBC
+---@param UI Gui
+---@param value boolean
+function SetEntWandCBC(UI, value)
+	WorldGlobalSetBool(UI, "EntWandRemoveCBC", value)
+end
+
 ---返回实体法杖是否是按下一直删除
 ---@param UI Gui
 ---@return boolean

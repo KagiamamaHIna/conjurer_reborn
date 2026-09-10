@@ -197,8 +197,8 @@ if CurSettingGet("unsafe_brush") then
         for y = 0, height - 1 do
             local color = ModImageGetPixel(brushImgID, x, y)
             if color ~= 0 then
-                JumblePos[#JumblePos + 1] = x - 16
-                JumblePos[#JumblePos + 1] = y - 16
+                JumblePos[#JumblePos + 1] = x - width / 2
+                JumblePos[#JumblePos + 1] = y - height / 2
             end
         end
     end

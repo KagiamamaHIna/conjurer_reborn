@@ -9,13 +9,17 @@ void free(void *ptr);
 void *malloc(size_t size);
 
 struct DevEntity{
-    void* vtable;
-    int id;
+    void* vtable;//+0
+    int id;//+4
+    char unk[8];//+8
+    int kill_flag;//+16
     //unknown...
 };
 
 struct NormalEntity{
     int id;
+    char unk[8];
+    int kill_flag;
     //unknown...
 };
 
@@ -180,15 +184,38 @@ else
     print_error("KeyboardListernCode is nullptr")
 end
 
+local EntityType = "struct NormalEntity*"
+if DebugGetIsDevBuild() then
+    EntityType = "struct DevEntity*"
+end
+
 local EntityKillCode = mp.FindPatternInModule(nil, "8B 0D ? ? ? ? ? ? ? ? E8 ? ? ? ? 85 c0 74 e0 8b c8 e8")
 if EntityKillCode ~= nil then
     local EntityManager = ffi.cast("char***", EntityKillCode + 2)[0][0]
     local EntityGetPtr = ffi.cast("EntityGetPtr*", mp.ResolveRelativeAddress(EntityKillCode + 10, 1, 5))
     ---获取实体指针
-    ---@param id integer
+    ---@param entity_id integer
     ---@return ffi.cdata*
-    function extend.EntityGetPtr(id)
-        return EntityGetPtr(EntityManager, id)
+    function extend.EntityGetPtr(entity_id)
+        return EntityGetPtr(EntityManager, entity_id)
+    end
+
+    ---取消实体死亡
+    ---@param entity_id integer
+    function extend.EntityUnKill(entity_id)
+        local ptr = ffi.cast(EntityType, EntityGetPtr(EntityManager, entity_id))
+        ptr.kill_flag = 0
+        for _, v in ipairs(EntityGetAllChildren(entity_id) or {}) do
+            extend.EntityUnKill(v)
+        end
+    end
+    
+    ---实体是否即将死亡
+    ---@param entity_id integer
+    ---@return boolean
+    function extend.EntityWillDie(entity_id)
+        local ptr = ffi.cast(EntityType, EntityGetPtr(EntityManager, entity_id))
+        return ptr.kill_flag ~= 0
     end
 else
     print_error("EntityKillCode is nullptr")
@@ -212,11 +239,7 @@ if DeathMatch ~= nil and EntityKillCode ~= nil then
         local begin = ffi.cast("void**", DeathMatch.player_entities.begin_)
         begin[index] = ptr
     end
-    
-    local EntityType = "struct NormalEntity*"
-    if DebugGetIsDevBuild() then
-        EntityType = "struct DevEntity*"
-    end
+
     ---获取引擎认为的玩家实体，即摄像头跟随的
     ---@param index integer? =0
     ---@return integer? id

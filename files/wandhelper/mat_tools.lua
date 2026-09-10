@@ -186,6 +186,76 @@ function unsafe_spray_action(material, brush, ix, iy)
 end
 
 function unsafe_spray_release_action(material, brush, x, y)
+
+end
+
+local JumblePos = {}
+if CurSettingGet("unsafe_brush") then
+	local path = "mods/conjurer_reborn/files/wands/matwand/brushes/jumble_reticle.png"
+    local brushImgID, width, height = SrcModImageMakeEditable(path, math.huge, math.huge)
+    for x = 0, width - 1 do
+        for y = 0, height - 1 do
+            local color = ModImageGetPixel(brushImgID, x, y)
+            if color ~= 0 then
+                JumblePos[#JumblePos + 1] = x - 16
+                JumblePos[#JumblePos + 1] = y - 16
+            end
+        end
+    end
+end
+
+local function CellIsBox2d(pcell)
+    local cell = pcell[0]
+	return cell[0].vtable.get_cell_type(cell) == CellType.SOLID
+end
+
+function unsafe_jumble_action(material, brush, ix, iy)
+    if World == nil then
+        return
+    end
+    local world_ffi = World.capi
+    local grid = world_ffi.get_grid_world()
+    local chunkMap = grid.vtable.get_chunk_map(grid)
+	local ListSize = #JumblePos / 2
+    for i = 1, #JumblePos, 2 do
+        local sx = ix + JumblePos[i]
+        local sy = iy + JumblePos[i + 1]
+		if not world_ffi.chunk_loaded(chunkMap, sx, sy) then
+			goto continue
+		end
+        local ty = math.random(1, ListSize) * 2
+        local tx = ty - 1
+        ty = iy + JumblePos[ty]
+        tx = ix + JumblePos[tx]
+		if tx == sx and ty == sy then--由于dev版会对自己交换自己进行断言检查，这是避免产生垃圾日志的检测
+			goto continue
+		end
+        if not world_ffi.chunk_loaded(chunkMap, tx, ty) then
+            goto continue
+        end
+		--需要检查是不是box2d材料，不应该对box2d进行交换
+        local scell = world_ffi.get_cell(chunkMap, sx, sy)
+        if scell[0] == nil then --如果原始位置没有材料，检查目标位置有没有
+            local tcell = world_ffi.get_cell(chunkMap, tx, ty)
+            if tcell[0] == nil or CellIsBox2d(tcell) then
+                goto continue
+            end
+            tcell[0].vtable.cell_swap(tcell[0], grid, sx, sy)
+        else
+            if CellIsBox2d(scell) then
+                goto continue
+            end
+            local tcell = world_ffi.get_cell(chunkMap, tx, ty)
+			if tcell[0] ~= nil and CellIsBox2d(tcell) then
+				goto continue
+			end
+            scell[0].vtable.cell_swap(scell[0], grid, tx, ty)
+        end
+		::continue::
+    end
+end
+
+function unsafe_jumble_release_action(material, brush, x, y)
 	
 end
 --

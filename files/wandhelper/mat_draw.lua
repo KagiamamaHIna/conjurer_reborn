@@ -436,6 +436,7 @@ local function UnsafeHandleDraw(UI, material, brush, x, y, rotation)
     end
 
     if brush.action then
+		x, y = GridSnap(x, y, GetBrushGridSize(UI))
 		brush.action(material, brush, x, y, rotation)
         return
     end

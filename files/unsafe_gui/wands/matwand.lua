@@ -240,7 +240,7 @@ local function InitSearcherCommon(item)
         Name = obj.attr.ui_name
     end
 
-    local ID = MatTable[item].attr.name
+    local ID = obj.attr.name
     local function GetEnName()
         return CSV.get(string.sub(obj.attr.ui_name, 2), "en")
     end
@@ -259,7 +259,7 @@ end
 local function NewMatSearcher(items)
     local getid = function(item) return MatTable[item].conjurer_unsafe_from_id or "?" end
     local datagetid = function(item) return MatTable[item[1]].conjurer_unsafe_from_id or "?" end
-    ModToDatas = GetDataToModlist(getid)(items)
+    local ModToDatas = GetDataToModlist(getid)(items)
 
     local SearcherSet = NewSearcherSet {
         common = NewSearcher(items, InitSearcherCommon),

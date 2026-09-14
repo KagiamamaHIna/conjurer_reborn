@@ -256,21 +256,44 @@ function CentripetalCatmullRomDrawSegment(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y
 	end
 end
 
+local function GetDeduplicationXYFn(fn)
+    local map1 = {}
+    local map2 = {}
+    local function result(x,y)
+        if map1[x] and map2[y]then
+            return
+        end
+        map1[x] = true
+        map2[y] = true
+        fn(x, y)
+    end
+    return result
+end
+
 ---@alias __GDLPred fun():boolean
 ---@alias __GDLGetPos fun():x:integer,y:integer
-
+---@alias __GDLImplAdapter (fun(x:number,y:number):x:number,y:number)?
+---@
 ---获取一个画线函数
 ---<br>第一个参数是谓词，用于启用判断
 ---<br>第二个参数是获取坐标函数
 ---<br>第三个参数是栅格化函数，用于实现功能
 ---<br>第四个参数是触发器，当满足触发条件时被调用
----@return fun(pred:__GDLPred, getPos: __GDLGetPos, implement:fun(x:integer, y:integer), trigger:fun()?) DrawLineInMouse
+---@return fun(pred:__GDLPred, getPos: __GDLGetPos, implement:fun(x:integer, y:integer), trigger:fun()?, implAdapter:__GDLImplAdapter) DrawLineInMouse
 function GetDrawLine()
     local pushFr = 0
     local Pos1X, Pos1Y
     local Pos2X, Pos2Y
     local Pos3X, Pos3Y
-    return function(pred, getPos, implement, trigger)
+    return function(pred, getPos, implement, trigger, implAdapter)
+        if implAdapter then
+            local DImpl = GetDeduplicationXYFn(implement)
+            implement = function(x, y)
+                x, y = implAdapter(x, y)
+                DImpl(x, y)
+            end
+        end
+        
         if pred() or pushFr > 0 then
             if trigger then
                 trigger()

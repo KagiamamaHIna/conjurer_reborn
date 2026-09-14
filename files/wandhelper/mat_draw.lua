@@ -392,7 +392,6 @@ end
 ---@param y number
 local function UnsafeDrawNormal(UI, material, x, y)
 	local brush = GetActiveBrush(UI)
-    x, y = GridSnap(x, y, GetBrushGridSize(UI))
 	local rotationType = UI.UserData["BrushRotationType"] or 0
     x, y = PosInCenter(x, y, brush.UnsafeWidth, brush.UnsafeHeight, rotationType)
 	local matid = CellFactory_GetType(material)
@@ -410,7 +409,6 @@ end
 ---@param y number
 local function UnsafeDrawBox2D(UI, material, x, y)
 	local brush = GetActiveBrush(UI)
-    x, y = GridSnap(x, y, GetBrushGridSize(UI))
 	local rotationType = UI.UserData["BrushRotationType"] or 0
     x, y = PosInCenter(x, y, brush.UnsafeWidth, brush.UnsafeHeight, rotationType)
 	local matid = CellFactory_GetType("conjurer_reborn_construction_steel")
@@ -436,7 +434,6 @@ local function UnsafeHandleDraw(UI, material, brush, x, y, rotation)
     end
 
     if brush.action then
-		x, y = GridSnap(x, y, GetBrushGridSize(UI))
 		brush.action(material, brush, x, y, rotation)
         return
     end
@@ -456,13 +453,6 @@ local function UnsafeErase(UI, material, x, y)
     local area = GetEraserArea(UI)
     local chunk_count, chunk_size, total_size = GetEraserSize(UI)
 
-    local grid_size
-    if GetEraserUseBrushGrid(UI) then
-        grid_size = GetBrushGridSize(UI)
-    else
-        grid_size = GetEraserGridSize(UI)
-    end
-    x, y = GridSnap(x, y, grid_size)
     x, y = PosInCenter(x, y, total_size, total_size)
     local eraser_mode = GetEraserMode(UI)
     local eraser_replace = GetEraserUseReplacer(UI)
@@ -648,7 +638,10 @@ local function UnsafeMaterialToolEntityUpdate(UI, refresh)
         		local cx, cy = GameGetCameraPos()
         		GameSetCameraPos(cx, cy)
     		end
-        end
+        end,
+		function (x,y)
+			return GridSnap(x, y, erase_grid_size)
+		end
 	)
 
 	if ACTION_RELEASE_ERASE then
@@ -666,7 +659,10 @@ local function UnsafeMaterialToolEntityUpdate(UI, refresh)
         		local cx, cy = GameGetCameraPos()
         		GameSetCameraPos(cx, cy)
     		end
-        end
+        end,
+		function (x,y)
+			return GridSnap(x, y, brush_grid_size)
+		end
 	)
 	
 	-- if ACTION_HOLD_DRAW or ACTION_CLICK_DRAW then

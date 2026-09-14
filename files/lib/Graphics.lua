@@ -273,7 +273,7 @@ end
 ---@alias __GDLPred fun():boolean
 ---@alias __GDLGetPos fun():x:integer,y:integer
 ---@alias __GDLImplAdapter (fun(x:number,y:number):x:number,y:number)?
----@
+
 ---获取一个画线函数
 ---<br>第一个参数是谓词，用于启用判断
 ---<br>第二个参数是获取坐标函数

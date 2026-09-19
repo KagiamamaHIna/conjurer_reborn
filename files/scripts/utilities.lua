@@ -1,5 +1,6 @@
+CurSettingDisableLoad = true
 dofile_once("mods/conjurer_reborn/files/lib/CurSetting.lua")
-
+CurSettingDisableLoad = nil
 dofile_once("data/scripts/lib/utilities.lua")
 
 dofile_once("mods/conjurer_reborn/files/scripts/enums.lua")

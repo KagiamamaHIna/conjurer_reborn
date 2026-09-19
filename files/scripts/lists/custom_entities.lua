@@ -106,7 +106,9 @@ CUSTOM_ENTITIES = {
     },
 	{
 		name = "$conjurer_reborn_tp_carrot",
-		desc = "$conjurer_reborn_tp_carrot_desc",
+		desc_fn = function ()
+			return CustomKeyName("$conjurer_reborn_tp_carrot_desc", "tp_carrot_blink", "tp_carrot_hold", "tp_carrot_hold_shift")
+		end,
 		path = "mods/conjurer_reborn/files/wands/carrot/entity.xml",
 		image = "mods/conjurer_reborn/files/wands/carrot/ui_gfx.png",
     },

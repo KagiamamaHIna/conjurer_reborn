@@ -212,8 +212,8 @@ conjurer_reborn_tp_carrot_desc =
 [[Enchanted old carrot.
 Point and squeeze to instantly relocate the wielder. Do not eat.
 ---
-Left-click to blink, right-click to hold.
-Hold Shift to force-sync the camera, enabling lightning-fast relocation.]]
+[$0] to blink, [$1] to hold.
+Hold [$2] to force-sync the camera, enabling lightning-fast relocation.]]
 conjurer_reborn_custom_entities_hamis_pet = "Hämis pet"
 conjurer_reborn_pink_wand = "Pink's wand"
 conjurer_reborn_pink_wand_desc = "Who is Pink?"
@@ -376,9 +376,9 @@ conjurer_reborn_entwand_progress_remove = "Progress unlocked, [MIDDLE-MOUSE] to 
 --entwand
 conjurer_reborn_entwand_entity_picker = "Entity Picker"
 conjurer_reborn_entwand_options = "Staff Options"
-conjurer_reborn_entwand_options_desc = "[LEFT-CLICK] to conjure entities\n[MIDDLE-MOUSE] to select entity from the map entity"
+conjurer_reborn_entwand_options_desc = "[$0] to conjure entities\n[$1] to select entity from the map entity"
 conjurer_reborn_entwand_kill_ent = "Delete Entity"
-conjurer_reborn_entwand_kill_ent_desc = "[RIGHT-CLICK] to delete entities"
+conjurer_reborn_entwand_kill_ent_desc = "[$0] to delete entities"
 conjurer_reborn_entwand_fav = "Add favorites with [RIGHT-CLICK]\non individual entity icons"
 conjurer_reborn_entwand_creatures_tab = "Creatures"
 conjurer_reborn_entwand_props_tab = "Props"
@@ -426,12 +426,12 @@ conjurer_reborn_entwand_options_spawn_corpse = "Spawn Corpse"
 conjurer_reborn_entwand_options_spawn_corpse_desc = "If creatures should spawn corpse upon death or not."
 
 --editwand
-conjurer_reborn_editwand_move_btn = "[LEFT-CLICK] to move entities"
-conjurer_reborn_editwand_move_btn_desc = "[RIGHT-CLICK] while moving to freeze"
-conjurer_reborn_editwand_rotate_btn = "[RIGHT-CLICK] to rotate entities"
-conjurer_reborn_editwand_rotate_btn_desc = "[LEFT-CLICK] to unfreeze rotated entities\n\nNote: physics entities have no free rotation, only torque."
-conjurer_reborn_editwand_help_btn = "[INTERACT] to inspect & edit hovered entities"
-conjurer_reborn_editwand_help_btn_desc = "[INTERACT] again in empty space to deselect entities"
+conjurer_reborn_editwand_move_btn = "[$0] to move entities"
+conjurer_reborn_editwand_move_btn_desc = "[$0] while moving to freeze"
+conjurer_reborn_editwand_rotate_btn = "[$0] to rotate entities"
+conjurer_reborn_editwand_rotate_btn_desc = "[$0] to unfreeze rotated entities\n\nNote: physics entities have no free rotation, only torque."
+conjurer_reborn_editwand_help_btn = "[$0] to inspect & edit hovered entities"
+conjurer_reborn_editwand_help_btn_desc = "[$0] again in empty space to deselect entities"
 conjurer_reborn_editwand_entity_properties = "Entity properties"
 conjurer_reborn_editwand_no_tag = "No tags found"
 conjurer_reborn_editwand_position = "Position"

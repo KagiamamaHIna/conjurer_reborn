@@ -22,7 +22,7 @@ dofile_once("mods/conjurer_reborn/files/unsafe_gui/bottom.lua")         --底部
 function CustomKeyName(setting, ...)
 	local names = {}
 	for _,key in ipairs({...})do
-    	local name = InputFrame.get_input_name(CurSettingGet(key))
+    	local name = GameTextGetTranslatedOrNot(InputFrame.get_input_name(CurSettingGet(key)))
 		names[#names+1] = name
 	end
     return GameTextGet(setting, unpack(names))
@@ -74,21 +74,21 @@ end
 ---@param key string
 ---@return boolean
 function CustomKeyDownCheckInput(key)
-    return InputFrame.read_input(CurSettingGet(key)) and not CheckInputEnabeld()
+    return InputFrame.read_input(CurSettingGet(key)) and not CheckInputEnabled()
 end
 
 ---会根据输入是否被屏蔽来检查是否应该生效
 ---@param key string
 ---@return boolean
 function CustomKeyJustDownCheckInput(key)
-    return InputFrame.read_input_down(CurSettingGet(key)) and not CheckInputEnabeld()
+    return InputFrame.read_input_down(CurSettingGet(key)) and not CheckInputEnabled()
 end
 
 ---会根据输入是否被屏蔽来检查是否应该生效
 ---@param key string
 ---@return boolean
 function CustomKeyJustUpCheckInput(key)
-    return InputFrame.read_input_up(CurSettingGet(key)) and not CheckInputEnabeld()
+    return InputFrame.read_input_up(CurSettingGet(key)) and not CheckInputEnabled()
 end
 
 local old_DEBUG_GetMouseWorld = DEBUG_GetMouseWorld
@@ -344,6 +344,16 @@ UI.MainTickFn["Main"] = function()
 	elseif shift and InputIsKeyJustDown(Key_3) and not UI.UserData["HasInputBoxHover"] then
 		SwitchWand(3)
 	elseif shift and InputIsKeyJustDown(Key_4) and not UI.UserData["HasInputBoxHover"] then
+		SwitchWand(4)
+	end
+
+	if CustomKeyJustDownCheckInput("mat_quick_switch") then
+        SwitchWand(1)
+    elseif CustomKeyJustDownCheckInput("ent_quick_switch") then
+        SwitchWand(2)
+    elseif CustomKeyJustDownCheckInput("edit_quick_switch") then
+        SwitchWand(3)
+    elseif CustomKeyJustDownCheckInput("tune_quick_switch") then
 		SwitchWand(4)
 	end
 
@@ -688,7 +698,8 @@ if APIExtend.PlayerIsDied then
     end
 end
 
-UI.MiscEventFn["KeybindUpdate"] = function ()
+UI.MiscEventFn["KeybindUpdate"] = function()
+	VirtualFileSet("mods/conjurer_reborn/carrot_flag.txt", UI.MouseInputBlock() and "1" or "0")
     if CustomKeyJustDownCheckInput("quick_enable_fe") then
         local fePause = GlobalsGetValue("conjurer_reborn.fe_enable", "1") ~= "0"
         GlobalsSetValue("conjurer_reborn.fe_enable", not fePause and "1" or "0")
@@ -697,7 +708,30 @@ UI.MiscEventFn["KeybindUpdate"] = function ()
     if CustomKeyJustDownCheckInput("material_overwrite") then
         local enabled = not GetBurshMatOverwrite(UI)
         SetConjurerCheckBoxStatus(UI, "BrushMatOverwrite", enabled)
-		SetBurshMatOverwrite(UI, enabled)
+        SetBurshMatOverwrite(UI, enabled)
+    end
+    if CustomKeyJustDownCheckInput("quick_scan_preview") then
+        local enabled = not GetScanPreview(UI)
+        SetConjurerCheckBoxStatus(UI, "EntWandScanPreview", enabled)
+        SetScanPreview(UI, enabled)
+    end
+    if CustomKeyJustDownCheckInput("glass_eye") then
+		ToggleCameraControls(UI)
+    end
+    if CustomKeyJustDownCheckInput("post_fx") then
+		TogglePostFx(UI)
+    end
+    if CustomKeyJustDownCheckInput("binoculars") then
+		ToggleBinoculars(UI)
+    end
+    if CustomKeyJustDownCheckInput("fullbright") then
+		ToggleFullbright(UI)
+    end
+    if CustomKeyJustDownCheckInput("grid_display") then
+		ToggleGrid()
+    end
+    if CustomKeyJustDownCheckInput("viima") then
+		ToggleSpeed()
     end
 end
 

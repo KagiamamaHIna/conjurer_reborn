@@ -255,7 +255,7 @@ local function EyedropperEntity(UI, x, y)
 	if GameIsInventoryOpen() then
 		return
 	end
-    if not InputIsMouseButtonDown(Mouse_middle) and not InputIsMouseButtonJustUp(Mouse_middle) then
+    if not CustomKeyDownCheckInput("quick_select_entity") and not CustomKeyJustUpCheckInput("quick_select_entity") then
         return
     end
 	local entobj = EntityObj(HOVERED_ENTITY)
@@ -325,7 +325,7 @@ local function EyedropperEntity(UI, x, y)
 		EyedropperTooltip(UI,Sprite, desc, eyedropperEntityId, leftOrRight, xOffset)
 	end)
 	
-	if InputIsMouseButtonJustUp(Mouse_middle) then
+	if CustomKeyJustUpCheckInput("quick_select_entity") then
         local c_index
         local key
 		if MetaData.type ~= EntityType.Other then
@@ -365,8 +365,8 @@ function EntEntityUpdate(UI)
 	SpawnerReticleFollowMouse(UI, x, y)
 	EyedropperEntity(UI, x, y)
 
-	local spawn_function = GetEntWandHoldSpawn(UI) and IsHoldingMouse1 or HasClickedMouse1
-	if spawn_function() then
+	local spawn_function = GetEntWandHoldSpawn(UI) and CustomKeyDownCheckUI or CustomKeyJustDownCheckUI
+	if spawn_function("spawn_entity") then
         SpawnEntity(UI)
         ActiveParticle("spark_blue", 14, 3)
 		UI.OnceCallOnExecute(function ()
@@ -375,8 +375,8 @@ function EntEntityUpdate(UI)
 	end
 
 
-	local delete_function = GetEntWandHoldDelete(UI) and IsHoldingMouse2 or HasClickedMouse2
-	if delete_function() then
+	local delete_function = GetEntWandHoldDelete(UI) and CustomKeyDownCheckUI or CustomKeyJustDownCheckUI
+	if delete_function("delete_entity") then
         if GetEntWandDeleteAll(UI) then
             DeleteAll(UI, x, y)
         else

@@ -1,6 +1,9 @@
-dofile_once("mods/conjurer_reborn/files/scripts/utilities.lua")
+CurSettingDisableLoad = true
 dofile_once("data/scripts/debug/keycodes.lua")
+dofile_once("mods/conjurer_reborn/files/lib/CurSetting.lua")
 dofile_once("mods/conjurer_reborn/files/lib/EntityClass.lua")
+---@module 'input'
+InputFrame = dofile_once("mods/conjurer_reborn/files/lib/input.lua")
 ---返回玩家当前手持物品
 ---@return integer|nil
 function GetActiveItem()
@@ -33,16 +36,23 @@ function SetCameraPlayerXY(x, y)
         local yOffset = Desired.y - SrcPos.y
         pspc[1].set_attrs = {
             mSmoothedCameraPosition = { x = x, y = y },
-            mDesiredCameraPos = {x = x + xOffset, y = y + yOffset}
+            mDesiredCameraPos = { x = x + xOffset, y = y + yOffset }
         }
     end
 end
-if has_clicked_m1() or is_holding_m2() then
+if GameIsInventoryOpen() then
+    return
+end
+if ModTextFileGetContent("mods/conjurer_reborn/carrot_flag.txt") == "1" then
+    return
+end
+
+if InputFrame.read_input_down(CurSettingGet("tp_carrot_blink")) or InputFrame.read_input(CurSettingGet("tp_carrot_hold")) then
 	local item = GetActiveItem()
 	local player = GetPlayerObj()
 	if player and EntityGetName(item or 0) == "conjurer_reborn_carrot" then
         local x, y = DEBUG_GetMouseWorld()
-        if InputIsKeyDown(Key_LSHIFT) or InputIsKeyDown(Key_RSHIFT) then
+        if InputFrame.read_input(CurSettingGet("tp_carrot_hold_shift")) then
             SetCameraPlayerXY(x, y)
         else
             player.attr.x = x

@@ -105,21 +105,34 @@ local EntityEditActive = true
 local MainEditBtns = {
 	{
 		id = "editwand_move_btn",
-		name = "$conjurer_reborn_editwand_move_btn",
-		image = "mods/conjurer_reborn/files/gfx/editwand_icons/icon_m1.png",
-		desc = "$conjurer_reborn_editwand_move_btn_desc"
+		name_fn = function ()
+            return CustomKeyName("$conjurer_reborn_editwand_move_btn", "edit_m1")
+        end,
+        image = "mods/conjurer_reborn/files/gfx/editwand_icons/icon_m1.png",
+        desc_fn = function ()
+            return CustomKeyName("$conjurer_reborn_editwand_move_btn_desc", "edit_m2")
+        end,
 	},
 	{
-		id = "editwand_rotate_btn",
+        id = "editwand_rotate_btn",
+    	name_fn = function ()
+            return CustomKeyName("$conjurer_reborn_editwand_rotate_btn", "edit_m2")
+        end,
 		name = "$conjurer_reborn_editwand_rotate_btn",
 		image = "mods/conjurer_reborn/files/gfx/editwand_icons/icon_m2.png",
-		desc = "$conjurer_reborn_editwand_rotate_btn_desc"
+        desc_fn = function ()
+            return CustomKeyName("$conjurer_reborn_editwand_rotate_btn_desc", "edit_m1")
+        end,
 	},
 	{
-		id = "editwand_help_btn",
-		name = "$conjurer_reborn_editwand_help_btn",
+        id = "editwand_help_btn",
+        name_fn = function ()
+            return CustomKeyName("$conjurer_reborn_editwand_help_btn", "edit_interact")
+        end,
 		image = "mods/conjurer_reborn/files/gfx/editwand_icons/icon_use.png",
-		desc = "$conjurer_reborn_editwand_help_btn_desc"
+        desc_fn = function ()
+            return CustomKeyName("$conjurer_reborn_editwand_help_btn_desc", "edit_interact")
+        end,
 	},
 }
 
@@ -132,7 +145,7 @@ local function EditwandButtons(UI)
 		UI.NextZDeep(0)
 		UI.ImageButton(v.id, 0, 0, v.image)
 
-		UI.GuiTooltip(GameTextGet(v.name) .. "\n" .. GameTextGet(v.desc))
+		UI.GuiTooltip(v.name_fn() .. "\n" .. v.desc_fn())
 	end
 
 	if UI.UserData["EditWandEntityToInspectEntity"] then

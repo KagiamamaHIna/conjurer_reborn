@@ -196,11 +196,11 @@ function EditWandUpdate(UI)
 	local x, y = DEBUG_GetMouseWorld()
 	local hovered_entity = ScanEntity(UI, x, y)
 
-	local only_m1_clicked = HasClickedMouse1() and not IsHoldingMouse2() and hovered_entity
-	local only_m2_clicked = HasClickedMouse2() and not IsHoldingMouse1() and hovered_entity
-
-	local m1_action_released = not IsHoldingMouse1() and ENTITY_TO_MOVE
-	local m2_action_released = not IsHoldingMouse2() and ENTITY_TO_ROTATE
+	local only_m1_clicked = CustomKeyJustDownCheckUI("edit_m1") and not CustomKeyDownCheckUI("edit_m2") and hovered_entity
+    local only_m2_clicked = CustomKeyJustDownCheckUI("edit_m2") and not CustomKeyDownCheckUI("edit_m1") and hovered_entity
+	
+	local m1_action_released = not CustomKeyDownCheckUI("edit_m1") and ENTITY_TO_MOVE
+	local m2_action_released = not CustomKeyDownCheckUI("edit_m2") and ENTITY_TO_ROTATE
 
 	-- Click events
     if only_m1_clicked then
@@ -226,7 +226,7 @@ function EditWandUpdate(UI)
 	if ENTITY_TO_MOVE then m1_action(ENTITY_TO_MOVE, x, y) end
 	if ENTITY_TO_ROTATE then m2_action(ENTITY_TO_ROTATE, x, y) end
 
-	if HasClickedInteract() then interact_action(UI, hovered_entity, x, y) end
+	if CustomKeyJustDownCheckUI("edit_interact") then interact_action(UI, hovered_entity, x, y) end
 
 
 	PREV_HOVERED_ENTITY = hovered_entity

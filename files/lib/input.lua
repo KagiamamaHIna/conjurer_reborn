@@ -402,8 +402,19 @@ function InputFrame.mod_setting_input(mod_id, gui, in_main_menu, im_id, setting)
     local text
     if detect_key[setting.id] then
         text = "$menuoptions_configurecontrols_pressakey"
+        GuiIdPush(gui, im_id)
+        local textw = GuiGetTextDimensions(gui, "$menuoptions_configurecontrols_pressakey")
+        GuiOptionsAddForNextWidget(gui, GUI_OPTION.Layout_NextSameLine)
+        local unbound = "["..GameTextGet("$menuoptions_configurecontrols_action_unbound").."]"
+        local clicked = GuiButton(gui, 1, offset + textw + 10, 0, unbound)
+        local _,_,hover = GuiGetPreviousWidgetInfo(gui)
+        if clicked then
+            detect_key[setting.id] = false
+            ModSettingSetNextValue(mod_setting_get_id(mod_id, setting), "unbound", false)
+        end
+        GuiIdPop(gui)
         local input = InputFrame.get_any_input()
-        if input ~= nil then
+        if input ~= nil and not hover then
             detect_key[setting.id] = false
             if input == "Mouse_left" or input == "Mouse_right" or input == "JOY_BUTTON_0" or input == "JOY_BUTTON_1" then
                 disable_button[setting.id] = true
@@ -420,6 +431,7 @@ function InputFrame.mod_setting_input(mod_id, gui, in_main_menu, im_id, setting)
     end
 
     local clicked, right_clicked = GuiButton(gui, im_id, offset, 0, text)
+
     if clicked then
         detect_key[setting.id] = true
     elseif right_clicked then

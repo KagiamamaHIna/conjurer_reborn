@@ -75,8 +75,8 @@ conjurer_reborn_tp_carrot_desc =
 [[蕴含魔法的古老胡萝卜
 使用它可瞬间移动持有者，还有不要吃掉了
 ---
-左键单击传送一次，右键按下持续传送
-按住shift使用会强制同步摄像机，这会让传送变得极快]]
+点按[$0]传送一次，按住[$1]持续传送
+按住[$2]使用会强制同步摄像机，这会让传送变得极快]]
 conjurer_reborn_custom_entities_hamis_pet = "哈米斯宠物"
 conjurer_reborn_pink_wand = "Pink的法杖"
 conjurer_reborn_pink_wand_desc = "谁是Pink？"
@@ -237,9 +237,9 @@ conjurer_reborn_matwand_unsafe_brush_eraser_desc = "关闭高级画刷此功能�
 --实体法杖相关
 conjurer_reborn_entwand_entity_picker = "实体选择"
 conjurer_reborn_entwand_options = "魔杖设置"
-conjurer_reborn_entwand_options_desc = "按下[鼠标左键]生成实体\n按下[鼠标中键]从地图实体上选中实体"
+conjurer_reborn_entwand_options_desc = "按下[$0]生成实体\n按下[$1]从地图实体上选中实体"
 conjurer_reborn_entwand_kill_ent = "删除实体"
-conjurer_reborn_entwand_kill_ent_desc = "按下[鼠标右键]删除实体"
+conjurer_reborn_entwand_kill_ent_desc = "按下[$0]删除实体"
 conjurer_reborn_entwand_fav = "对实体图标按下[鼠标右键]加入或移除收藏"
 conjurer_reborn_entwand_creatures_tab = "生物"
 conjurer_reborn_entwand_props_tab = "物体"
@@ -285,16 +285,16 @@ conjurer_reborn_entwand_options_gold_drop = "掉落黄金"
 conjurer_reborn_entwand_options_gold_drop_desc = "生物死亡后是否掉落黄金"
 conjurer_reborn_entwand_options_spawn_corpse = "产生尸体"
 conjurer_reborn_entwand_options_spawn_corpse_desc = "生物死亡后是否产生尸体"
-conjurer_reborn_entwand_progress_get = "未获得进展，按下[鼠标中键]可获得"
-conjurer_reborn_entwand_progress_remove = "已获得进展，按下[鼠标中键]可删除"
+conjurer_reborn_entwand_progress_get = "未获得进展，按下[$0]可获得"
+conjurer_reborn_entwand_progress_remove = "已获得进展，按下[$0]可删除"
 
 --编辑法杖相关
-conjurer_reborn_editwand_move_btn = "按下[鼠标左键]移动实体"
-conjurer_reborn_editwand_move_btn_desc = "按下[鼠标右键]冻结实体移动"
-conjurer_reborn_editwand_rotate_btn = "按下[鼠标右键]旋转实体"
-conjurer_reborn_editwand_rotate_btn_desc = "按下[鼠标左键]解除冻结的实体\n\n注：物理实体不能自由旋转，只有扭矩"
-conjurer_reborn_editwand_help_btn = "按下[互动键]检查与编辑选中的实体"
-conjurer_reborn_editwand_help_btn_desc = "在空白处按下[互动键]取消选中的实体"
+conjurer_reborn_editwand_move_btn = "按下[$0]移动实体"
+conjurer_reborn_editwand_move_btn_desc = "按下[$0]冻结实体移动"
+conjurer_reborn_editwand_rotate_btn = "按下[$0]旋转实体"
+conjurer_reborn_editwand_rotate_btn_desc = "按下[$0]解除冻结的实体\n\n注：物理实体不能自由旋转，只有扭矩"
+conjurer_reborn_editwand_help_btn = "按下[$0]检查与编辑选中的实体"
+conjurer_reborn_editwand_help_btn_desc = "在空白处按下[$0]取消选中的实体"
 conjurer_reborn_editwand_entity_properties = "实体属性"
 conjurer_reborn_editwand_no_tag = "未找到标签"
 conjurer_reborn_editwand_position = "坐标"

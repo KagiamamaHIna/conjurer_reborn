@@ -38,7 +38,7 @@
   <ItemComponent
     _tags="enabled_in_world"
     item_name="$conjurer_reborn_tp_carrot"
-    ui_description="$conjurer_reborn_tp_carrot_desc"
+    ui_description=""
     max_child_items="0"
     is_pickable="1"
     is_equipable_forced="1"
@@ -70,6 +70,11 @@
   <LuaComponent
     _tags="enabled_in_hand"
     script_source_file="mods/conjurer_reborn/files/wands/carrot/blink.lua"
+    execute_every_n_frame="1"
+  ></LuaComponent>
+  <LuaComponent
+    _tags="enabled_in_hand,enabled_in_world,enabled_in_inventory"
+    script_source_file="mods/conjurer_reborn/files/wands/carrot/refresh.lua"
     execute_every_n_frame="1"
   ></LuaComponent>
 </Entity>

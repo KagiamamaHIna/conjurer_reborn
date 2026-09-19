@@ -117,9 +117,9 @@ local function EnemyTooltipText(UI, id, isNoDraw, MainFn)
             local count = APIExtend.StatsGetKeyValue(id)
             UI.NextColor(127, 127, 127, 255)
             if count > 0 then
-                UI.Text(0, 0, "$conjurer_reborn_entwand_progress_remove")
+                UI.Text(0, 0, CustomKeyName("$conjurer_reborn_entwand_progress_remove", "remove_add_progress"))
             else
-                UI.Text(0, 0, "$conjurer_reborn_entwand_progress_get")
+                UI.Text(0, 0, CustomKeyName("$conjurer_reborn_entwand_progress_get", "remove_add_progress"))
             end
         end
     end
@@ -152,7 +152,7 @@ local ActiveHoverY = 0
 ---@param MainFn function? 给主函数开放的特别函数，用于在前面加上选择实体的文本
 local function EnemyTooltip(UI, id, index, MainFn)
     local _, _, hover, x, y = UI.WidgetInfo()
-    if hover and InputIsMouseButtonJustDown(Mouse_middle) then
+    if hover and CustomKeyJustDownCheckInput("remove_add_progress") then
         local count = APIExtend.StatsGetKeyValue(id)
         APIExtend.StatsSetKeyValue(id, count > 0 and 0 or 1)
         if count then
@@ -233,9 +233,9 @@ local function SpellTooltipText(UI, id)
         local count = APIExtend.StatsGetKeyValue("action_" .. id:lower())
         UI.NextColor(127, 127, 127, 255)
         if count > 0 then
-            UI.Text(0, 0, "$conjurer_reborn_entwand_progress_remove")
+            UI.Text(0, 0, CustomKeyName("$conjurer_reborn_entwand_progress_remove", "remove_add_progress"))
         else
-            UI.Text(0, 0, "$conjurer_reborn_entwand_progress_get")
+            UI.Text(0, 0, CustomKeyName("$conjurer_reborn_entwand_progress_get", "remove_add_progress"))
         end
     end
     
@@ -267,9 +267,9 @@ local function PerkTooltipText(UI, id)
     UI.VerticalSpacing(1)
     UI.NextColor(127, 127, 127, 255)
     if HasFlagPersistent("perk_picked_" .. id:lower()) then
-        UI.Text(0, 0, "$conjurer_reborn_entwand_progress_remove")
+        UI.Text(0, 0, CustomKeyName("$conjurer_reborn_entwand_progress_remove", "remove_add_progress"))
     else
-        UI.Text(0, 0, "$conjurer_reborn_entwand_progress_get")
+        UI.Text(0, 0, CustomKeyName("$conjurer_reborn_entwand_progress_get", "remove_add_progress"))
     end
 
 	UI.VerticalSpacing(3)
@@ -287,17 +287,29 @@ end
 ---@param UI Gui
 ---@param item table
 local function OtherTooltipText(UI, item)
-    UI.Text(0, 0, item.name)           --本地化名称显示
+    local name = item.name
+    if item.name_fn then
+        name = item.name_fn()
+    end
+    UI.Text(0, 0, name)           --本地化名称显示
     if item.id then
         UI.NextColor(127, 127, 127, 255) --id显示
         UI.Text(0, 0, item.id)
     end
-    if item.desc then
-        UI.Text(0, 0, item.desc) --描述显示
+    local desc = item.desc
+    if item.desc_fn then
+        desc = item.desc_fn()
     end
-	if item.desc2 then
+    if desc then
+        UI.Text(0, 0, desc) --描述显示
+    end
+    local desc2 = item.desc2
+    if item.desc2_fn then
+        desc2 = item.desc2_fn()
+    end
+	if desc2 then
         UI.VerticalSpacing(2)
-		UI.Text(0, 0, item.desc2) --描述显示
+		UI.Text(0, 0, desc2) --描述显示
 	end
 end
 
@@ -321,7 +333,7 @@ end
 ---@param UI Gui
 ---@param id string
 local function SpellMiddleMouse(UI, id)
-    if APIExtend.StatsSetKeyValue and UI.WidgetInfoTable().hovered and InputIsMouseButtonJustDown(Mouse_middle) then
+    if APIExtend.StatsSetKeyValue and UI.WidgetInfoTable().hovered and CustomKeyJustDownCheckInput("remove_add_progress") then
         local keyname = "action_" .. id:lower()
         local count = APIExtend.StatsGetKeyValue(keyname)
         APIExtend.StatsSetKeyValue(keyname, count > 0 and 0 or 1)
@@ -346,7 +358,7 @@ end
 ---@param UI Gui
 ---@param id string
 local function PerkMiddleMouse(UI, id)
-    if UI.WidgetInfoTable().hovered and InputIsMouseButtonJustDown(Mouse_middle) then
+    if UI.WidgetInfoTable().hovered and CustomKeyJustDownCheckInput("remove_add_progress") then
         local keyname = "perk_picked_" .. id:lower()
         if HasFlagPersistent(keyname) then
             RemoveFlagPersistent(keyname)
@@ -881,7 +893,7 @@ local MainEntBtns = {
 			ToggleActiveOverlay(EntOptions)
 		end,
         desc = function(UI)
-			UI.Text(0,0,"$conjurer_reborn_entwand_options_desc")
+            UI.Text(0, 0, CustomKeyName("$conjurer_reborn_entwand_options_desc", "spawn_entity", "quick_select_entity"))
 		end
 	},
     {
@@ -894,7 +906,7 @@ local MainEntBtns = {
 
 		end,
         desc = function(UI)
-			UI.Text(0,0,"$conjurer_reborn_entwand_kill_ent_desc")
+            UI.Text(0, 0, CustomKeyName("$conjurer_reborn_entwand_kill_ent_desc", "delete_entity"))
 		end
 	},
 }

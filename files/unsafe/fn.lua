@@ -691,7 +691,7 @@ function RestoreInput()
 	end
 end
 
-function CheckInputEnabeld()
+function CheckInputEnabled()
     return GlobalsGetValue(ModID .. "Blocked", "0") == "1"
 end
 

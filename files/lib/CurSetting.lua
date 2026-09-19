@@ -7,9 +7,11 @@ if not ModIsEnabled("conjurer_reborn") then--为了顺序无关
         for _, s in pairs(settings) do
             if s.id ~= nil then
                 local key = "conjurer_reborn." .. s.id
-                local value = ModSettingGetNextValue(key)
-                if value ~= nil then
-                    ModSettingSet(key, value)
+                if CurSettingDisableLoad == nil then
+                    local value = ModSettingGetNextValue(key)
+                    if value ~= nil then
+                        ModSettingSet(key, value)
+                    end
                 end
                 if ModSettingGet(key) == nil and s.value_default ~= nil then
                     ModSettingSet(key, s.value_default)

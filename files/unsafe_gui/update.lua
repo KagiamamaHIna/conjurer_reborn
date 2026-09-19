@@ -700,7 +700,7 @@ end
 
 UI.MiscEventFn["KeybindUpdate"] = function()
 	VirtualFileSet("mods/conjurer_reborn/carrot_flag.txt", UI.MouseInputBlock() and "1" or "0")
-    if CustomKeyJustDownCheckInput("quick_enable_fe") then
+    if World and CustomKeyJustDownCheckInput("quick_enable_fe") then
         local fePause = GlobalsGetValue("conjurer_reborn.fe_enable", "1") ~= "0"
         GlobalsSetValue("conjurer_reborn.fe_enable", not fePause and "1" or "0")
         World.EnableCellUpdate(not fePause)
@@ -722,7 +722,13 @@ UI.MiscEventFn["KeybindUpdate"] = function()
 		TogglePostFx(UI)
     end
     if CustomKeyJustDownCheckInput("binoculars") then
-		ToggleBinoculars(UI)
+        if GetBinocularsActive(UI) then
+            SetFullbright(UI, WorldGlobalGetBool(UI, "lastFullbright", false))
+        else
+            WorldGlobalSetBool(UI, "lastFullbright", GetFullbright(UI))
+            SetFullbright(UI, true)
+        end
+        ToggleBinoculars(UI)
     end
     if CustomKeyJustDownCheckInput("fullbright") then
 		ToggleFullbright(UI)

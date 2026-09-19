@@ -714,12 +714,16 @@ local function BrushPicker(UI)
                 ClickSound()
                 AddBrushFav(TypeIndex, i)
             end
-            local Text = GameTextGet(v.name)
-            if v.desc then --如果有多余的文本需要，那么就附加上去
-                Text = Text .. "\n" .. GameTextGet(v.desc)
+            local Text = GameTextGetTranslatedOrNot(v.name)
+            local desc = v.desc
+            if v.desc_fn then
+                desc = v.desc_fn()
+            end
+            if desc then --如果有多余的文本需要，那么就附加上去
+                Text = Text .. "\n" .. GameTextGetTranslatedOrNot(desc)
             end
             if v.can_rotation or v.can_rotation_horizontal then
-                Text = Text .. "\n" .. GameTextGet("$conjurer_reborn_material_brush_rotation_desc")
+                Text = Text .. "\n" .. CustomKeyName("$conjurer_reborn_material_brush_rotation_desc", "left_brush", "right_brush")
             end
             UI.GuiTooltip(Text)
         end
@@ -999,12 +1003,16 @@ local function DrawFav(UI)
                     ClickSound()
                     ChangeActiveBrush(UI, value.CategoryIndex, value.Index)
                 end
-                local Text = GameTextGet(brush.name)
-                if brush.desc then --如果有多余的文本需要，那么就附加上去
-                    Text = Text .. "\n" .. GameTextGet(brush.desc)
+                local Text = GameTextGetTranslatedOrNot(brush.name)
+                local desc = brush.desc
+                if brush.desc_fn then
+                    desc = brush.desc_fn()
+                end
+                if desc then --如果有多余的文本需要，那么就附加上去
+                    Text = Text .. "\n" .. GameTextGetTranslatedOrNot(desc)
                 end
                 if brush.can_rotation or brush.can_rotation_horizontal then
-                    Text = Text .. "\n" .. GameTextGet("$conjurer_reborn_material_brush_rotation_desc")
+                    Text = Text .. "\n" .. CustomKeyName("$conjurer_reborn_material_brush_rotation_desc", "left_brush", "right_brush")
                 end
                 UI.GuiTooltip(Text)
             end
@@ -1054,7 +1062,7 @@ end
 local function MatText(UI)
     local brush = GetActiveBrush(UI)
     local brushEntiy = EntityGetWithName("conjurer_reborn_brush_reticle")
-	local flag = CurSettingGet("quick_display_mat") and InputIsMouseButtonDown(Mouse_middle)
+	local flag = CurSettingGet("quick_display_mat") and CustomKeyDownCheckInput("quick_eyedropper")
     if (brush.name == "$conjurer_reborn_material_tools_eyedropper_tool" or flag) and brushEntiy then
 		local x, y = EntityGetTransform(brushEntiy)
         local id = GlobalsGetValue("conjurer_reborn.checkmat_material_str_id")
@@ -1090,7 +1098,7 @@ local MainMatBtns = {
             ToggleActiveOverlay(BrushPicker)
 		end,
         desc = function(UI)
-            UI.Text(0, 0, "$conjurer_reborn_material_brush_options_desc")
+            UI.Text(0, 0, CustomKeyName("$conjurer_reborn_material_brush_options_desc","draw_material"))
 		end
 	},
     {
@@ -1102,8 +1110,8 @@ local MainMatBtns = {
         action = function()
             ToggleActiveOverlay(EraserPicker)
 		end,
-		desc = function (UI)
-			UI.Text(0,0,"$conjurer_reborn_material_eraser_options_desc")
+        desc = function(UI)
+            UI.Text(0, 0, CustomKeyName("$conjurer_reborn_material_eraser_options_desc","erase_material"))
 		end
 	},
 }
@@ -1176,7 +1184,7 @@ function DrawMatWandGui(UI, refresh)
 		return
 	end
 	MatText(UI)
-    if EyedropperEnable or InputIsMouseButtonJustUp(Mouse_middle) then--判断吸管工具触发
+    if EyedropperEnable or CustomKeyJustUpCheckInput("quick_eyedropper") then--判断吸管工具触发
         EyedropperEnable = false
         local id = GlobalsGetValue("conjurer_reborn.checkmat_material_str_id")
         if IgnoreMatTable[id] == nil and id then

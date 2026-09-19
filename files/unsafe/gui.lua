@@ -137,8 +137,14 @@ local this = {
 
         RawScreenWidth = -1,
         RawScreenHeight = -1,
-        
+
         lastZdeep = nil,
+
+        UIBlockInfo = {},
+        UIBlockInfoCache = {},
+
+        hasHover = false,
+        lastHasHover = false
 	},
 	public = {
 		ScreenWidth = -1, --当前屏宽
@@ -150,6 +156,22 @@ local this = {
 		gui = GuiCreate(), --gui userdata
 	}
 }
+
+local oldGuiImageButton = GuiImageButton
+function GuiImageButton(gui, ...)
+    local result = { oldGuiImageButton(gui, ...) }
+    local _,_,hover = GuiGetPreviousWidgetInfo(gui)
+    this.private.hasHover = this.private.hasHover or hover
+    return unpack(result)
+end
+
+local oldGuiTextInput = GuiTextInput
+function GuiTextInput(gui, ...)
+    local result = { oldGuiTextInput(gui, ...) }
+    local _, _, hover = GuiGetPreviousWidgetInfo(gui)
+    this.private.hasHover = this.private.hasHover or hover
+    return unpack(result)
+end
 
 ---@class Gui
 ---@field ScreenWidth integer
@@ -1275,7 +1297,7 @@ function UI.DrawScrollContainer(id, IsBlock, IsAutoBox, AutoSprite, mirrorize_ov
                 this.private.ScrollData[newid].margin_y)
 			
             GuiEndScrollContainer(this.public.gui)
-
+            UI.AddUIBlockInfo()
 			GuiLayoutEndLayer(this.public.gui)
 			GuiAnimateEnd(this.public.gui)
         end
@@ -2310,6 +2332,36 @@ function UI.GetMouseInWorld()
     return x, y
 end
 
+---@param info table?
+function UI.AddUIBlockInfo(info)
+    if info then
+        this.private.UIBlockInfo[#this.private.UIBlockInfo+1] = info
+        return
+    end
+    this.private.UIBlockInfo[#this.private.UIBlockInfo+1] = UI.WidgetInfoTable()
+end
+
+local function IsHoverInArea(x, y, ax, ay, aw, ah)
+	return x > ax and x < ax + aw and y > ay and y < ay + ah
+end
+
+---true代表应阻挡输入操作
+---@return boolean
+function UI.MouseInputBlock()
+    if this.private.lastHasHover then
+        return true
+    end
+    local x, y = UI.GetMousePosHasScale()
+    local status = false
+    for _, v in ipairs(this.private.UIBlockInfoCache) do
+        if status then
+            break
+        end
+        status = IsHoverInArea(x, y, v.x, v.y, v.width, v.height)
+    end
+    return status
+end
+
 ---返回一个缩放参数，代表相对ui的位置与实际ui位置的倍率
 ---@return number
 function UI.GetScale()
@@ -2355,7 +2407,7 @@ function UI.DispatchMessage()
         GuiAnimateEnd(this.public.gui)
 		this.private.TextInputHeight = UI.WidgetInfoTable().height
 	end
-	
+
     for _, fn in pairs(this.private.FirstEventFn) do
         if type(fn) == "function" then
             fn(UI)
@@ -2401,11 +2453,17 @@ function UI.DispatchMessage()
         this.private.ScrollData = {}      --清空数据		
     end
     if next(this.private.HScrollData) then --如果表有数据
-        this.private.HScrollData = {}     --清空数据        
+        this.private.HScrollData = {}      --清空数据
     end
-    if not this.private.TextInputDrawPosHas then--如果没有悬浮的就清空数据
+    if next(this.private.UIBlockInfo) then
+        this.private.UIBlockInfoCache = this.private.UIBlockInfo
+        this.private.UIBlockInfo = {}
+    end
+    if not this.private.TextInputDrawPosHas then --如果没有悬浮的就清空数据
         this.private.TextInputDrawPosTimer = nil
     end
+    this.private.lastHasHover = this.private.hasHover
+    this.private.hasHover = false
     this.private.TextInputDrawPosHas = false
     this.private.ZDeep = DefaultZDeep
 

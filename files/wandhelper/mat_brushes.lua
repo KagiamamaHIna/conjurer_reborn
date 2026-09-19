@@ -252,7 +252,9 @@ local Tools = {
     },
 	{
         name = "$conjurer_reborn_material_tools_eyedropper_tool",
-		desc = "$conjurer_reborn_material_tools_eyedropper_tool_desc",
+		desc_fn = function ()
+			return CustomKeyName("$conjurer_reborn_material_tools_eyedropper_tool_desc", "quick_eyedropper")
+		end,
 		offset_x = 0,
 		offset_y = 10,
 		reticle_file = "mods/conjurer_reborn/files/wands/matwand/brushes/eyedropper_reticle.png",
@@ -288,8 +290,10 @@ local Tools = {
 		release_action = unsafe_spray_release_action,
     },
 	{
-		name = "$conjurer_reborn_material_tools_line_tool",
-		desc = "$conjurer_reborn_material_tools_not_filler_desc_line",
+        name = "$conjurer_reborn_material_tools_line_tool",
+		desc_fn = function ()
+			return CustomKeyName("$conjurer_reborn_material_tools_not_filler_desc_line", "angle_snap")
+		end,
 		offset_x = 0,
 		offset_y = 0,
 		reticle_file = "mods/conjurer_reborn/files/wands/matwand/brushes/0_reticle.png",
@@ -301,8 +305,10 @@ local Tools = {
 		release_action = dragger_release_action,
 	},
 	{
-		name = "$conjurer_reborn_material_tools_rectangle_tool",
-		desc = "$conjurer_reborn_material_tools_not_filler_desc",
+        name = "$conjurer_reborn_material_tools_rectangle_tool",
+		desc_fn = function ()
+			return CustomKeyName("$conjurer_reborn_material_tools_not_filler_desc", "constrain_proportion")
+		end,
 		offset_x = 0,
 		offset_y = 0,
 		reticle_file = "mods/conjurer_reborn/files/wands/matwand/brushes/0_reticle.png",
@@ -316,7 +322,9 @@ local Tools = {
 	},
 	{
 		name = "$conjurer_reborn_material_tools_ellipse_tool",
-		desc = "$conjurer_reborn_material_tools_not_filler_desc",
+		desc_fn = function ()
+			return CustomKeyName("$conjurer_reborn_material_tools_not_filler_desc", "constrain_proportion")
+		end,
 		offset_x = 0,
 		offset_y = 0,
 		reticle_file = "mods/conjurer_reborn/files/wands/matwand/brushes/0_reticle.png",
@@ -330,7 +338,9 @@ local Tools = {
 	},
 	{
 		name = "$conjurer_reborn_material_tools_rectangle_tool_hollow",
-		desc = "$conjurer_reborn_material_tools_not_filler_desc",
+		desc_fn = function ()
+			return CustomKeyName("$conjurer_reborn_material_tools_not_filler_desc", "constrain_proportion")
+		end,
 		offset_x = 0,
 		offset_y = 0,
 		reticle_file = "mods/conjurer_reborn/files/wands/matwand/brushes/0_reticle.png",
@@ -344,7 +354,9 @@ local Tools = {
     },
 	{
 		name = "$conjurer_reborn_material_tools_ellipse_tool_hollow",
-		desc = "$conjurer_reborn_material_tools_not_filler_desc",
+		desc_fn = function ()
+			return CustomKeyName("$conjurer_reborn_material_tools_not_filler_desc", "constrain_proportion")
+		end,
 		offset_x = 0,
 		offset_y = 0,
 		reticle_file = "mods/conjurer_reborn/files/wands/matwand/brushes/0_reticle.png",
@@ -358,7 +370,9 @@ local Tools = {
     },
 	{
 		name = "$conjurer_reborn_material_tools_triangle_up_tool",
-		desc = "$conjurer_reborn_material_tools_not_filler_desc",
+		desc_fn = function ()
+			return CustomKeyName("$conjurer_reborn_material_tools_not_filler_desc", "constrain_proportion")
+		end,
 		offset_x = 0,
 		offset_y = 0,
 		reticle_file = "mods/conjurer_reborn/files/wands/matwand/brushes/0_reticle.png",
@@ -372,7 +386,9 @@ local Tools = {
     },
 	{
 		name = "$conjurer_reborn_material_tools_triangle_right_tool",
-		desc = "$conjurer_reborn_material_tools_not_filler_desc",
+		desc_fn = function ()
+			return CustomKeyName("$conjurer_reborn_material_tools_not_filler_desc", "constrain_proportion")
+		end,
 		offset_x = 0,
 		offset_y = 0,
 		reticle_file = "mods/conjurer_reborn/files/wands/matwand/brushes/0_reticle.png",
@@ -386,7 +402,9 @@ local Tools = {
     },
 	{
 		name = "$conjurer_reborn_material_tools_triangle_up_hollow_tool",
-		desc = "$conjurer_reborn_material_tools_not_filler_desc",
+		desc_fn = function ()
+			return CustomKeyName("$conjurer_reborn_material_tools_not_filler_desc", "constrain_proportion")
+		end,
 		offset_x = 0,
 		offset_y = 0,
 		reticle_file = "mods/conjurer_reborn/files/wands/matwand/brushes/0_reticle.png",
@@ -400,7 +418,9 @@ local Tools = {
     },
 	{
 		name = "$conjurer_reborn_material_tools_triangle_right_hollow_tool",
-		desc = "$conjurer_reborn_material_tools_not_filler_desc",
+		desc_fn = function ()
+			return CustomKeyName("$conjurer_reborn_material_tools_not_filler_desc", "constrain_proportion")
+		end,
 		offset_x = 0,
 		offset_y = 0,
 		reticle_file = "mods/conjurer_reborn/files/wands/matwand/brushes/0_reticle.png",

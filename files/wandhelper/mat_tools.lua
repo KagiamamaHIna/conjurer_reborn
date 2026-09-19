@@ -273,7 +273,7 @@ function line_action(material, brush, x, y)
 
 		local length = get_distance(line_x, line_y, x, y)
 		local rotation = math.atan2(y - line_y, x - line_x)
-        if InputIsKeyDown(Key_LSHIFT) or InputIsKeyDown(Key_RSHIFT) then
+        if CustomKeyDown("angle_snap") then
 			local isNeg = false
 			if rotation < 0 then--将负数度数（其实就是>180）转换为正数处理，后续换回负数
 				isNeg = true
@@ -328,7 +328,7 @@ function corner_aligned_polygon_action(material, brush, x, y, rotation)
 
 		local width = rect_x - x
 		local height = rect_y - y
-		if InputIsKeyDown(Key_LSHIFT) or InputIsKeyDown(Key_RSHIFT) then
+		if CustomKeyDown("constrain_proportion") then
             local widthIsNeg = false
 			if width < 0 then
                 widthIsNeg = true

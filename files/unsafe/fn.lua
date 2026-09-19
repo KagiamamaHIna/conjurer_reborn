@@ -691,6 +691,10 @@ function RestoreInput()
 	end
 end
 
+function CheckInputEnabeld()
+    return GlobalsGetValue(ModID .. "Blocked", "0") == "1"
+end
+
 ---返回世界状态组件上特定的值
 ---@param key string
 ---@return any

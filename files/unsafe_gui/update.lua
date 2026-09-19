@@ -1,4 +1,6 @@
 dofile_once("mods/conjurer_reborn/files/lib/Graphics.lua")
+---@module 'input'
+InputFrame = dofile_once("mods/conjurer_reborn/files/lib/input.lua")
 dofile_once("mods/conjurer_reborn/files/scripts/settings_handlers.lua")
 ---@type Gui
 local UI = dofile("mods/conjurer_reborn/files/unsafe/gui.lua")
@@ -16,6 +18,78 @@ dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/entwand.lua")  --实体
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/editwand.lua") --编辑法杖
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/wands/tunewand.lua") --编辑法杖
 dofile_once("mods/conjurer_reborn/files/unsafe_gui/bottom.lua")         --底部按钮
+
+function CustomKeyName(setting, ...)
+	local names = {}
+	for _,key in ipairs({...})do
+    	local name = InputFrame.get_input_name(CurSettingGet(key))
+		names[#names+1] = name
+	end
+    return GameTextGet(setting, unpack(names))
+end
+
+---没有其他检查
+---@param key string
+---@return boolean
+function CustomKeyDown(key)
+    return InputFrame.read_input(CurSettingGet(key))
+end
+
+---没有其他检查
+---@param key string
+---@return boolean
+function CustomKeyJustDown(key)
+    return InputFrame.read_input_down(CurSettingGet(key))
+end
+
+---没有其他检查
+---@param key string
+---@return boolean
+function CustomKeyJustUp(key)
+    return InputFrame.read_input_up(CurSettingGet(key))
+end
+
+---会根据gui来检查是否应该生效
+---@param key string
+---@return boolean
+function CustomKeyDownCheckUI(key)
+    return InputFrame.read_input(CurSettingGet(key)) and not UI.MouseInputBlock()
+end
+
+---会根据gui来检查是否应该生效
+---@param key string
+---@return boolean
+function CustomKeyJustDownCheckUI(key)
+    return InputFrame.read_input_down(CurSettingGet(key)) and not UI.MouseInputBlock()
+end
+
+---会根据gui来检查是否应该生效
+---@param key string
+---@return boolean
+function CustomKeyJustUpCheckUI(key)
+    return InputFrame.read_input_up(CurSettingGet(key)) and not UI.MouseInputBlock()
+end
+
+---会根据输入是否被屏蔽来检查是否应该生效
+---@param key string
+---@return boolean
+function CustomKeyDownCheckInput(key)
+    return InputFrame.read_input(CurSettingGet(key)) and not CheckInputEnabeld()
+end
+
+---会根据输入是否被屏蔽来检查是否应该生效
+---@param key string
+---@return boolean
+function CustomKeyJustDownCheckInput(key)
+    return InputFrame.read_input_down(CurSettingGet(key)) and not CheckInputEnabeld()
+end
+
+---会根据输入是否被屏蔽来检查是否应该生效
+---@param key string
+---@return boolean
+function CustomKeyJustUpCheckInput(key)
+    return InputFrame.read_input_up(CurSettingGet(key)) and not CheckInputEnabeld()
+end
 
 local old_DEBUG_GetMouseWorld = DEBUG_GetMouseWorld
 function DEBUG_GetMouseWorld()
@@ -611,6 +685,19 @@ if APIExtend.PlayerIsDied then
         if InputIsKeyJustDown(Key_RETURN) or InputIsKeyJustDown(Key_KP_ENTER) then--KP是小键盘上的回车键
 			APIExtend.PlayerRespawn()
 		end
+    end
+end
+
+UI.MiscEventFn["KeybindUpdate"] = function ()
+    if CustomKeyJustDownCheckInput("quick_enable_fe") then
+        local fePause = GlobalsGetValue("conjurer_reborn.fe_enable", "1") ~= "0"
+        GlobalsSetValue("conjurer_reborn.fe_enable", not fePause and "1" or "0")
+        World.EnableCellUpdate(not fePause)
+    end
+    if CustomKeyJustDownCheckInput("material_overwrite") then
+        local enabled = not GetBurshMatOverwrite(UI)
+        SetConjurerCheckBoxStatus(UI, "BrushMatOverwrite", enabled)
+		SetBurshMatOverwrite(UI, enabled)
     end
 end
 

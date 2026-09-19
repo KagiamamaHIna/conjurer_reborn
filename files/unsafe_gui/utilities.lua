@@ -439,13 +439,23 @@ end
 ---@param id string
 ---@return boolean status, boolean init
 function GetConjurerCheckBoxStatus(id)
-    local StatusKey = "conjurer_unsafe".. id .. "Status"
+    local StatusKey = id .. "Status"
 	local result = GlobalsGetValue(StatusKey, Globaldefault)
 	if result == Globaldefault then
 		return false, false
 	end
 	return result == "1", true
 end
+
+---设置开启状态，第二个是全局变量是否初始化
+---@param UI Gui
+---@param id string
+---@param enabled boolean
+function SetConjurerCheckBoxStatus(UI, id, enabled)
+    local StatusKey = id .. "Status"
+	WorldGlobalSetBool(UI, StatusKey, enabled)
+end
+
 
 ---Conjurer风格的Checkbox，不持久性保存数据
 ---@param UI Gui
@@ -652,7 +662,7 @@ end
 ---@param h number
 ---@param mw number
 ---@param mh number
-function InputBlock(UI, id, x, y, w, h, mw, mh)
+local function InputBlock(UI, id, x, y, w, h, mw, mh)
 	GuiAnimateBegin(UI.gui)
     GuiAnimateAlphaFadeIn(UI.gui, UI.NewID(id), 0, 0, false)
 	GuiLayoutBeginLayer(UI.gui)
@@ -660,8 +670,11 @@ function InputBlock(UI, id, x, y, w, h, mw, mh)
 	GuiOptionsAddForNextWidget(UI.gui, GUI_OPTION.AlwaysClickable)
 	GuiBeginScrollContainer(UI.gui, UI.NewID(id.."隐形"), x, y, w, h, true, mw, mh)
 	
-	GuiEndScrollContainer(UI.gui)
-
+    GuiEndScrollContainer(UI.gui)
+    local info = UI.WidgetInfoTable()
+	info.x = info.x + mw
+	info.y = info.y + mh
+	UI.AddUIBlockInfo(info)
 	GuiLayoutEndLayer(UI.gui)
 	GuiAnimateEnd(UI.gui)
 end

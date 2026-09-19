@@ -320,13 +320,13 @@ local function LegacyMaterialToolEntityUpdate(UI)
 		if UI.UserData["BrushRotationType"] == nil then--没有角度初始化为0
 			UI.UserData["BrushRotationType"] = 0
 		end
-        if InputIsKeyJustDown(Key_q) then--按q左转
+        if CustomKeyJustDownCheckInput("right_brush") then--按q左转
             if UI.UserData["BrushRotationType"] - 1 < 0 then
                 UI.UserData["BrushRotationType"] = rotationMax
             else
                 UI.UserData["BrushRotationType"] = UI.UserData["BrushRotationType"] - 1
             end
-        elseif InputIsKeyJustDown(Key_e) then
+        elseif CustomKeyJustDownCheckInput("left_brush") then
 			if UI.UserData["BrushRotationType"] + 1 > rotationMax then
                 UI.UserData["BrushRotationType"] = 0
             else
@@ -348,11 +348,11 @@ local function LegacyMaterialToolEntityUpdate(UI)
 		brushObj.attr.rotation = 0
 	end
 
-	local holding_m1 = IsHoldingMouse1()
+	local holding_m1 = CustomKeyDownCheckUI("draw_material")
 	local ACTION_HOLD_DRAW = not brush.click_to_use and holding_m1
-	local ACTION_CLICK_DRAW = brush.click_to_use and HasClickedMouse1()
+	local ACTION_CLICK_DRAW = brush.click_to_use and CustomKeyJustDownCheckUI("draw_material")
 	local ACTION_RELEASE_DRAW = (holding_m1 == false and PrevDraw == true)
-	local ACTION_HOLD_ERASE = IsHoldingMouse2()
+	local ACTION_HOLD_ERASE = CustomKeyDownCheckUI("erase_material")
 	local ACTION_RELEASE_ERASE = (ACTION_HOLD_ERASE == false and PrevErase == true)
 	local brush_grid_size = GetBrushGridSize(UI)
 
@@ -579,13 +579,13 @@ local function UnsafeMaterialToolEntityUpdate(UI, refresh)
         if UI.UserData["BrushRotationType"] == nil then
             UI.UserData["BrushRotationType"] = 0
         end
-        if InputIsKeyJustDown(Key_q) then
+        if CustomKeyJustDownCheckInput("right_brush") then
             if UI.UserData["BrushRotationType"] - 1 < 0 then
                 UI.UserData["BrushRotationType"] = rotationMax
             else
                 UI.UserData["BrushRotationType"] = UI.UserData["BrushRotationType"] - 1
             end
-        elseif InputIsKeyJustDown(Key_e) then
+        elseif CustomKeyJustDownCheckInput("left_brush") then
             if UI.UserData["BrushRotationType"] + 1 > rotationMax then
                 UI.UserData["BrushRotationType"] = 0
             else
@@ -607,11 +607,11 @@ local function UnsafeMaterialToolEntityUpdate(UI, refresh)
         brushObj.attr.rotation = 0
     end
 	
-	local holding_m1 = IsHoldingMouse1()
+	local holding_m1 = CustomKeyDownCheckUI("draw_material")
 	local ACTION_HOLD_DRAW = not brush.click_to_use and holding_m1
-	local ACTION_CLICK_DRAW = brush.click_to_use and HasClickedMouse1()
+	local ACTION_CLICK_DRAW = brush.click_to_use and CustomKeyJustDownCheckUI("draw_material")
 	local ACTION_RELEASE_DRAW = (holding_m1 == false and PrevDraw == true)
-	local ACTION_HOLD_ERASE = IsHoldingMouse2()
+	local ACTION_HOLD_ERASE = CustomKeyDownCheckUI("erase_material")
 	local ACTION_RELEASE_ERASE = (ACTION_HOLD_ERASE == false and PrevErase == true)
 	local brush_grid_size = GetBrushGridSize(UI)
 
@@ -663,12 +663,7 @@ local function UnsafeMaterialToolEntityUpdate(UI, refresh)
 		function (x,y)
 			return GridSnap(x, y, brush_grid_size)
 		end
-	)
-	
-	-- if ACTION_HOLD_DRAW or ACTION_CLICK_DRAW then
-    --     HandleDraw(UI, material, brush, bx, by, math.deg(brushObj.attr.rotation))
-    --     ActiveParticle(material, 16, 2)
-	-- end
+    )
 
 	if ACTION_RELEASE_DRAW then
         HandleRelease(material, brush, bx, by, math.deg(brushObj.attr.rotation))

@@ -23,7 +23,6 @@ local i18n = {
                 "!   Quick restart is known to mess up at least the following:",
                 "!     1. Selected zoom level",
                 "!     2. The tower background",
-                "!     3. Custom Staff GUI",
 				"`"
             },
         general = "General",
@@ -74,7 +73,7 @@ local i18n = {
         bottom_hidden_btn_pos_right = "Right",
         unsafe = "Unsafe Setting",
         unsafe_load_conjurer = "Unsafe automatically loads Conjurer in non-gamemode",
-        unsafe_load_conjurer_desc = "No need to manually enable Conjurer Reborn\nSimply enabling Unsafe is enough",
+        unsafe_load_conjurer_desc = "No need to manually enable Conjurer Reborn\nSimply enable Unsafe to use it",
 		unsafe_brush = "Advanced Brush",
         unsafe_brush_desc =
             MT {
@@ -166,8 +165,7 @@ local i18n = {
 				"!",
 				"!   须知，快捷重启可能会导致以下功能出现问题：",
 				"!     1. 选定的缩放级别",
-				"!     2. 背景贴图",
-				"!     3. 自定义的GUI",
+                "!     2. 巫师塔的背景贴图",
 				"\\"
             },
         general = "常规",
@@ -216,7 +214,7 @@ local i18n = {
         bottom_hidden_btn_pos_right = "右",
         unsafe = "不安全设置",
         unsafe_load_conjurer = "Unsafe主动以非游戏模式加载Conjurer",
-        unsafe_load_conjurer_desc = "无需启用Conjurer Reborn\n只要启用unsafe即可",
+        unsafe_load_conjurer_desc = "无需启用Conjurer Reborn\n只要启用unsafe即可使用",
 		unsafe_brush = "高级画刷",
         unsafe_brush_desc =
             MT {
@@ -509,8 +507,6 @@ mod_settings =
     Setting{
 		category_id = "general_settings",
 		ui_name = "general",
-		foldable = true,
-		_folded = true,
 		settings = {
 			Setting{
 				id = "zoom_level",
@@ -557,8 +553,6 @@ mod_settings =
 	Setting{
 		category_id = "visuals_and_audio",
         ui_name = "visuals_and_audio",
-		foldable = true,
-		_folded = true,
         settings = {
 			Setting{
 				id = "tooltip_animation",
@@ -807,8 +801,6 @@ mod_settings =
 	Setting{
 		category_id = "conjurer_other",
         ui_name = "other",
-		foldable = true,
-		_folded = true,
         settings = {
 			Setting{
 				id = "game_print_gui_error",
@@ -897,8 +889,6 @@ mod_settings =
 	Setting{
 		category_id = "unsafe_settings",
         ui_name = "unsafe",
-        foldable = true,
-		_folded = true,
 		settings = {
 			Setting{
 				id = "unsafe_load_conjurer",

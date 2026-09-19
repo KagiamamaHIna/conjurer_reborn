@@ -370,8 +370,8 @@ conjurer_reborn_no_reaction = " (No material reaction)"
 conjurer_reborn_matwand_clear_eraser = "Clearer Eraser"
 conjurer_reborn_matwand_clear_eraser_desc = "Makes the eraser easier to see\nThis toggle persist across worlds"
 conjurer_reborn_matwand_unsafe_brush_eraser_desc = "If Advanced Brush is disabled, this feature will be unavailable."
-conjurer_reborn_entwand_progress_get = "Progress not unlocked, [MIDDLE-MOUSE] to unlock"
-conjurer_reborn_entwand_progress_remove = "Progress unlocked, [MIDDLE-MOUSE] to remove"
+conjurer_reborn_entwand_progress_get = "Progress not unlocked, [$0] to unlock"
+conjurer_reborn_entwand_progress_remove = "Progress unlocked, [$0] to remove"
 
 --entwand
 conjurer_reborn_entwand_entity_picker = "Entity Picker"

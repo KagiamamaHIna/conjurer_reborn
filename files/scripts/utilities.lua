@@ -12,14 +12,6 @@ dofile_once("mods/conjurer_reborn/files/scripts/enums.lua")
 MOD_PATH = "mods/conjurer_reborn/files/"
 ICON_UNKNOWN = "mods/conjurer_reborn/files/gfx/icon_unknown.png"
 
-local BUTTON_SETTING = CurSettingGet("secondary_button")
-local BUTTON_CHOICES = {
-  throw={hold="mButtonDownThrow", click="mButtonFrameThrow"},
-  mouse2={hold="mButtonDownRightClick", click="mButtonFrameRightClick"}
-}
-
-local SELECTED_BUTTON = BUTTON_CHOICES[BUTTON_SETTING]
-
 --
 ---------------------------
 -- General utilities
@@ -106,20 +98,6 @@ function is_holding_m1(ignore_guncomponent)
   )
 end
 
-function is_holding_m2(ignore_guncomponent)
-  local player = get_player()
-  if not player then return false end
-
-  if not ignore_guncomponent and not shooting_is_enabled(player) then
-    return false
-  end
-
-  return ComponentGetValue2(
-    EntityGetFirstComponentIncludingDisabled(player, "ControlsComponent"),
-    SELECTED_BUTTON.hold
-  )
-end
-
 
 function has_clicked_m1(ignore_guncomponent)
   local click_frame = EntityGetValue(
@@ -141,20 +119,6 @@ function has_clicked_interact()
 
   return click_frame == GameGetFrameNum()
 end
-
-
-function has_clicked_m2(ignore_guncomponent)
-  local click_frame = EntityGetValue(
-    get_player(), "ControlsComponent", SELECTED_BUTTON.click
-  )
-
-  if not ignore_guncomponent and not shooting_is_enabled() then
-    return false
-  end
-
-  return click_frame == GameGetFrameNum()
-end
-
 
 function get_frames_in_air(player)
   return EntityGetValue(

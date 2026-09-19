@@ -155,7 +155,7 @@ end
 local function m1_action(entity, x, y)
 	MoveEntity(entity, x, y)
 
-	if HasClickedMouse2() then
+	if CustomKeyJustDownCheckUI("edit_m2") then
 		FreezeEntity(entity)
 	end
 end

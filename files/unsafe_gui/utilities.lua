@@ -467,82 +467,30 @@ end
 ---@param default boolean?
 ---@return boolean enable, boolean click
 function ConjurerCheckboxNoSave(UI, id, x, y, text, zdeep, default)
-	zdeep = Default(zdeep, 0)
-	default = Default(default, false)
-	local StatusKey = id .. "Status"
-	local Status = UI.UserData[StatusKey]
-	if Status == nil then
-		Status = default
-		UI.UserData[StatusKey] = default
-	end
-	local CheckboxImg = "mods/conjurer_reborn/files/gfx/checkbox_empty.png"
-	if Status then
-		CheckboxImg = "mods/conjurer_reborn/files/gfx/checkbox_full.png"
-	end
-	UI.BeginHorizontal(x, y, true, 0, 0)
-	UI.NextZDeep(zdeep)
-	local _, height = GuiGetTextDimensions(UI.gui, text)
-	local _, ImgHeight = GuiGetImageDimensions(UI.gui, CheckboxImg)
-	UI.Image(id .. "CheckBoxImage", 0, height / 2 - ImgHeight / 2, CheckboxImg)
-	UI.NextZDeep(zdeep)
-	local left = UI.TextBtn(id, 3, 0, text)
-	if left then
-		UI.UserData[StatusKey] = not Status
-	end
-	UI.LayoutEnd()
-	return UI.UserData[StatusKey], left
-end
-
-local BUTTON_SETTING = CurSettingGet("secondary_button")
-local BUTTON_CHOICES = {
-	throw = { hold = "mButtonDownThrow", click = "mButtonFrameThrow" },
-	mouse2 = { hold = "mButtonDownRightClick", click = "mButtonFrameRightClick" }
-}
-
-local SELECTED_BUTTON = BUTTON_CHOICES[BUTTON_SETTING]
-
----来源于原版conjurer
----@param player integer?
----@return boolean
-function ShootingIsEnabled(player)
-	player = player or GetPlayer()
-	if not player then return false end
-
-	return ComponentGetIsEnabled(EntityGetFirstComponentIncludingDisabled(player, "GunComponent"))
-end
-
----来源于原版conjurer
----@param ignore_guncomponent boolean?
----@return boolean
-function IsHoldingMouse1(ignore_guncomponent)
-	local player = GetPlayer()
-	if not player then return false end
-
-	if not ignore_guncomponent and not ShootingIsEnabled(player) then
-		return false
-	end
-
-	return ComponentGetValue2(
-		EntityGetFirstComponentIncludingDisabled(player, "ControlsComponent"),
-		"mButtonDownFire"
-	)
-end
-
----来源于原版conjurer
----@param ignore_guncomponent boolean?
----@return boolean
-function IsHoldingMouse2(ignore_guncomponent)
-	local player = GetPlayer()
-	if not player then return false end
-
-	if not ignore_guncomponent and not ShootingIsEnabled(player) then
-		return false
-	end
-
-	return ComponentGetValue2(
-		EntityGetFirstComponentIncludingDisabled(player, "ControlsComponent"),
-		SELECTED_BUTTON.hold
-	)
+    zdeep = Default(zdeep, 0)
+    default = Default(default, false)
+    local StatusKey = id .. "Status"
+    local Status = UI.UserData[StatusKey]
+    if Status == nil then
+        Status = default
+        UI.UserData[StatusKey] = default
+    end
+    local CheckboxImg = "mods/conjurer_reborn/files/gfx/checkbox_empty.png"
+    if Status then
+        CheckboxImg = "mods/conjurer_reborn/files/gfx/checkbox_full.png"
+    end
+    UI.BeginHorizontal(x, y, true, 0, 0)
+    UI.NextZDeep(zdeep)
+    local _, height = GuiGetTextDimensions(UI.gui, text)
+    local _, ImgHeight = GuiGetImageDimensions(UI.gui, CheckboxImg)
+    UI.Image(id .. "CheckBoxImage", 0, height / 2 - ImgHeight / 2, CheckboxImg)
+    UI.NextZDeep(zdeep)
+    local left = UI.TextBtn(id, 3, 0, text)
+    if left then
+        UI.UserData[StatusKey] = not Status
+    end
+    UI.LayoutEnd()
+    return UI.UserData[StatusKey], left
 end
 
 ---来源于原版conjurer
@@ -600,57 +548,6 @@ function EntityGetValue(entity, component_name, attr_name)
 		return nil
 	end
 	return ComponentGetValue2(comp, attr_name)
-end
-
----来源于原版conjurer
----@param entity integer
----@param component_name string
----@param attr_name string
-function EntityToggleValue(entity, component_name, attr_name)
-	if entity == nil or entity == 0 then return end
-
-	local value = EntityGetValue(entity, component_name, attr_name)
-	EntitySetValue(entity, component_name, attr_name, not value)
-end
-
----来源于原版conjurer
----@param ignore_guncomponent boolean?
----@return boolean
-function HasClickedMouse1(ignore_guncomponent)
-	local click_frame = EntityGetValue(
-		GetPlayer(), "ControlsComponent", "mButtonFrameFire"
-	)
-
-	if not ignore_guncomponent and not ShootingIsEnabled() then
-		return false
-	end
-
-	return click_frame == GameGetFrameNum()
-end
-
----来源于原版conjurer
----@return boolean
-function HasClickedInteract()
-	local click_frame = EntityGetValue(
-		GetPlayer(), "ControlsComponent", "mButtonFrameInteract"
-	)
-
-	return click_frame == GameGetFrameNum()
-end
-
----来源于原版conjurer
----@param ignore_guncomponent boolean?
----@return boolean
-function HasClickedMouse2(ignore_guncomponent)
-	local click_frame = EntityGetValue(
-		GetPlayer(), "ControlsComponent", SELECTED_BUTTON.click
-	)
-
-	if not ignore_guncomponent and not ShootingIsEnabled() then
-		return false
-	end
-
-	return click_frame == GameGetFrameNum()
 end
 
 ---输入阻止框

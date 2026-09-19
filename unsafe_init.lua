@@ -322,9 +322,9 @@ function OnPlayerDied(player)
     GlobalsSetValue("conjurer_reborn_PLAYER_HAS_DIED", "1")
 	GamePrintImportant(
 		"$conjurer_reborn_player_died1",
-		"$conjurer_reborn_player_died2"
+		CustomKeyName("$conjurer_reborn_player_died2", "player_respawn")
 	)
-    GamePrint("$conjurer_reborn_player_died2")
+    GamePrint(CustomKeyName("$conjurer_reborn_player_died2", "player_respawn"))
 end
 
 function OnPlayerSpawned(player)

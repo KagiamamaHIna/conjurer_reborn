@@ -478,10 +478,10 @@ UI.MiscEventFn["CESSATION"] = function ()
         return
     end
 	if not CessationMessage then
-		GamePrintImportant("$conjurer_reborn_exit_cessation")
+		GamePrintImportant(CustomKeyName("$conjurer_reborn_exit_cessation", "exit_polymorph"))
 	end
     CessationMessage = true
-	if not InputIsKeyDown(Key_q) then
+	if not CustomKeyDown("exit_polymorph") then
 		return
 	end
 	for _,vid in ipairs(EntityGetWithTag("polymorphed_cessation") or {})do
@@ -514,10 +514,10 @@ UI.MiscEventFn["POLYMORPH"] = function()
 		for _,v in ipairs(player.comp_all.DamageModelComponent or {})do
 			v.attr.wait_for_kill_flag_on_death = true
 		end
-        GamePrintImportant("$conjurer_reborn_exit_poly")
+        GamePrintImportant(CustomKeyName("$conjurer_reborn_exit_poly", "exit_polymorph"))
     end
 	PolymorphMessage = true
-    if not InputIsKeyDown(Key_q) then
+    if not CustomKeyDown("exit_polymorph") then
         return
     end
     for _, v in ipairs(player:GetAllChildObj() or {}) do
@@ -528,16 +528,6 @@ UI.MiscEventFn["POLYMORPH"] = function()
             end
 			c:SetEnable(true)
         end
-    end
-end
-
-UI.TickEventFn["PolyDeath"] = function()
-    if GlobalsGetValue("conjurer_reborn_poly_death", "0") == "0" then
-        return
-    end
-    local player = GetPlayerObj()
-    if player == nil then
-        return
     end
 end
 
@@ -692,7 +682,7 @@ if APIExtend.PlayerIsDied then
         if not APIExtend.PlayerIsDied()  then
             return
         end
-        if InputIsKeyJustDown(Key_RETURN) or InputIsKeyJustDown(Key_KP_ENTER) then--KP是小键盘上的回车键
+        if CustomKeyJustDown("player_respawn") then--KP是小键盘上的回车键
 			APIExtend.PlayerRespawn()
 		end
     end

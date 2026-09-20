@@ -26,7 +26,34 @@ function InputFrame.get_any_input()
     end
 end
 
+---check mouse button
 ---@param input string
+---@return boolean
+function InputFrame.check_mouse_btn(input)
+    if input ~= "Mouse_left" and input ~= "Mouse_right" then
+        return true
+    end
+    ---遁入虚空不能控制，不用检测
+    local player = EntityGetWithTag("player_unit")[1]
+    player = player or EntityGetWithTag("polymorphed_player")[1]
+    if player == nil then
+        return true
+    end
+    local ControlsComponent = EntityGetFirstComponentIncludingDisabled(player, "ControlsComponent")
+    if ControlsComponent == nil then
+        return true
+    end
+    local enabled = ComponentGetValue2(ControlsComponent, "enabled")
+    if not enabled then
+        return true
+    end
+    local key = input == "Mouse_left" and "mButtonDownLeftClick" or "mButtonDownRightClick"
+    local Click = ComponentGetValue2(ControlsComponent, key)
+    return Click
+end
+
+---@param input string
+---@return boolean
 function InputFrame.read_input(input)
     if input == "unbound" then
         return false
@@ -45,7 +72,15 @@ function InputFrame.read_input(input)
     end
 end
 
+---check mouse button
 ---@param input string
+---@return boolean
+function InputFrame.read_input_cmb(input)
+    return InputFrame.read_input(input) and InputFrame.check_mouse_btn(input)
+end
+
+---@param input string
+---@return boolean
 function InputFrame.read_input_down(input)
     if input == "unbound" then
         return false
@@ -64,7 +99,15 @@ function InputFrame.read_input_down(input)
     end
 end
 
+---check mouse button
 ---@param input string
+---@return boolean
+function InputFrame.read_input_down_cmb(input)
+    return InputFrame.read_input_down(input) and InputFrame.check_mouse_btn(input)
+end
+
+---@param input string
+---@return boolean
 function InputFrame.read_input_up(input)
     if input == "unbound" then
         return false
@@ -81,6 +124,13 @@ function InputFrame.read_input_up(input)
         end
         return true
     end
+end
+
+---check mouse button
+---@param input string
+---@return boolean
+function InputFrame.read_input_up_cmb(input)
+    return InputFrame.read_input_up(input) and InputFrame.check_mouse_btn(input)
 end
 
 local names = {
@@ -405,9 +455,9 @@ function InputFrame.mod_setting_input(mod_id, gui, in_main_menu, im_id, setting)
         GuiIdPush(gui, im_id)
         local textw = GuiGetTextDimensions(gui, "$menuoptions_configurecontrols_pressakey")
         GuiOptionsAddForNextWidget(gui, GUI_OPTION.Layout_NextSameLine)
-        local unbound = "["..GameTextGet("$menuoptions_configurecontrols_action_unbound").."]"
+        local unbound = "[" .. GameTextGet("$menuoptions_configurecontrols_action_unbound") .. "]"
         local clicked = GuiButton(gui, 1, offset + textw + 10, 0, unbound)
-        local _,_,hover = GuiGetPreviousWidgetInfo(gui)
+        local _, _, hover = GuiGetPreviousWidgetInfo(gui)
         if clicked then
             detect_key[setting.id] = false
             ModSettingSetNextValue(mod_setting_get_id(mod_id, setting), "unbound", false)

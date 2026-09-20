@@ -47,12 +47,12 @@ if ModTextFileGetContent("mods/conjurer_reborn/carrot_flag.txt") == "1" then
     return
 end
 
-if InputFrame.read_input_down(CurSettingGet("tp_carrot_blink")) or InputFrame.read_input(CurSettingGet("tp_carrot_hold")) then
+if InputFrame.read_input_down_cmb(CurSettingGet("tp_carrot_blink")) or InputFrame.read_input_cmb(CurSettingGet("tp_carrot_hold")) then
 	local item = GetActiveItem()
 	local player = GetPlayerObj()
 	if player and EntityGetName(item or 0) == "conjurer_reborn_carrot" then
         local x, y = DEBUG_GetMouseWorld()
-        if InputFrame.read_input(CurSettingGet("tp_carrot_hold_shift")) then
+        if InputFrame.read_input_cmb(CurSettingGet("tp_carrot_hold_shift")) then
             SetCameraPlayerXY(x, y)
         else
             player.attr.x = x

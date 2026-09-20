@@ -32,63 +32,63 @@ end
 ---@param key string
 ---@return boolean
 function CustomKeyDown(key)
-    return InputFrame.read_input(CurSettingGet(key))
+    return InputFrame.read_input_cmb(CurSettingGet(key))
 end
 
 ---没有其他检查
 ---@param key string
 ---@return boolean
 function CustomKeyJustDown(key)
-    return InputFrame.read_input_down(CurSettingGet(key))
+    return InputFrame.read_input_down_cmb(CurSettingGet(key))
 end
 
 ---没有其他检查
 ---@param key string
 ---@return boolean
 function CustomKeyJustUp(key)
-    return InputFrame.read_input_up(CurSettingGet(key))
+    return InputFrame.read_input_up_cmb(CurSettingGet(key))
 end
 
 ---会根据gui来检查是否应该生效
 ---@param key string
 ---@return boolean
 function CustomKeyDownCheckUI(key)
-    return InputFrame.read_input(CurSettingGet(key)) and not UI.MouseInputBlock()
+    return InputFrame.read_input_cmb(CurSettingGet(key)) and not UI.MouseInputBlock()
 end
 
 ---会根据gui来检查是否应该生效
 ---@param key string
 ---@return boolean
 function CustomKeyJustDownCheckUI(key)
-    return InputFrame.read_input_down(CurSettingGet(key)) and not UI.MouseInputBlock()
+    return InputFrame.read_input_down_cmb(CurSettingGet(key)) and not UI.MouseInputBlock()
 end
 
 ---会根据gui来检查是否应该生效
 ---@param key string
 ---@return boolean
 function CustomKeyJustUpCheckUI(key)
-    return InputFrame.read_input_up(CurSettingGet(key)) and not UI.MouseInputBlock()
+    return InputFrame.read_input_up_cmb(CurSettingGet(key)) and not UI.MouseInputBlock()
 end
 
 ---会根据输入是否被屏蔽来检查是否应该生效
 ---@param key string
 ---@return boolean
 function CustomKeyDownCheckInput(key)
-    return InputFrame.read_input(CurSettingGet(key)) and not CheckInputEnabled()
+    return InputFrame.read_input_cmb(CurSettingGet(key)) and not CheckInputEnabled()
 end
 
 ---会根据输入是否被屏蔽来检查是否应该生效
 ---@param key string
 ---@return boolean
 function CustomKeyJustDownCheckInput(key)
-    return InputFrame.read_input_down(CurSettingGet(key)) and not CheckInputEnabled()
+    return InputFrame.read_input_down_cmb(CurSettingGet(key)) and not CheckInputEnabled()
 end
 
 ---会根据输入是否被屏蔽来检查是否应该生效
 ---@param key string
 ---@return boolean
 function CustomKeyJustUpCheckInput(key)
-    return InputFrame.read_input_up(CurSettingGet(key)) and not CheckInputEnabled()
+    return InputFrame.read_input_up_cmb(CurSettingGet(key)) and not CheckInputEnabled()
 end
 
 local old_DEBUG_GetMouseWorld = DEBUG_GetMouseWorld

@@ -40,9 +40,6 @@ function SetCameraPlayerXY(x, y)
         }
     end
 end
-if GameIsInventoryOpen() then
-    return
-end
 if ModTextFileGetContent("mods/conjurer_reborn/carrot_flag.txt") == "1" then
     return
 end

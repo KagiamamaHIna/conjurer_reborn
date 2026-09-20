@@ -506,7 +506,9 @@ mod_settings =
 {
     Setting{
 		category_id = "general_settings",
-		ui_name = "general",
+        ui_name = "general",
+		foldable = true,
+		_folded = true,
 		settings = {
 			Setting{
 				id = "zoom_level",
@@ -553,6 +555,8 @@ mod_settings =
 	Setting{
 		category_id = "visuals_and_audio",
         ui_name = "visuals_and_audio",
+        foldable = true,
+		_folded = true,
         settings = {
 			Setting{
 				id = "tooltip_animation",
@@ -801,6 +805,8 @@ mod_settings =
 	Setting{
 		category_id = "conjurer_other",
         ui_name = "other",
+		foldable = true,
+		_folded = true,
         settings = {
 			Setting{
 				id = "game_print_gui_error",
@@ -889,6 +895,8 @@ mod_settings =
 	Setting{
 		category_id = "unsafe_settings",
         ui_name = "unsafe",
+		foldable = true,
+		_folded = true,
 		settings = {
 			Setting{
 				id = "unsafe_load_conjurer",

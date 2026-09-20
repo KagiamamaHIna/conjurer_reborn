@@ -40,9 +40,6 @@ function SetCameraPlayerXY(x, y)
         }
     end
 end
-if ModTextFileGetContent("mods/conjurer_reborn/carrot_flag.txt") == "1" then
-    return
-end
 
 if InputFrame.read_input_down_cmb(CurSettingGet("tp_carrot_blink")) or InputFrame.read_input_cmb(CurSettingGet("tp_carrot_hold")) then
 	local item = GetActiveItem()

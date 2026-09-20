@@ -689,7 +689,7 @@ if APIExtend.PlayerIsDied then
 end
 
 UI.MiscEventFn["KeybindUpdate"] = function()
-	VirtualFileSet("mods/conjurer_reborn/carrot_flag.txt", UI.MouseInputBlock() and "1" or "0")
+	VirtualFileSet("mods/conjurer_reborn/has_cr_gui_flag.txt", UI.MouseInputBlock() and "1" or "0")
     if World and CustomKeyJustDownCheckInput("quick_enable_fe") then
         local fePause = GlobalsGetValue("conjurer_reborn.fe_enable", "1") ~= "0"
         GlobalsSetValue("conjurer_reborn.fe_enable", not fePause and "1" or "0")

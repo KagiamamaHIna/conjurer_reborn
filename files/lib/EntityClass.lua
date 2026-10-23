@@ -1,4 +1,4 @@
----v1.0.15.1
+---v1.0.15.2
 
 ---@class ECList<V>: { [integer]: V }
 local ECListMetatable = {}
@@ -202,7 +202,7 @@ function EntityComponentObj(comp_id)
 				rawset(t, k, nil)
 				for tk, tv in pairs(v) do
 					if type(tv) == "table" and (tv.x ~= nil or tv.y ~= nil) then
-						local src_x, src_y = compobj:GetValue(k)
+						local src_x, src_y = compobj:GetValue(tk)
 						src_x = tv.x or src_x
 						src_y = tv.y or src_y
 						compobj:SetValue(tk, src_x, src_y)

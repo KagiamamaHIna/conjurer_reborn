@@ -251,7 +251,7 @@ if DeathMatch ~= nil and EntityKillCode ~= nil then
             return
         end
         local begin = ffi.cast("void**", DeathMatch.player_entities.begin_)
-        local entity = ffi.cast(EntityType, begin[0])
+        local entity = ffi.cast(EntityType, begin[index])
         return entity.id
     end
 end
